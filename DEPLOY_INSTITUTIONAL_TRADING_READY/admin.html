@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Institutional Trading - Administration</title>
+  <style>
+    :root {
+      --bg: #050608;
+      --panel: #0b0e12;
+      --line: rgba(244,240,230,.16);
+      --paper: #f4f0e6;
+      --muted: rgba(244,240,230,.62);
+      --gold: #d2a247;
+      --green: #00c783;
+      --red: #ef4560;
+      --cyan: #26b7ff;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--paper);
+      background:
+        radial-gradient(circle at 18% 16%, rgba(210,162,71,.14), transparent 30%),
+        radial-gradient(circle at 82% 32%, rgba(0,199,131,.11), transparent 32%),
+        linear-gradient(135deg, #050608, #0a0d11 60%, #050608);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; }
+    .wrap { width: min(1480px, calc(100% - 44px)); margin: 0 auto; }
+    .micro, .btn, label, th {
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      background: rgba(5,6,8,.78);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      color: #060708;
+      background: var(--gold);
+      font-weight: 950;
+    }
+
+    main { padding: 52px 0 90px; }
+    h1 {
+      max-width: 760px;
+      margin: 14px 0 0;
+      font-size: clamp(44px, 5.8vw, 86px);
+      line-height: .88;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 720px;
+      color: var(--muted);
+      font-weight: 760;
+      line-height: 1.65;
+    }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(380px, 520px);
+      gap: 22px;
+      align-items: stretch;
+      margin-bottom: 22px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(244,240,230,.07), rgba(244,240,230,.02)),
+        rgba(8,10,13,.82);
+      box-shadow: 0 34px 110px rgba(0,0,0,.38);
+    }
+
+    .login {
+      display: grid;
+      gap: 12px;
+      padding: 24px;
+      align-content: center;
+    }
+
+    input, textarea {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 13px;
+      color: var(--paper);
+      border: 1px solid var(--line);
+      background: rgba(244,240,230,.055);
+      outline: 0;
+    }
+
+    textarea { min-height: 82px; padding-top: 12px; resize: vertical; }
+
+    .btn {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 18px;
+      border: 1px solid rgba(244,240,230,.2);
+      color: var(--paper);
+      background: transparent;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn.gold { color: #07090c; background: var(--gold); border-color: var(--gold); }
+    .btn.green { color: #07090c; background: var(--green); border-color: var(--green); }
+    .btn.red { color: #fff; background: var(--red); border-color: var(--red); }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 1px;
+      margin-bottom: 18px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .stat {
+      min-height: 94px;
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      padding: 18px;
+      background: rgba(8,10,13,.92);
+    }
+
+    .stat strong { font-size: 34px; line-height: 1; }
+
+    .desk-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 22px;
+      margin-bottom: 14px;
+    }
+
+    .desk-head h2 {
+      margin: 6px 0 0;
+      font-size: clamp(30px, 3.2vw, 52px);
+      line-height: .94;
+    }
+
+    .finance-grid {
+      display: grid;
+      grid-template-columns: 1.25fr repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      margin-bottom: 18px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .finance-card {
+      min-height: 126px;
+      display: grid;
+      align-content: center;
+      gap: 9px;
+      padding: 20px;
+      background: rgba(8,10,13,.94);
+    }
+
+    .finance-card.primary {
+      background:
+        radial-gradient(circle at 82% 12%, rgba(0,199,131,.18), transparent 35%),
+        linear-gradient(135deg, rgba(210,162,71,.16), rgba(8,10,13,.96));
+    }
+
+    .finance-card strong {
+      font-size: clamp(30px, 3vw, 54px);
+      line-height: .92;
+    }
+
+    .finance-card small {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 820;
+      line-height: 1.45;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 15px 18px;
+      border-bottom: 1px solid var(--line);
+      color: var(--gold);
+    }
+
+    .logs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .ops-grid {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .ops-panel {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .ops-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .analytics-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .analytics-line {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      background: rgba(5,6,8,.48);
+      color: var(--muted);
+      font-weight: 820;
+    }
+
+    .owner-flow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .owner-flow div {
+      min-height: 94px;
+      display: grid;
+      align-content: center;
+      gap: 7px;
+      padding: 16px;
+      background: rgba(8,10,13,.72);
+    }
+
+    .request-list {
+      display: grid;
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .webhook-log {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding: 12px;
+    }
+
+    .donation-log,
+    .chat-log {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding: 12px;
+    }
+
+    .webhook-item {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr) 170px 150px;
+      gap: 12px;
+      align-items: center;
+      padding: 13px;
+      border: 1px solid var(--line);
+      background: rgba(8,10,13,.82);
+    }
+
+    .webhook-item strong { color: var(--paper); }
+
+    .donation-item {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr) 140px 190px;
+      gap: 12px;
+      align-items: center;
+      padding: 13px;
+      border: 1px solid var(--line);
+      background: rgba(8,10,13,.82);
+    }
+
+    .chat-item {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr) minmax(240px, 320px);
+      gap: 12px;
+      align-items: start;
+      padding: 13px;
+      border: 1px solid var(--line);
+      background: rgba(8,10,13,.82);
+    }
+
+    .chat-reply {
+      display: grid;
+      gap: 8px;
+    }
+
+    .request-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 330px);
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .request-main,
+    .request-side {
+      padding: 18px;
+      background: rgba(8,10,13,.9);
+    }
+
+    .request-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: start;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .request-head h3 {
+      margin: 6px 0 0;
+      font-size: 25px;
+      line-height: 1;
+    }
+
+    .request-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .request-grid div {
+      min-height: 92px;
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      padding: 13px;
+      background: rgba(5,6,8,.66);
+      overflow-wrap: anywhere;
+    }
+
+    .request-grid strong {
+      color: var(--paper);
+      font-size: 17px;
+      line-height: 1.1;
+    }
+
+    .message-box {
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      color: rgba(244,240,230,.78);
+      background: rgba(244,240,230,.045);
+      font-weight: 740;
+      line-height: 1.5;
+    }
+
+    .proof-shot {
+      display: block;
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.3);
+      overflow: hidden;
+    }
+
+    .proof-shot img {
+      display: block;
+      width: 100%;
+      max-height: 230px;
+      object-fit: cover;
+    }
+
+    .proof-shot span {
+      display: block;
+      padding: 9px 11px;
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .status {
+      display: inline-flex;
+      padding: 7px 9px;
+      border: 1px solid var(--line);
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .status.pending { color: #07090c; background: var(--gold); border-color: var(--gold); }
+    .status.approved { color: #07090c; background: var(--green); border-color: var(--green); }
+    .status.rejected { color: #fff; background: var(--red); border-color: var(--red); }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .note { grid-column: 1 / -1; }
+    .end-date { grid-column: 1 / -1; min-height: 42px; }
+    .empty { padding: 38px; color: var(--muted); font-weight: 820; }
+    .hidden { display: none; }
+
+    @media (max-width: 900px) {
+      .top-grid,
+      .stats,
+      .finance-grid,
+      .logs-grid,
+      .ops-grid,
+      .ops-row,
+      .owner-flow,
+      .request-card,
+      .request-grid,
+      .webhook-item,
+      .donation-item { grid-template-columns: 1fr; }
+      h1 { font-size: clamp(46px, 14vw, 72px); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="vente.html">
+        <span class="mark">TI</span>
+        <span><strong>Institutional Trading</strong><br><span class="micro">Administration</span></span>
+      </a>
+      <a class="btn" href="vente-v12.html#contact">Retour site</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="top-grid">
+      <div>
+        <span class="micro" style="color:var(--gold)">Administration privee</span>
+        <h1>Gestion des acces.</h1>
+        <p class="lead" style="margin-top:22px">Lien prive + mot de passe. Chaque validation alimente automatiquement le dashboard client.</p>
+        <div class="owner-flow">
+          <div><span class="micro" style="color:var(--gold)">01</span><strong>Client paye PayPal</strong></div>
+          <div><span class="micro" style="color:var(--cyan)">02</span><strong>Tu valides ici</strong></div>
+          <div><span class="micro" style="color:var(--green)">03</span><strong>Espace client actif</strong></div>
+        </div>
+      </div>
+      <form class="panel login" id="loginForm">
+        <label for="password">Mot de passe admin</label>
+        <input id="password" type="password" placeholder="Mot de passe" autocomplete="current-password" required>
+        <button class="btn gold" type="submit">Entrer</button>
+        <a class="btn" href="client.html">Vue client</a>
+        <p class="lead" id="loginStatus"></p>
+      </form>
+    </div>
+
+    <section id="desk" class="hidden">
+      <div class="panel desk-head">
+        <div>
+          <span class="micro" style="color:var(--gold)">Tableau de bord</span>
+          <h2>Vue operationnelle.</h2>
+        </div>
+        <span class="micro" id="lastUpdate">Actif</span>
+      </div>
+      <div class="finance-grid">
+        <div class="finance-card primary"><span class="micro">Total encaisse</span><strong id="cashTotal">0 EUR</strong><small>Abonnements actifs + dons confirmes</small></div>
+        <div class="finance-card"><span class="micro">Abonnements</span><strong id="subscriptionTotal">0 EUR</strong><small id="subscriptionMeta">0 client actif</small></div>
+        <div class="finance-card"><span class="micro">Dons confirmes</span><strong id="donationTotal">0 EUR</strong><small>Soutien projet</small></div>
+        <div class="finance-card"><span class="micro">A traiter</span><strong id="pendingMoneyCount">0</strong><small>Demandes en attente</small></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="micro">Total</span><strong id="totalCount">0</strong></div>
+        <div class="stat"><span class="micro">En attente</span><strong id="pendingCount">0</strong></div>
+        <div class="stat"><span class="micro">Valides</span><strong id="approvedCount">0</strong></div>
+        <div class="stat"><span class="micro">Refuses</span><strong id="rejectedCount">0</strong></div>
+        <div class="stat"><span class="micro">Parrainages valides</span><strong id="referralCount">0</strong></div>
+        <div class="stat"><span class="micro">Webhooks PayPal</span><strong id="webhookCount">0</strong></div>
+      </div>
+      <div class="ops-grid">
+        <div class="panel ops-panel">
+          <div class="section-title micro"><span>Audience site</span><span id="analyticsUpdated">Actif</span></div>
+          <div class="stats" style="margin-bottom:0;grid-template-columns:repeat(3,minmax(0,1fr))">
+            <div class="stat"><span class="micro">En ligne</span><strong id="onlineCount">0</strong></div>
+            <div class="stat"><span class="micro">Visiteurs jour</span><strong id="visitorsToday">0</strong></div>
+            <div class="stat"><span class="micro">Pages vues</span><strong id="pageViewsToday">0</strong></div>
+          </div>
+          <div class="analytics-list" id="topPages"></div>
+        </div>
+        <form class="panel ops-panel" id="flashForm">
+          <div class="section-title micro"><span>Vente flash</span><span id="flashState">Inactive</span></div>
+          <label style="display:flex;gap:10px;align-items:center"><input type="checkbox" name="active" style="width:auto;min-height:auto"> Activer sur le site</label>
+          <input name="title" placeholder="Titre ex : Offre flash -20%">
+          <textarea name="copy" placeholder="Texte court affiche sous la barre"></textarea>
+          <div class="ops-row">
+            <input name="cta" placeholder="Bouton ex : Profiter">
+            <input name="endsAt" type="datetime-local">
+          </div>
+          <input name="url" placeholder="Lien du bouton">
+          <button class="btn gold" type="submit">Publier la vente flash</button>
+          <p class="lead" id="flashStatus"></p>
+        </form>
+      </div>
+      <div class="logs-grid">
+        <div class="panel donation-log hidden" id="donationLog"></div>
+        <div class="panel webhook-log hidden" id="paypalLog"></div>
+      </div>
+      <div class="panel chat-log hidden" id="chatLog"></div>
+      <div class="panel table-wrap">
+        <div class="section-title micro"><span>Demandes d'acces</span><span id="requestMeta">0 ligne</span></div>
+        <div class="request-list" id="requestRows"></div>
+        <div class="empty hidden" id="emptyState">Aucune demande pour le moment.</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let adminPassword = sessionStorage.getItem("tiAdminPassword") || "";
+    let requests = [];
+    let paypalEvents = [];
+    let donations = [];
+    let chatMessages = [];
+    let donationTotal = 0;
+    let analytics = { online: 0, visitorsToday: 0, pageViewsToday: 0, topPages: [] };
+    let siteConfig = { flash: {} };
+    const demoMode = new URLSearchParams(location.search).get("demo") === "1";
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+    }
+
+    function formatDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "--";
+      return new Intl.DateTimeFormat("fr-FR", { dateStyle: "short", timeStyle: "short", timeZone: "Europe/Paris" }).format(date);
+    }
+
+    function dateInputValue(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "";
+      const paris = new Intl.DateTimeFormat("fr-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).format(date);
+      return paris;
+    }
+
+    function remaining(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "--";
+      const days = Math.max(0, Math.floor((date.getTime() - Date.now()) / 86400000));
+      return days === 0 ? "expire ou aujourd'hui" : `${days} j restants`;
+    }
+
+    function money(value) {
+      return `${Number(value || 0).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} EUR`;
+    }
+
+    function actionLabel(value) {
+      const labels = {
+        subscription_extended: "Abonnement valide",
+        donation_recorded: "Don confirme",
+        unmatched_payment: "Paiement non rattache",
+        duplicate_ignored: "Doublon ignore",
+        logged: "Log"
+      };
+      return labels[value] || value || "--";
+    }
+
+    function localInputDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "";
+      const pad = number => String(number).padStart(2, "0");
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+
+    function fillFlashForm() {
+      const flash = siteConfig.flash || {};
+      const form = document.getElementById("flashForm");
+      form.elements.active.checked = Boolean(flash.active);
+      form.elements.title.value = flash.title || "";
+      form.elements.copy.value = flash.copy || "";
+      form.elements.cta.value = flash.cta || "";
+      form.elements.url.value = flash.url || "";
+      form.elements.endsAt.value = localInputDate(flash.endsAt);
+      document.getElementById("flashState").textContent = flash.active ? "Active" : "Inactive";
+    }
+
+    function referralFor(item) {
+      const code = String(item.referralCode || "").toUpperCase();
+      const approved = requests.filter(child => String(child.usedReferralCode || "").toUpperCase() === code && child.status === "approved").length;
+      const pending = requests.filter(child => String(child.usedReferralCode || "").toUpperCase() === code && child.status === "pending").length;
+      const reward = approved >= 10 ? "1 mois gratuit" : approved >= 5 ? "Bot -50%" : "Aucun palier";
+      return { code, approved, pending, reward };
+    }
+
+    async function api(path, options = {}) {
+      const response = await fetch(path, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          "X-Admin-Password": adminPassword,
+          ...(options.headers || {})
+        }
+      });
+      const payload = await response.json();
+      if (!response.ok || !payload.ok) throw new Error(payload.error || "api");
+      return payload;
+    }
+
+    function render() {
+      const total = requests.length;
+      const pending = requests.filter(item => item.status === "pending").length;
+      const approved = requests.filter(item => item.status === "approved").length;
+      const rejected = requests.filter(item => item.status === "rejected").length;
+      const referralTotal = requests.filter(item => item.status === "approved" && item.usedReferralCode).length;
+      const activeClients = requests.filter(item => item.status === "approved" && new Date(item.subscriptionEnd).getTime() > Date.now()).length;
+      const subscriptionRevenue = activeClients * 49.99;
+      const confirmedDonations = donations.filter(item => item.status === "confirmed");
+      const confirmedDonationTotal = confirmedDonations.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+      const totalCash = subscriptionRevenue + confirmedDonationTotal;
+      document.getElementById("cashTotal").textContent = money(totalCash);
+      document.getElementById("subscriptionTotal").textContent = money(subscriptionRevenue);
+      document.getElementById("subscriptionMeta").textContent = `${activeClients} client${activeClients > 1 ? "s" : ""} actif${activeClients > 1 ? "s" : ""}`;
+      document.getElementById("pendingMoneyCount").textContent = pending;
+      document.getElementById("webhookCount").textContent = paypalEvents.length;
+      document.getElementById("lastUpdate").textContent = `Maj ${new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}`;
+      document.getElementById("requestMeta").textContent = `${total} ligne${total > 1 ? "s" : ""}`;
+      document.getElementById("onlineCount").textContent = analytics.online || 0;
+      document.getElementById("visitorsToday").textContent = analytics.visitorsToday || 0;
+      document.getElementById("pageViewsToday").textContent = analytics.pageViewsToday || 0;
+      document.getElementById("analyticsUpdated").textContent = analytics.updated_at ? formatDate(analytics.updated_at) : "Actif";
+      document.getElementById("topPages").innerHTML = (analytics.topPages || []).length
+        ? analytics.topPages.map(item => `<div class="analytics-line"><span>${escapeHTML(item.page)}</span><strong>${escapeHTML(item.views)}</strong></div>`).join("")
+        : `<div class="analytics-line"><span>Aucune visite trackee</span><strong>0</strong></div>`;
+      fillFlashForm();
+      document.getElementById("totalCount").textContent = total;
+      document.getElementById("pendingCount").textContent = pending;
+      document.getElementById("approvedCount").textContent = approved;
+      document.getElementById("rejectedCount").textContent = rejected;
+      document.getElementById("referralCount").textContent = referralTotal;
+      document.getElementById("donationTotal").textContent = money(donationTotal || confirmedDonationTotal);
+      document.getElementById("emptyState").classList.toggle("hidden", total !== 0);
+      const donationLog = document.getElementById("donationLog");
+      donationLog.classList.toggle("hidden", donations.length === 0);
+      donationLog.innerHTML = donations.length ? `<div class="section-title micro"><span>Dons confirmes PayPal</span><span>${money(confirmedDonationTotal)}</span></div>${donations.slice(0, 8).map(donation => `
+        <div class="donation-item">
+          <strong>${escapeHTML(formatDate(donation.created_at))}</strong>
+          <span>${escapeHTML(donation.email || "email inconnu")}<br><span class="micro">Transaction ${escapeHTML(donation.transaction_id || "-")}</span></span>
+          <span class="status ${donation.status === "confirmed" ? "approved" : donation.status === "rejected" ? "rejected" : "pending"}">${donation.status === "confirmed" ? "PayPal confirme" : escapeHTML(donation.status)}</span>
+          <span><strong>${money(donation.amount)}</strong><br><span class="micro">${escapeHTML(donation.verification_status || "webhook")}</span></span>
+        </div>
+      `).join("")}` : "";
+      const paypalLog = document.getElementById("paypalLog");
+      paypalLog.classList.toggle("hidden", paypalEvents.length === 0);
+      paypalLog.innerHTML = paypalEvents.length ? `<div class="section-title micro"><span>Confirmations PayPal</span><span>${paypalEvents.length}</span></div>${paypalEvents.slice(0, 6).map(event => `
+        <div class="webhook-item">
+          <strong>${escapeHTML(formatDate(event.received_at))}</strong>
+          <span>${escapeHTML(event.payer_email || "email inconnu")} - ${escapeHTML(event.transaction_id || "transaction inconnue")}</span>
+          <span class="status ${["subscription_extended", "donation_recorded"].includes(event.action) ? "approved" : event.action === "unmatched_payment" ? "pending" : "rejected"}">${escapeHTML(actionLabel(event.action))}</span>
+          <span class="micro">${escapeHTML(event.verified ? "verifie" : event.verification_status || event.reason || "")}</span>
+        </div>
+      `).join("")}` : "";
+      const clientMessages = chatMessages.filter(item => item.sender !== "admin");
+      const chatLog = document.getElementById("chatLog");
+      chatLog.classList.toggle("hidden", clientMessages.length === 0);
+      chatLog.innerHTML = clientMessages.length ? `<div class="section-title micro"><span>Chat support</span><span>${clientMessages.length}</span></div>${clientMessages.slice(0, 12).map(message => `
+        <div class="chat-item">
+          <strong>${escapeHTML(formatDate(message.created_at))}</strong>
+          <span>${escapeHTML(message.name || "Client")} - ${escapeHTML(message.email || "")}<br><br>${escapeHTML(message.message || "")}</span>
+          <div class="chat-reply">
+            <textarea data-chat-reply="${escapeHTML(message.email || "")}" placeholder="Reponse admin"></textarea>
+            <button class="btn gold" data-chat-send="${escapeHTML(message.email || "")}">Repondre</button>
+          </div>
+        </div>
+      `).join("")}` : "";
+      document.getElementById("requestRows").innerHTML = requests.map(item => {
+        const referral = referralFor(item);
+        return `
+        <article class="request-card">
+          <div class="request-main">
+            <div class="request-head">
+              <div>
+                <span class="micro">${escapeHTML(formatDate(item.created_at))}</span>
+                <h3>${escapeHTML(item.name)}</h3>
+              </div>
+              <span class="status ${escapeHTML(item.status)}">${escapeHTML(item.status)}</span>
+            </div>
+            <div class="request-grid">
+              <div><span class="micro">E-mail PayPal</span><strong>${escapeHTML(item.email)}</strong></div>
+              <div><span class="micro">TradingView</span><strong style="color:var(--cyan)">${escapeHTML(item.tradingview)}</strong></div>
+              <div><span class="micro">Fin abonnement</span><strong>${escapeHTML(formatDate(item.subscriptionEnd))}</strong><span class="micro">${escapeHTML(remaining(item.subscriptionEnd))}</span></div>
+              <div><span class="micro">Offre</span><strong>${escapeHTML(item.product)}</strong></div>
+              <div><span class="micro">Code parrain</span><strong style="color:var(--gold)">${escapeHTML(referral.code || "-")}</strong><span class="micro">${referral.approved} valides / ${referral.pending} attente</span></div>
+              <div><span class="micro">Code utilise</span><strong>${escapeHTML(item.usedReferralCode || "-")}</strong><span class="micro">${escapeHTML(referral.reward)}</span></div>
+            </div>
+            <div class="message-box">
+              <span class="micro" style="color:var(--gold)">Preuve PayPal</span><br>
+              ${escapeHTML(item.paymentProof || "-")}
+              ${item.paymentProofImage ? `<a class="proof-shot" href="${escapeHTML(item.paymentProofImage)}" target="_blank" rel="noopener"><img src="${escapeHTML(item.paymentProofImage)}" alt="Capture preuve paiement"><span>Ouvrir la capture</span></a>` : `<div class="proof-shot"><span>Aucune capture jointe</span></div>`}
+            </div>
+            <div class="message-box">
+              <span class="micro" style="color:var(--gold)">Message client / note admin</span><br>
+              ${escapeHTML(item.message || "-")}
+              ${item.adminNote ? `<br><br><span class="micro">${escapeHTML(item.adminNote)}</span>` : ""}
+            </div>
+          </div>
+          <div class="request-side">
+            <div class="actions">
+              <button class="btn green" data-status="approved" data-id="${escapeHTML(item.id)}">Valider</button>
+              <button class="btn red" data-status="rejected" data-id="${escapeHTML(item.id)}">Refuser</button>
+              <input class="end-date" type="date" data-end="${escapeHTML(item.id)}" value="${escapeHTML(dateInputValue(item.subscriptionEnd))}">
+              <textarea class="note" data-note="${escapeHTML(item.id)}" placeholder="Note admin">${escapeHTML(item.adminNote || "")}</textarea>
+              <a class="btn note" href="client.html" target="_blank" rel="noopener">Vue client</a>
+            </div>
+          </div>
+        </article>
+      `}).join("");
+    }
+
+    async function loadRequests() {
+      if (demoMode) {
+        const now = new Date();
+        requests = [
+          { id: "demo-1", created_at: now.toISOString(), status: "approved", name: "Client Demo", email: "client.demo@paypal.com", tradingview: "ClientDemoTV", product: "BTC Institutional Setup - 49,99 EUR / mois", paymentProof: "PAYPAL-DEMO-001", paymentProofImage: "", message: "Demande test validee.", adminNote: "Compte demo", subscriptionEnd: new Date(Date.now() + 24 * 86400000).toISOString(), referralCode: "TICLIENTDEMO", usedReferralCode: "" },
+          { id: "demo-2", created_at: now.toISOString(), status: "approved", name: "Filleul 1", email: "filleul1@paypal.com", tradingview: "FilleulTV1", product: "Gold Institutional Setup - 49,99 EUR / mois", paymentProof: "PAYPAL-DEMO-002", paymentProofImage: "", message: "Arrive via code.", adminNote: "", subscriptionEnd: new Date(Date.now() + 18 * 86400000).toISOString(), referralCode: "TIFILLEUL1", usedReferralCode: "TICLIENTDEMO" },
+          { id: "demo-3", created_at: now.toISOString(), status: "pending", name: "Filleul attente", email: "pending@paypal.com", tradingview: "PendingTV", product: "Nasdaq Institutional Setup - 49,99 EUR / mois", paymentProof: "PAYPAL-DEMO-003", paymentProofImage: "", message: "En attente de validation.", adminNote: "", subscriptionEnd: "", referralCode: "TIPENDINGTV", usedReferralCode: "TICLIENTDEMO" }
+        ];
+        paypalEvents = [
+          { received_at: now.toISOString(), payer_email: "client.demo@paypal.com", transaction_id: "PAYPAL-DEMO-001", action: "subscription_extended", reason: "demo abonnement", verified: true, verification_status: "SUCCESS" },
+          { received_at: now.toISOString(), payer_email: "donateur@email.com", transaction_id: "PAYPAL-DON-DEMO", action: "donation_recorded", reason: "demo don", verified: true, verification_status: "SUCCESS" }
+        ];
+        donations = [{ id: "don-demo-1", created_at: now.toISOString(), status: "confirmed", name: "Supporter Demo", email: "donateur@email.com", amount: 25, message: "Don confirme par PayPal", transaction_id: "PAYPAL-DON-DEMO", source: "paypal_webhook", verified: true, verification_status: "SUCCESS" }];
+        donationTotal = 25;
+        analytics = { online: 7, visitorsToday: 42, pageViewsToday: 118, updated_at: now.toISOString(), topPages: [{ page: "/vente-v12.html", views: 81 }, { page: "/vente-v12.html#offers", views: 22 }, { page: "/client.html", views: 15 }] };
+        chatMessages = [{ created_at: now.toISOString(), sender: "client", name: "Prospect Demo", email: "prospect@email.com", message: "Bonjour, je veux le Nasdaq." }];
+        siteConfig = { flash: { active: true, title: "Offre flash membre", copy: "BTC, Gold ou Nasdaq : 49,99 EUR / mois par algo.", cta: "Acceder", url: "vente-v12.html#offers", endsAt: "" } };
+        document.getElementById("desk").classList.remove("hidden");
+        document.getElementById("loginStatus").textContent = "Mode test charge.";
+        render();
+        return;
+      }
+      const [accessPayload, paypalPayload, donationPayload, analyticsPayload, configPayload, chatPayload] = await Promise.all([
+        api("/api/admin/access-requests"),
+        api("/api/admin/paypal-events"),
+        api("/api/admin/donations"),
+        api("/api/admin/analytics"),
+        api("/api/admin/site-config"),
+        api("/api/admin/chat")
+      ]);
+      requests = accessPayload.requests || [];
+      paypalEvents = paypalPayload.events || [];
+      donations = donationPayload.donations || [];
+      donationTotal = donationPayload.totalConfirmed || 0;
+      analytics = analyticsPayload || analytics;
+      siteConfig = configPayload.config || siteConfig;
+      chatMessages = chatPayload.messages || [];
+      document.getElementById("desk").classList.remove("hidden");
+      document.getElementById("loginStatus").textContent = "Administration chargee.";
+      render();
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      adminPassword = document.getElementById("password").value;
+      sessionStorage.setItem("tiAdminPassword", adminPassword);
+      document.getElementById("loginStatus").textContent = "Connexion...";
+      try {
+        await loadRequests();
+      } catch (error) {
+        document.getElementById("loginStatus").textContent = "Mot de passe incorrect ou serveur admin indisponible.";
+      }
+    });
+
+    document.getElementById("requestRows").addEventListener("click", async event => {
+      const button = event.target.closest("button[data-status]");
+      if (!button) return;
+      const id = button.dataset.id;
+      const note = document.querySelector(`[data-note="${CSS.escape(id)}"]`).value;
+      const end = document.querySelector(`[data-end="${CSS.escape(id)}"]`).value;
+      button.disabled = true;
+      try {
+        await api("/api/admin/access-requests/status", {
+          method: "POST",
+          body: JSON.stringify({ id, status: button.dataset.status, adminNote: note, subscriptionEnd: end })
+        });
+        await loadRequests();
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    document.getElementById("chatLog").addEventListener("click", async event => {
+      const button = event.target.closest("button[data-chat-send]");
+      if (!button) return;
+      const email = button.dataset.chatSend;
+      const textarea = document.querySelector(`[data-chat-reply="${CSS.escape(email)}"]`);
+      const message = textarea ? textarea.value.trim() : "";
+      if (!message) return;
+      button.disabled = true;
+      try {
+        await api("/api/admin/chat/reply", {
+          method: "POST",
+          body: JSON.stringify({ email, message })
+        });
+        await loadRequests();
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    document.getElementById("flashForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.target;
+      const status = document.getElementById("flashStatus");
+      const data = Object.fromEntries(new FormData(form).entries());
+      data.active = form.elements.active.checked;
+      status.textContent = "Publication...";
+      try {
+        const payload = await api("/api/admin/site-config", {
+          method: "POST",
+          body: JSON.stringify(data)
+        });
+        siteConfig = payload.config || siteConfig;
+        status.textContent = "Vente flash publiee.";
+        render();
+      } catch (error) {
+        status.textContent = "Impossible de publier.";
+      }
+    });
+
+    if (demoMode) {
+      document.getElementById("password").value = "demo";
+      loadRequests();
+    } else if (adminPassword) {
+      document.getElementById("password").value = adminPassword;
+      loadRequests().catch(() => sessionStorage.removeItem("tiAdminPassword"));
+    }
+  </script>
+</body>
+</html>
