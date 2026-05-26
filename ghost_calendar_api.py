@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Institutional Trading - Espace Client</title>
+  <style>
+    :root {
+      --bg: #050608;
+      --panel: #0b0e12;
+      --paper: #f4f0e6;
+      --muted: rgba(244,240,230,.66);
+      --line: rgba(244,240,230,.16);
+      --gold: #d2a247;
+      --btc: #ff8a21;
+      --green: #00c783;
+      --cyan: #26b7ff;
+      --red: #ef4560;
+      --violet: #8b5cf6;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--paper);
+      background:
+        linear-gradient(rgba(244,240,230,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244,240,230,.026) 1px, transparent 1px),
+        radial-gradient(circle at 20% 14%, rgba(210,162,71,.18), transparent 30%),
+        radial-gradient(circle at 84% 20%, rgba(38,183,255,.12), transparent 32%),
+        radial-gradient(circle at 54% 70%, rgba(255,138,33,.08), transparent 30%),
+        linear-gradient(135deg, #050608, #0b1012 58%, #050608);
+      background-size: 72px 72px, 72px 72px, auto, auto, auto, auto;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    h1, h2, h3, p { margin: 0; }
+    .wrap { width: min(1460px, calc(100% - 44px)); margin: 0 auto; }
+    .micro, .btn, label {
+      font-size: 10px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(5,6,8,.8);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      min-height: 72px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      color: #07090c;
+      background: var(--gold);
+      font-weight: 950;
+    }
+
+    main { padding: 70px 0 90px; }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, .98fr) minmax(360px, 460px);
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      max-width: 920px;
+      margin-top: 16px;
+      font-size: clamp(50px, 7vw, 112px);
+      line-height: .86;
+      letter-spacing: 0;
+    }
+
+    h2 { font-size: clamp(30px, 3.5vw, 58px); line-height: .92; }
+    h3 { font-size: clamp(22px, 2vw, 34px); line-height: 1; }
+    .lead { color: var(--muted); font-weight: 760; line-height: 1.65; }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background:
+        linear-gradient(135deg, rgba(244,240,230,.08), rgba(244,240,230,.025)),
+        rgba(8,10,13,.82);
+      box-shadow: 0 34px 110px rgba(0,0,0,.36);
+      overflow: hidden;
+    }
+
+    .login {
+      display: grid;
+      gap: 12px;
+      padding: 22px;
+    }
+
+    input {
+      width: 100%;
+      min-height: 52px;
+      padding: 0 14px;
+      color: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(244,240,230,.055);
+      outline: 0;
+    }
+
+    input:focus {
+      border-color: rgba(38,183,255,.56);
+      box-shadow: 0 0 0 3px rgba(38,183,255,.10), 0 0 34px rgba(38,183,255,.08);
+    }
+
+    .btn {
+      min-height: 48px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 18px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(244,240,230,.04);
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .btn.gold {
+      color: #07090c;
+      border-color: var(--gold);
+      background: var(--gold);
+    }
+
+    .btn.dark {
+      color: var(--paper);
+      border-color: rgba(244,240,230,.18);
+      background: #07090c;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(38,183,255,.48);
+      box-shadow: 0 18px 54px rgba(0,0,0,.24);
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(340px, .62fr);
+      gap: 18px;
+    }
+
+    .status-card {
+      min-height: 390px;
+      display: grid;
+      align-content: space-between;
+      padding: 30px;
+      background:
+        radial-gradient(circle at 80% 22%, rgba(0,199,131,.18), transparent 34%),
+        radial-gradient(circle at 18% 0, rgba(210,162,71,.14), transparent 28%),
+        linear-gradient(135deg, rgba(244,240,230,.08), rgba(244,240,230,.02)),
+        rgba(8,10,13,.88);
+    }
+
+    .status-line {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .tag {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 10px;
+      color: #07090c;
+      background: var(--gold);
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .tag.green { background: var(--green); }
+    .tag.red { color: #fff; background: var(--red); }
+    .tag.cyan { color: #07090c; background: var(--cyan); }
+
+    .meter {
+      height: 10px;
+      margin-top: 28px;
+      overflow: hidden;
+      background: rgba(244,240,230,.12);
+    }
+
+    .meter span {
+      display: block;
+      height: 100%;
+      width: var(--meter, 0%);
+      background: linear-gradient(90deg, var(--gold), var(--green));
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 26px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .stats div {
+      min-height: 94px;
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      padding: 16px;
+      background: rgba(5,6,8,.74);
+    }
+
+    .stats strong { font-size: 30px; line-height: 1; }
+
+    .side {
+      display: grid;
+      gap: 18px;
+    }
+
+    .mini {
+      padding: 22px;
+    }
+
+    .modules {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .module {
+      position: relative;
+      min-height: 210px;
+      display: grid;
+      align-content: space-between;
+      gap: 16px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 86% 0, rgba(244,240,230,.09), transparent 16rem),
+        rgba(244,240,230,.045);
+      overflow: hidden;
+    }
+
+    .module::after {
+      content: attr(data-label);
+      position: absolute;
+      right: -8px;
+      bottom: -18px;
+      color: rgba(244,240,230,.08);
+      font-size: 84px;
+      line-height: .8;
+      font-weight: 950;
+      letter-spacing: -.08em;
+      pointer-events: none;
+    }
+
+    .module[data-market="btc"] {
+      border-color: rgba(255,138,33,.28);
+      background:
+        radial-gradient(circle at 86% 0, rgba(255,138,33,.18), transparent 16rem),
+        rgba(244,240,230,.045);
+    }
+
+    .module[data-market="gold"] {
+      border-color: rgba(210,162,71,.32);
+      background:
+        radial-gradient(circle at 86% 0, rgba(210,162,71,.18), transparent 16rem),
+        rgba(244,240,230,.045);
+    }
+
+    .module[data-market="nasdaq"] {
+      border-color: rgba(38,183,255,.30);
+      background:
+        radial-gradient(circle at 86% 0, rgba(38,183,255,.18), transparent 16rem),
+        rgba(244,240,230,.045);
+    }
+
+    .module strong { font-size: 36px; line-height: 1; }
+
+    .module > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .module-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .module .btn {
+      min-height: 40px;
+      padding: 0 13px;
+      font-size: 9px;
+    }
+    .referral-card {
+      margin-top: 18px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 84% 18%, rgba(210,162,71,.16), transparent 34%),
+        rgba(244,240,230,.045);
+    }
+
+    .referral-code {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      background: rgba(5,6,8,.74);
+    }
+
+    .referral-code strong {
+      color: var(--gold);
+      font-size: clamp(26px, 4vw, 48px);
+      line-height: 1;
+      letter-spacing: .04em;
+    }
+
+    .reward-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .reward-grid div {
+      min-height: 92px;
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      padding: 14px;
+      background: rgba(5,6,8,.74);
+    }
+
+    .reward-grid strong {
+      font-size: 26px;
+      line-height: 1;
+    }
+    .hidden { display: none; }
+
+    @media (max-width: 980px) {
+      .hero, .dashboard, .modules, .reward-grid { grid-template-columns: 1fr; }
+      h1 { font-size: clamp(46px, 13vw, 76px); }
+    }
+
+    @media (max-width: 520px) {
+      .wrap { width: min(1460px, calc(100% - 28px)); }
+      .nav { align-items: flex-start; flex-direction: column; padding: 14px 0; }
+      .hero { gap: 16px; }
+      .stats { grid-template-columns: 1fr; }
+      .referral-code { display: grid; align-items: stretch; }
+      .referral-code .btn { width: 100%; }
+      .referral-code strong { font-size: clamp(24px, 11vw, 38px); overflow-wrap: anywhere; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="vente.html">
+        <span class="mark">TI</span>
+        <span><strong>Institutional Trading</strong><br><span class="micro">Espace client</span></span>
+      </a>
+      <a class="btn" href="vente.html#contact">Support</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <span class="micro" style="color:var(--gold)">Espace prive</span>
+        <h1>Votre acces Institutional Trading.</h1>
+        <p class="lead" style="margin-top:22px">Connectez-vous avec votre e-mail et votre mot de passe membre.</p>
+      </div>
+      <form class="panel login" id="clientLogin">
+        <label for="email">E-mail PayPal</label>
+        <input id="email" name="email" type="email" placeholder="votre@email.com" required>
+        <label for="password">Mot de passe</label>
+        <input id="password" name="password" type="password" placeholder="mot de passe" required>
+        <button class="btn gold" type="submit">Entrer</button>
+        <p class="lead" id="loginStatus"></p>
+      </form>
+    </section>
+
+    <section class="dashboard hidden" id="dashboard">
+      <div class="panel status-card">
+        <div>
+          <span class="micro" style="color:var(--gold)">Abonnement</span>
+          <h2 id="clientName">Compte client</h2>
+          <p class="lead" style="margin-top:16px" id="clientMeta"></p>
+          <div class="status-line" id="statusLine"></div>
+          <div class="meter"><span id="meter"></span></div>
+          <div class="stats">
+            <div><span class="micro">Jours restants</span><strong id="daysLeft">--</strong></div>
+            <div><span class="micro">Fin abonnement</span><strong id="endDate">--</strong></div>
+            <div><span class="micro">Plan</span><strong id="planAmount">49,99 EUR</strong></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn gold" id="renewLink" href="https://www.paypal.com/ncp/payment/DCVU8JTEY7GJ4" target="_blank" rel="noopener">Renouveler</a>
+          <a class="btn dark" href="vente.html#contact">Support</a>
+        </div>
+        <p class="lead" style="margin-top:16px">Le renouvellement ouvre PayPal. Une fois le paiement confirme, la date d'abonnement se met a jour.</p>
+      </div>
+
+      <aside class="side">
+        <article class="panel mini">
+          <span class="micro" style="color:var(--cyan)">TradingView</span>
+          <h3 id="tvName" style="margin-top:10px">--</h3>
+          <p class="lead" style="margin-top:12px">Username rattache a vos scripts prives.</p>
+        </article>
+        <article class="panel mini">
+          <span class="micro" style="color:var(--gold)">Validation</span>
+          <h3 id="accessStatus" style="margin-top:10px">--</h3>
+          <p class="lead" style="margin-top:12px" id="accessCopy">--</p>
+        </article>
+      </aside>
+    </section>
+
+    <section class="referral-card hidden" id="referralCard">
+      <span class="micro" style="color:var(--gold)">Parrainage</span>
+      <h2 style="margin-top:12px">Votre code client.</h2>
+      <p class="lead" style="margin-top:12px">Si une personne prend le pack avec votre code, elle compte comme filleul une fois validee.</p>
+      <div class="referral-code">
+        <strong id="referralCode">--</strong>
+        <button class="btn gold" type="button" id="copyReferral">Copier</button>
+      </div>
+      <div class="reward-grid">
+        <div><span class="micro">Filleuls valides</span><strong id="refApproved">0</strong></div>
+        <div><span class="micro">Prochain palier</span><strong id="refNext">5</strong></div>
+        <div><span class="micro">Recompense</span><strong id="refReward">--</strong></div>
+      </div>
+    </section>
+
+    <section class="modules hidden" id="modules">
+      <article class="module" data-market="btc" data-label="BTC">
+        <div><span class="micro" style="color:var(--cyan)">BTC</span><h3>BTC Institutional Setup</h3></div>
+        <p class="lead">Surveillance 24/7, zones, invalidation et alertes TradingView.</p>
+        <strong style="color:var(--cyan)">85.3%</strong>
+        <div class="module-actions"><a class="btn dark" href="https://www.paypal.com/ncp/payment/SB6UU4KPJ974A" target="_blank" rel="noopener">Renouveler BTC</a></div>
+      </article>
+      <article class="module" data-market="gold" data-label="GOLD">
+        <div><span class="micro" style="color:var(--gold)">Gold</span><h3>Gold Institutional Setup</h3></div>
+        <p class="lead">Sessions London / New York / Asia, timing propre et lecture de liquidite.</p>
+        <strong style="color:var(--gold)">83.0%</strong>
+        <div class="module-actions"><a class="btn dark" href="https://www.paypal.com/ncp/payment/DCVU8JTEY7GJ4" target="_blank" rel="noopener">Renouveler Gold</a></div>
+      </article>
+      <article class="module" data-market="nasdaq" data-label="NDX">
+        <div><span class="micro" style="color:var(--cyan)">Nasdaq</span><h3>Nasdaq Institutional Setup</h3></div>
+        <p class="lead">US100, sessions London / New York / Asia et alertes TradingView.</p>
+        <strong style="color:var(--cyan)">81.3%</strong>
+        <div class="module-actions"><a class="btn dark" href="https://www.paypal.com/ncp/payment/VMTBQ5G9EMWTU" target="_blank" rel="noopener">Renouveler Nasdaq</a></div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const demoMode = new URLSearchParams(location.search).get("demo") === "1";
+    const paypalByMarket = {
+      btc: "https://www.paypal.com/ncp/payment/SB6UU4KPJ974A",
+      gold: "https://www.paypal.com/ncp/payment/DCVU8JTEY7GJ4",
+      nasdaq: "https://www.paypal.com/ncp/payment/VMTBQ5G9EMWTU"
+    };
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+    }
+
+    function formatDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "--";
+      return new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "short", year: "numeric", timeZone: "Europe/Paris" }).format(date);
+    }
+
+    function clientMarkets(client) {
+      const source = Array.isArray(client.products) && client.products.length ? client.products.join(" ") : client.product || "";
+      const text = source.toLowerCase();
+      const markets = [];
+      if (text.includes("btc")) markets.push("btc");
+      if (text.includes("gold")) markets.push("gold");
+      if (text.includes("nasdaq")) markets.push("nasdaq");
+      return markets.length ? markets : ["btc", "gold", "nasdaq"];
+    }
+
+    function marketLabel(markets) {
+      return markets.map(value => value === "btc" ? "BTC" : value === "gold" ? "Gold" : "Nasdaq").join(" / ");
+    }
+
+    function monthlyAmount(markets) {
+      return `${(markets.length * 49.99).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} EUR`;
+    }
+
+    function render(client) {
+      const approved = client.status === "approved";
+      const expired = approved && Number(client.daysRemaining || 0) <= 0;
+      const active = approved && !expired;
+      document.getElementById("dashboard").classList.remove("hidden");
+      document.getElementById("modules").classList.remove("hidden");
+      document.getElementById("referralCard").classList.remove("hidden");
+      document.getElementById("clientName").textContent = client.name || "Compte client";
+      document.getElementById("clientMeta").textContent = `${client.product || "Institutional Trading Setup"} - ${client.email || ""}`;
+      document.getElementById("tvName").textContent = client.tradingview || "--";
+      document.getElementById("daysLeft").textContent = String(client.daysRemaining ?? "--");
+      document.getElementById("endDate").textContent = formatDate(client.subscriptionEnd);
+      document.getElementById("renewLink").href = client.paypalUrl || "https://www.paypal.com/ncp/payment/DCVU8JTEY7GJ4";
+      document.getElementById("meter").style.setProperty("--meter", `${Math.min(100, Math.max(0, (Number(client.daysRemaining || 0) / 30) * 100))}%`);
+      const markets = clientMarkets(client);
+      document.getElementById("planAmount").textContent = `${monthlyAmount(markets)} / mois`;
+      document.getElementById("renewLink").href = markets.length === 1 ? paypalByMarket[markets[0]] : "vente.html#offers";
+      document.getElementById("renewLink").textContent = markets.length === 1 ? `Renouveler ${marketLabel(markets)}` : "Renouveler mes algos";
+      document.querySelectorAll(".module").forEach(module => {
+        module.classList.toggle("hidden", !markets.includes(module.dataset.market));
+      });
+      document.getElementById("statusLine").innerHTML = [
+        `<span class="tag ${active ? "green" : expired ? "red" : ""}">${active ? "Actif" : expired ? "Expire" : escapeHTML(client.status)}</span>`,
+        `<span class="tag cyan">${escapeHTML(marketLabel(markets))}</span>`,
+        `<span class="tag">TradingView</span>`
+      ].join("");
+      document.getElementById("accessStatus").textContent = active ? "Acces actif" : expired ? "Renouvellement requis" : client.status === "pending" ? "En validation" : "Acces bloque";
+      document.getElementById("accessCopy").textContent = active
+        ? "Votre espace membre est actif."
+        : expired
+          ? "Renouvelez votre abonnement pour conserver l'acces."
+          : "Votre activation est en cours.";
+      const referral = client.referral || {};
+      document.getElementById("referralCode").textContent = referral.code || "--";
+      document.getElementById("refApproved").textContent = String(referral.approvedCount ?? 0);
+      document.getElementById("refNext").textContent = referral.remaining ? `${referral.remaining} restants` : "Palier atteint";
+      document.getElementById("refReward").textContent = referral.reward || "Aucun palier";
+    }
+
+    document.getElementById("clientLogin").addEventListener("submit", async event => {
+      event.preventDefault();
+      const status = document.getElementById("loginStatus");
+      status.textContent = "Verification...";
+      try {
+        const response = await fetch("/api/client/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(Object.fromEntries(new FormData(event.target).entries()))
+        });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) throw new Error(payload.error || "login");
+        sessionStorage.setItem("tiClient", JSON.stringify(payload.client));
+        status.textContent = "Acces valide.";
+        render(payload.client);
+      } catch (error) {
+        status.textContent = "Compte introuvable. Verifiez l'e-mail et le mot de passe.";
+      }
+    });
+
+    const cached = sessionStorage.getItem("tiClient");
+    document.getElementById("copyReferral").addEventListener("click", async () => {
+      const code = document.getElementById("referralCode").textContent.trim();
+      try {
+        await navigator.clipboard.writeText(code);
+        document.getElementById("copyReferral").textContent = "Copie";
+      } catch (error) {
+        document.getElementById("copyReferral").textContent = code;
+      }
+    });
+
+    if (demoMode) {
+      render({
+        status: "approved",
+        name: "Client Demo",
+        email: "client.demo@paypal.com",
+        tradingview: "ClientDemoTV",
+        product: "Nasdaq Institutional Setup - 49,99 EUR / mois",
+        products: ["Nasdaq Institutional Setup - 49,99 EUR / mois"],
+        subscriptionEnd: new Date(Date.now() + 24 * 86400000).toISOString(),
+        daysRemaining: 24,
+        paypalUrl: "https://www.paypal.com/ncp/payment/DCVU8JTEY7GJ4",
+        referral: { code: "TICLIENTDEMO", approvedCount: 4, pendingCount: 1, remaining: 1, nextTarget: 5, reward: "Aucun palier" }
+      });
+      document.getElementById("loginStatus").textContent = "Mode test charge.";
+    } else if (cached) {
+      try { render(JSON.parse(cached)); } catch (error) { sessionStorage.removeItem("tiClient"); }
+    }
+  </script>
+</body>
+</html>

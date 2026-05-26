@@ -1,0 +1,44 @@
+<svg width="1920" height="1200" viewBox="0 0 1920 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="blueCore" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1510 170) rotate(134) scale(780 520)">
+      <stop stop-color="#0057ff" stop-opacity=".42"/>
+      <stop offset=".52" stop-color="#0b62c8" stop-opacity=".14"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="electricWash" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(245 280) rotate(42) scale(650 430)">
+      <stop stop-color="#00d5ff" stop-opacity=".42"/>
+      <stop offset=".48" stop-color="#0077d9" stop-opacity=".14"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bladeA" x1="-40" y1="1080" x2="1880" y2="170" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00d5ff" stop-opacity=".34"/>
+      <stop offset=".42" stop-color="#0057ff" stop-opacity=".1"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity=".32"/>
+    </linearGradient>
+    <linearGradient id="bladeB" x1="40" y1="90" x2="1940" y2="860" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff" stop-opacity=".32"/>
+      <stop offset=".52" stop-color="#0057ff" stop-opacity=".13"/>
+      <stop offset="1" stop-color="#00d5ff" stop-opacity=".24"/>
+    </linearGradient>
+    <pattern id="mesh" width="96" height="96" patternUnits="userSpaceOnUse">
+      <path d="M96 0H0V96" stroke="#0057ff" stroke-opacity=".11" stroke-width="1"/>
+      <path d="M0 96L96 0" stroke="#00d5ff" stroke-opacity=".055" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1920" height="1200" fill="#f7fbff"/>
+  <rect width="1920" height="1200" fill="url(#blueCore)"/>
+  <rect width="1920" height="1200" fill="url(#electricWash)"/>
+  <rect width="1920" height="1200" fill="url(#mesh)"/>
+  <path d="M-180 1030C216 835 402 678 735 632C1104 581 1335 355 2050 118" stroke="url(#bladeA)" stroke-width="18" stroke-linecap="round"/>
+  <path d="M-100 132C302 210 574 364 910 458C1288 564 1538 702 2050 1022" stroke="url(#bladeB)" stroke-width="22" stroke-linecap="round"/>
+  <path d="M180 760L434 540H728L1004 354H1365L1660 210" stroke="#0057ff" stroke-opacity=".18" stroke-width="3"/>
+  <path d="M238 842H540L788 718H1050L1314 596H1680" stroke="#00d5ff" stroke-opacity=".18" stroke-width="3"/>
+  <g opacity=".38">
+    <circle cx="434" cy="540" r="6" fill="#00d5ff"/>
+    <circle cx="728" cy="540" r="6" fill="#0057ff"/>
+    <circle cx="1004" cy="354" r="6" fill="#ffffff"/>
+    <circle cx="1314" cy="596" r="6" fill="#00d5ff"/>
+    <circle cx="1660" cy="210" r="6" fill="#0057ff"/>
+  </g>
+  <rect width="1920" height="1200" fill="white" opacity=".08"/>
+</svg>
