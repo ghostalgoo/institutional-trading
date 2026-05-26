@@ -12,9 +12,11 @@
       --muted: rgba(244,240,230,.66);
       --line: rgba(244,240,230,.16);
       --gold: #d2a247;
+      --btc: #ff8a21;
       --green: #00c783;
       --cyan: #26b7ff;
       --red: #ef4560;
+      --violet: #8b5cf6;
     }
 
     * { box-sizing: border-box; }
@@ -23,9 +25,13 @@
       margin: 0;
       color: var(--paper);
       background:
+        linear-gradient(rgba(244,240,230,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244,240,230,.026) 1px, transparent 1px),
         radial-gradient(circle at 20% 14%, rgba(210,162,71,.18), transparent 30%),
         radial-gradient(circle at 84% 20%, rgba(38,183,255,.12), transparent 32%),
+        radial-gradient(circle at 54% 70%, rgba(255,138,33,.08), transparent 30%),
         linear-gradient(135deg, #050608, #0b1012 58%, #050608);
+      background-size: 72px 72px, 72px 72px, auto, auto, auto, auto;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
     }
 
@@ -91,10 +97,12 @@
 
     .panel {
       border: 1px solid var(--line);
+      border-radius: 26px;
       background:
         linear-gradient(135deg, rgba(244,240,230,.08), rgba(244,240,230,.025)),
         rgba(8,10,13,.82);
       box-shadow: 0 34px 110px rgba(0,0,0,.36);
+      overflow: hidden;
     }
 
     .login {
@@ -109,8 +117,14 @@
       padding: 0 14px;
       color: var(--paper);
       border: 1px solid var(--line);
+      border-radius: 14px;
       background: rgba(244,240,230,.055);
       outline: 0;
+    }
+
+    input:focus {
+      border-color: rgba(38,183,255,.56);
+      box-shadow: 0 0 0 3px rgba(38,183,255,.10), 0 0 34px rgba(38,183,255,.08);
     }
 
     .btn {
@@ -120,8 +134,10 @@
       align-items: center;
       padding: 0 18px;
       border: 1px solid var(--line);
+      border-radius: 999px;
       background: rgba(244,240,230,.04);
       cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
     }
 
     .btn.gold {
@@ -134,6 +150,12 @@
       color: var(--paper);
       border-color: rgba(244,240,230,.18);
       background: #07090c;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(38,183,255,.48);
+      box-shadow: 0 18px 54px rgba(0,0,0,.24);
     }
 
     .dashboard {
@@ -149,6 +171,7 @@
       padding: 30px;
       background:
         radial-gradient(circle at 80% 22%, rgba(0,199,131,.18), transparent 34%),
+        radial-gradient(circle at 18% 0, rgba(210,162,71,.14), transparent 28%),
         linear-gradient(135deg, rgba(244,240,230,.08), rgba(244,240,230,.02)),
         rgba(8,10,13,.88);
     }
@@ -228,15 +251,72 @@
     }
 
     .module {
+      position: relative;
       min-height: 210px;
       display: grid;
       align-content: space-between;
+      gap: 16px;
       padding: 22px;
       border: 1px solid var(--line);
-      background: rgba(244,240,230,.045);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 86% 0, rgba(244,240,230,.09), transparent 16rem),
+        rgba(244,240,230,.045);
+      overflow: hidden;
+    }
+
+    .module::after {
+      content: attr(data-label);
+      position: absolute;
+      right: -8px;
+      bottom: -18px;
+      color: rgba(244,240,230,.08);
+      font-size: 84px;
+      line-height: .8;
+      font-weight: 950;
+      letter-spacing: -.08em;
+      pointer-events: none;
+    }
+
+    .module[data-market="btc"] {
+      border-color: rgba(255,138,33,.28);
+      background:
+        radial-gradient(circle at 86% 0, rgba(255,138,33,.18), transparent 16rem),
+        rgba(244,240,230,.045);
+    }
+
+    .module[data-market="gold"] {
+      border-color: rgba(210,162,71,.32);
+      background:
+        radial-gradient(circle at 86% 0, rgba(210,162,71,.18), transparent 16rem),
+        rgba(244,240,230,.045);
+    }
+
+    .module[data-market="nasdaq"] {
+      border-color: rgba(38,183,255,.30);
+      background:
+        radial-gradient(circle at 86% 0, rgba(38,183,255,.18), transparent 16rem),
+        rgba(244,240,230,.045);
     }
 
     .module strong { font-size: 36px; line-height: 1; }
+
+    .module > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .module-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .module .btn {
+      min-height: 40px;
+      padding: 0 13px;
+      font-size: 9px;
+    }
     .referral-card {
       margin-top: 18px;
       padding: 24px;
@@ -292,6 +372,16 @@
       .hero, .dashboard, .modules, .reward-grid { grid-template-columns: 1fr; }
       h1 { font-size: clamp(46px, 13vw, 76px); }
     }
+
+    @media (max-width: 520px) {
+      .wrap { width: min(1460px, calc(100% - 28px)); }
+      .nav { align-items: flex-start; flex-direction: column; padding: 14px 0; }
+      .hero { gap: 16px; }
+      .stats { grid-template-columns: 1fr; }
+      .referral-code { display: grid; align-items: stretch; }
+      .referral-code .btn { width: 100%; }
+      .referral-code strong { font-size: clamp(24px, 11vw, 38px); overflow-wrap: anywhere; }
+    }
   </style>
 </head>
 <body>
@@ -301,7 +391,7 @@
         <span class="mark">TI</span>
         <span><strong>Institutional Trading</strong><br><span class="micro">Espace client</span></span>
       </a>
-      <a class="btn" href="vente-v12.html#contact">Support</a>
+      <a class="btn" href="vente.html#contact">Support</a>
     </div>
   </header>
 
@@ -333,12 +423,12 @@
           <div class="stats">
             <div><span class="micro">Jours restants</span><strong id="daysLeft">--</strong></div>
             <div><span class="micro">Fin abonnement</span><strong id="endDate">--</strong></div>
-            <div><span class="micro">Plan</span><strong>49,99 EUR</strong></div>
+            <div><span class="micro">Plan</span><strong id="planAmount">49,99 EUR</strong></div>
           </div>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <a class="btn gold" id="renewLink" href="https://www.paypal.com/ncp/payment/DCVU8JTEY7GJ4" target="_blank" rel="noopener">Renouveler</a>
-          <a class="btn dark" href="vente-v12.html#contact">Support</a>
+          <a class="btn dark" href="vente.html#contact">Support</a>
         </div>
         <p class="lead" style="margin-top:16px">Le renouvellement ouvre PayPal. Une fois le paiement confirme, la date d'abonnement se met a jour.</p>
       </div>
@@ -373,26 +463,34 @@
     </section>
 
     <section class="modules hidden" id="modules">
-      <article class="module">
+      <article class="module" data-market="btc" data-label="BTC">
         <div><span class="micro" style="color:var(--cyan)">BTC</span><h3>BTC Institutional Setup</h3></div>
         <p class="lead">Surveillance 24/7, zones, invalidation et alertes TradingView.</p>
         <strong style="color:var(--cyan)">85.3%</strong>
+        <div class="module-actions"><a class="btn dark" href="https://www.paypal.com/ncp/payment/SB6UU4KPJ974A" target="_blank" rel="noopener">Renouveler BTC</a></div>
       </article>
-      <article class="module">
+      <article class="module" data-market="gold" data-label="GOLD">
         <div><span class="micro" style="color:var(--gold)">Gold</span><h3>Gold Institutional Setup</h3></div>
         <p class="lead">Sessions London / New York / Asia, timing propre et lecture de liquidite.</p>
         <strong style="color:var(--gold)">83.0%</strong>
+        <div class="module-actions"><a class="btn dark" href="https://www.paypal.com/ncp/payment/DCVU8JTEY7GJ4" target="_blank" rel="noopener">Renouveler Gold</a></div>
       </article>
-      <article class="module">
+      <article class="module" data-market="nasdaq" data-label="NDX">
         <div><span class="micro" style="color:var(--cyan)">Nasdaq</span><h3>Nasdaq Institutional Setup</h3></div>
         <p class="lead">US100, sessions London / New York / Asia et alertes TradingView.</p>
         <strong style="color:var(--cyan)">81.3%</strong>
+        <div class="module-actions"><a class="btn dark" href="https://www.paypal.com/ncp/payment/VMTBQ5G9EMWTU" target="_blank" rel="noopener">Renouveler Nasdaq</a></div>
       </article>
     </section>
   </main>
 
   <script>
     const demoMode = new URLSearchParams(location.search).get("demo") === "1";
+    const paypalByMarket = {
+      btc: "https://www.paypal.com/ncp/payment/SB6UU4KPJ974A",
+      gold: "https://www.paypal.com/ncp/payment/DCVU8JTEY7GJ4",
+      nasdaq: "https://www.paypal.com/ncp/payment/VMTBQ5G9EMWTU"
+    };
 
     function escapeHTML(value) {
       return String(value ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -402,6 +500,24 @@
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) return "--";
       return new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "short", year: "numeric", timeZone: "Europe/Paris" }).format(date);
+    }
+
+    function clientMarkets(client) {
+      const source = Array.isArray(client.products) && client.products.length ? client.products.join(" ") : client.product || "";
+      const text = source.toLowerCase();
+      const markets = [];
+      if (text.includes("btc")) markets.push("btc");
+      if (text.includes("gold")) markets.push("gold");
+      if (text.includes("nasdaq")) markets.push("nasdaq");
+      return markets.length ? markets : ["btc", "gold", "nasdaq"];
+    }
+
+    function marketLabel(markets) {
+      return markets.map(value => value === "btc" ? "BTC" : value === "gold" ? "Gold" : "Nasdaq").join(" / ");
+    }
+
+    function monthlyAmount(markets) {
+      return `${(markets.length * 49.99).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} EUR`;
     }
 
     function render(client) {
@@ -418,9 +534,16 @@
       document.getElementById("endDate").textContent = formatDate(client.subscriptionEnd);
       document.getElementById("renewLink").href = client.paypalUrl || "https://www.paypal.com/ncp/payment/DCVU8JTEY7GJ4";
       document.getElementById("meter").style.setProperty("--meter", `${Math.min(100, Math.max(0, (Number(client.daysRemaining || 0) / 30) * 100))}%`);
+      const markets = clientMarkets(client);
+      document.getElementById("planAmount").textContent = `${monthlyAmount(markets)} / mois`;
+      document.getElementById("renewLink").href = markets.length === 1 ? paypalByMarket[markets[0]] : "vente.html#offers";
+      document.getElementById("renewLink").textContent = markets.length === 1 ? `Renouveler ${marketLabel(markets)}` : "Renouveler mes algos";
+      document.querySelectorAll(".module").forEach(module => {
+        module.classList.toggle("hidden", !markets.includes(module.dataset.market));
+      });
       document.getElementById("statusLine").innerHTML = [
         `<span class="tag ${active ? "green" : expired ? "red" : ""}">${active ? "Actif" : expired ? "Expire" : escapeHTML(client.status)}</span>`,
-        `<span class="tag cyan">BTC / Gold / Nasdaq</span>`,
+        `<span class="tag cyan">${escapeHTML(marketLabel(markets))}</span>`,
         `<span class="tag">TradingView</span>`
       ].join("");
       document.getElementById("accessStatus").textContent = active ? "Acces actif" : expired ? "Renouvellement requis" : client.status === "pending" ? "En validation" : "Acces bloque";
@@ -474,6 +597,7 @@
         email: "client.demo@paypal.com",
         tradingview: "ClientDemoTV",
         product: "Nasdaq Institutional Setup - 49,99 EUR / mois",
+        products: ["Nasdaq Institutional Setup - 49,99 EUR / mois"],
         subscriptionEnd: new Date(Date.now() + 24 * 86400000).toISOString(),
         daysRemaining: 24,
         paypalUrl: "https://www.paypal.com/ncp/payment/DCVU8JTEY7GJ4",

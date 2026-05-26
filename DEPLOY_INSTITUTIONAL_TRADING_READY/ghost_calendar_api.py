@@ -58,6 +58,11 @@ PAYPAL_PAYMENT_URLS = {
     "nasdaq": "https://www.paypal.com/ncp/payment/VMTBQ5G9EMWTU",
     "btc": "https://www.paypal.com/ncp/payment/SB6UU4KPJ974A",
 }
+PRODUCT_LABELS = {
+    "btc": "BTC Institutional Setup - 49,99 EUR / mois",
+    "gold": "Gold Institutional Setup - 49,99 EUR / mois",
+    "nasdaq": "Nasdaq Institutional Setup - 49,99 EUR / mois",
+}
 DONATION_EMAIL = os.environ.get("TRADING_DONATION_EMAIL", "Mehdi.parisville@outlook.com")
 DONATION_URL = os.environ.get(
     "TRADING_DONATION_URL",
@@ -505,8 +510,8 @@ def default_site_config() -> dict[str, Any]:
             "active": False,
             "title": "",
             "copy": "",
-            "cta": "Profiter de l'offre",
-            "url": PAYPAL_PAYMENT_URL,
+            "cta": "Voir l'offre",
+            "url": "#offers",
             "endsAt": "",
         }
     }
@@ -529,6 +534,29 @@ def load_site_config() -> dict[str, Any]:
 
 def save_site_config(config: dict[str, Any]) -> None:
     SITE_CONFIG_FILE.write_text(json.dumps(config, ensure_ascii=True, indent=2), encoding="utf-8")
+
+
+def parse_local_datetime(value: Any) -> datetime | None:
+    text = clean_text(value, 80)
+    if not text:
+        return None
+    try:
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=PARIS)
+    return parsed.astimezone(PARIS)
+
+
+def public_flash_payload() -> dict[str, Any]:
+    flash = dict(load_site_config().get("flash", {}))
+    ends_at = parse_local_datetime(flash.get("endsAt"))
+    if not flash.get("active") or not clean_text(flash.get("title"), 90):
+        flash["active"] = False
+    if ends_at and ends_at <= now_paris():
+        flash["active"] = False
+    return flash
 
 
 def load_analytics() -> dict[str, Any]:
@@ -680,6 +708,8 @@ def extend_subscription(item: dict[str, Any], event: dict[str, Any], transaction
 
 def paypal_url_for_product(product: str) -> str:
     text = clean_text(product, 240).lower()
+    if "+" in text or "par setup" in text or "setups" in text:
+        return "#offers"
     if "nasdaq" in text:
         return PAYPAL_PAYMENT_URLS["nasdaq"]
     if "btc" in text:
@@ -689,10 +719,46 @@ def paypal_url_for_product(product: str) -> str:
     return PAYPAL_PAYMENT_URL
 
 
+def normalize_products(data: dict[str, Any]) -> list[str]:
+    raw_products = data.get("products")
+    values: list[str] = []
+    if isinstance(raw_products, list):
+        values.extend(clean_text(item, 180) for item in raw_products)
+    elif isinstance(raw_products, str):
+        values.append(clean_text(raw_products, 320))
+    values.append(clean_text(data.get("product"), 320))
+    haystack = " ".join(values).lower()
+    selected = [label for key, label in PRODUCT_LABELS.items() if key in haystack]
+    if selected:
+        return selected[:3]
+    fallback = clean_text(data.get("product"), 320)
+    return [fallback] if fallback else []
+
+
+def product_summary(products: list[str]) -> str:
+    if not products:
+        return "Institutional Trading Setup - 49,99 EUR / mois"
+    if len(products) == 1:
+        return products[0]
+    names = []
+    for product in products:
+        text = product.lower()
+        if "btc" in text:
+            names.append("BTC")
+        elif "gold" in text:
+            names.append("Gold")
+        elif "nasdaq" in text:
+            names.append("Nasdaq")
+    if names:
+        return f"{' + '.join(names)} Institutional Setups - 49,99 EUR / mois par setup"
+    return clean_text(" + ".join(products), 320)
+
+
 def public_client_payload(item: dict[str, Any]) -> dict[str, Any]:
     subscription_end = str(item.get("subscriptionEnd") or "")
     requests = load_access_requests()
     product = item.get("product", "Institutional Trading Setup - 49,99 EUR / mois")
+    products = item.get("products") if isinstance(item.get("products"), list) else normalize_products({"product": product})
     return {
         "id": item.get("id"),
         "status": item.get("status", "pending"),
@@ -700,6 +766,7 @@ def public_client_payload(item: dict[str, Any]) -> dict[str, Any]:
         "email": item.get("email", ""),
         "tradingview": item.get("tradingview", ""),
         "product": product,
+        "products": products,
         "created_at": item.get("created_at", ""),
         "updated_at": item.get("updated_at", ""),
         "subscriptionStart": item.get("subscriptionStart", ""),
@@ -730,6 +797,7 @@ def create_access_request(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
     if len(required["clientPassword"]) < 6:
         return False, {"ok": False, "error": "password_too_short"}
 
+    products = normalize_products(data)
     now = now_paris().isoformat()
     item = {
         "id": f"req-{now_paris():%Y%m%d%H%M%S}-{uuid4().hex[:8]}",
@@ -742,7 +810,8 @@ def create_access_request(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
         "paymentProof": required["paymentProof"],
         "paymentProofImage": clean_image_data(data.get("paymentProofImage")),
         "passwordHash": hash_password(required["clientPassword"]),
-        "product": clean_text(data.get("product"), 160) or "Institutional Trading Setup - 49,99 EUR / mois",
+        "product": product_summary(products),
+        "products": products,
         "message": clean_text(data.get("message"), 1200),
         "adminNote": "",
         "subscriptionStart": "",
@@ -775,8 +844,12 @@ def update_site_config(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
     flash["title"] = clean_text(data.get("title"), 90)
     flash["copy"] = clean_text(data.get("copy"), 180)
     flash["cta"] = clean_text(data.get("cta"), 40) or "Profiter de l'offre"
-    flash["url"] = clean_text(data.get("url"), 400) or PAYPAL_PAYMENT_URL
+    flash["url"] = clean_text(data.get("url"), 400) or "#offers"
     flash["endsAt"] = clean_text(data.get("endsAt"), 80)
+    if not flash["active"]:
+        flash["title"] = ""
+        flash["copy"] = ""
+        flash["endsAt"] = ""
     config["flash"] = flash
     save_site_config(config)
     return True, {"ok": True, "config": config}
@@ -1242,8 +1315,7 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
             self.send_json({"ok": True, "messages": list(reversed(messages[-60:]))})
             return
         if path == "/api/public-config":
-            config = load_site_config()
-            self.send_json({"ok": True, "paypalUrl": PAYPAL_PAYMENT_URL, "donationUrl": DONATION_URL, "donationEmail": DONATION_EMAIL, "flash": config.get("flash", {})})
+            self.send_json({"ok": True, "paypalUrl": PAYPAL_PAYMENT_URL, "donationUrl": DONATION_URL, "donationEmail": DONATION_EMAIL, "flash": public_flash_payload()})
             return
         super().do_GET()
 

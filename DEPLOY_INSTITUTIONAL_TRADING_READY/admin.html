@@ -12,9 +12,11 @@
       --paper: #f4f0e6;
       --muted: rgba(244,240,230,.62);
       --gold: #d2a247;
+      --btc: #ff8a21;
       --green: #00c783;
       --red: #ef4560;
       --cyan: #26b7ff;
+      --violet: #8b5cf6;
     }
 
     * { box-sizing: border-box; }
@@ -22,9 +24,13 @@
       margin: 0;
       color: var(--paper);
       background:
+        linear-gradient(rgba(244,240,230,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244,240,230,.028) 1px, transparent 1px),
         radial-gradient(circle at 18% 16%, rgba(210,162,71,.14), transparent 30%),
-        radial-gradient(circle at 82% 32%, rgba(0,199,131,.11), transparent 32%),
+        radial-gradient(circle at 82% 32%, rgba(38,183,255,.13), transparent 32%),
+        radial-gradient(circle at 58% 0, rgba(255,138,33,.08), transparent 28%),
         linear-gradient(135deg, #050608, #0a0d11 60%, #050608);
+      background-size: 72px 72px, 72px 72px, auto, auto, auto, auto;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       min-height: 100vh;
     }
@@ -92,10 +98,12 @@
 
     .panel {
       border: 1px solid var(--line);
+      border-radius: 24px;
       background:
         linear-gradient(135deg, rgba(244,240,230,.07), rgba(244,240,230,.02)),
         rgba(8,10,13,.82);
       box-shadow: 0 34px 110px rgba(0,0,0,.38);
+      overflow: hidden;
     }
 
     .login {
@@ -111,11 +119,18 @@
       padding: 0 13px;
       color: var(--paper);
       border: 1px solid var(--line);
+      border-radius: 14px;
       background: rgba(244,240,230,.055);
       outline: 0;
     }
 
     textarea { min-height: 82px; padding-top: 12px; resize: vertical; }
+
+    input:focus,
+    textarea:focus {
+      border-color: rgba(38,183,255,.56);
+      box-shadow: 0 0 0 3px rgba(38,183,255,.10), 0 0 34px rgba(38,183,255,.08);
+    }
 
     .btn {
       min-height: 48px;
@@ -125,15 +140,18 @@
       gap: 8px;
       padding: 0 18px;
       border: 1px solid rgba(244,240,230,.2);
+      border-radius: 999px;
       color: var(--paper);
       background: transparent;
       text-decoration: none;
       cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
     }
 
     .btn.gold { color: #07090c; background: var(--gold); border-color: var(--gold); }
     .btn.green { color: #07090c; background: var(--green); border-color: var(--green); }
     .btn.red { color: #fff; background: var(--red); border-color: var(--red); }
+    .btn:hover { transform: translateY(-2px); border-color: rgba(38,183,255,.48); box-shadow: 0 18px 54px rgba(0,0,0,.22); }
     .btn:disabled { opacity: .5; cursor: not-allowed; }
 
     .stats {
@@ -446,6 +464,167 @@
 
     .note { grid-column: 1 / -1; }
     .end-date { grid-column: 1 / -1; min-height: 42px; }
+
+    .offer-command {
+      position: relative;
+      display: grid;
+      gap: 16px;
+      padding: 0;
+      background:
+        radial-gradient(circle at 82% 0, rgba(38,183,255,.16), transparent 25rem),
+        radial-gradient(circle at 10% 0, rgba(255,138,33,.14), transparent 22rem),
+        linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.025)),
+        rgba(7,9,12,.88);
+    }
+
+    .offer-command-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, .78fr);
+      gap: 16px;
+      padding: 18px;
+    }
+
+    .offer-fields,
+    .offer-preview {
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .offer-switch {
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 0 14px;
+      border: 1px solid rgba(244,240,230,.13);
+      border-radius: 18px;
+      background: rgba(255,255,255,.045);
+    }
+
+    .duration-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .duration-btn {
+      min-height: 40px;
+      border: 1px solid rgba(244,240,230,.14);
+      border-radius: 999px;
+      color: rgba(244,240,230,.78);
+      background: rgba(255,255,255,.045);
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .duration-btn:hover,
+    .duration-btn.active {
+      color: #07090c;
+      border-color: var(--gold);
+      background: linear-gradient(135deg, #fff0a6, var(--gold), var(--btc));
+      box-shadow: 0 18px 54px rgba(210,162,71,.18);
+    }
+
+    .offer-preview {
+      align-content: stretch;
+      padding: 16px;
+      border: 1px solid rgba(244,240,230,.13);
+      border-radius: 22px;
+      background:
+        linear-gradient(rgba(244,240,230,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244,240,230,.045) 1px, transparent 1px),
+        rgba(3,5,8,.54);
+      background-size: 34px 34px, 34px 34px, auto;
+    }
+
+    .offer-preview-card {
+      position: relative;
+      min-height: 210px;
+      display: grid;
+      align-content: space-between;
+      gap: 18px;
+      padding: 20px;
+      border: 1px solid rgba(210,162,71,.28);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 82% 18%, rgba(210,162,71,.20), transparent 18rem),
+        radial-gradient(circle at 12% 16%, rgba(38,183,255,.13), transparent 16rem),
+        linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.025)),
+        rgba(5,7,10,.82);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.09), 0 30px 90px rgba(0,0,0,.26);
+      overflow: hidden;
+    }
+
+    .offer-preview-card::after {
+      content: "LIVE";
+      position: absolute;
+      right: -10px;
+      bottom: -16px;
+      color: rgba(210,162,71,.13);
+      font-size: 90px;
+      font-weight: 950;
+      letter-spacing: -.08em;
+    }
+
+    .offer-preview-card h3 {
+      margin: 8px 0 0;
+      font-size: clamp(28px, 2.8vw, 44px);
+      line-height: .95;
+    }
+
+    .offer-preview-copy {
+      color: rgba(244,240,230,.70);
+      font-weight: 760;
+      line-height: 1.55;
+    }
+
+    .offer-timer {
+      min-height: 54px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      padding: 0 16px;
+      border: 1px solid rgba(244,240,230,.16);
+      border-radius: 999px;
+      color: var(--gold);
+      background: rgba(0,0,0,.22);
+      font-size: 18px;
+      font-weight: 950;
+      letter-spacing: .06em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .product-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .product-pill {
+      min-height: 26px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 9px;
+      border: 1px solid rgba(244,240,230,.14);
+      border-radius: 999px;
+      color: rgba(244,240,230,.78);
+      background: rgba(255,255,255,.045);
+      font-size: 9px;
+      font-weight: 950;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .product-pill.btc { color: var(--btc); border-color: rgba(255,138,33,.36); }
+    .product-pill.gold { color: var(--gold); border-color: rgba(210,162,71,.36); }
+    .product-pill.nasdaq { color: var(--cyan); border-color: rgba(38,183,255,.36); }
     .empty { padding: 38px; color: var(--muted); font-weight: 820; }
     .hidden { display: none; }
 
@@ -460,7 +639,9 @@
       .request-card,
       .request-grid,
       .webhook-item,
-      .donation-item { grid-template-columns: 1fr; }
+      .donation-item,
+      .offer-command-body,
+      .duration-grid { grid-template-columns: 1fr; }
       h1 { font-size: clamp(46px, 14vw, 72px); }
     }
   </style>
@@ -472,7 +653,7 @@
         <span class="mark">TI</span>
         <span><strong>Institutional Trading</strong><br><span class="micro">Administration</span></span>
       </a>
-      <a class="btn" href="vente-v12.html#contact">Retour site</a>
+      <a class="btn" href="vente.html#contact">Retour site</a>
     </div>
   </header>
 
@@ -529,18 +710,43 @@
           </div>
           <div class="analytics-list" id="topPages"></div>
         </div>
-        <form class="panel ops-panel" id="flashForm">
-          <div class="section-title micro"><span>Vente flash</span><span id="flashState">Inactive</span></div>
-          <label style="display:flex;gap:10px;align-items:center"><input type="checkbox" name="active" style="width:auto;min-height:auto"> Activer sur le site</label>
-          <input name="title" placeholder="Titre ex : Offre flash -20%">
-          <textarea name="copy" placeholder="Texte court affiche sous la barre"></textarea>
-          <div class="ops-row">
-            <input name="cta" placeholder="Bouton ex : Profiter">
-            <input name="endsAt" type="datetime-local">
+        <form class="panel ops-panel offer-command" id="flashForm">
+          <div class="section-title micro"><span>Offre speciale site</span><span id="flashState">Inactive</span></div>
+          <div class="offer-command-body">
+            <div class="offer-fields">
+              <label class="offer-switch">
+                <span>Activer sur le site</span>
+                <input type="checkbox" name="active" style="width:auto;min-height:auto">
+              </label>
+              <input name="title" placeholder="Titre ex : Offre speciale week-end">
+              <textarea name="copy" placeholder="Message court affiche sur vente.html avec minuteur"></textarea>
+              <div class="duration-grid" aria-label="Duree rapide">
+                <button class="duration-btn" type="button" data-duration-minutes="60">1h</button>
+                <button class="duration-btn" type="button" data-duration-minutes="180">3h</button>
+                <button class="duration-btn" type="button" data-duration-minutes="1440">24h</button>
+                <button class="duration-btn" type="button" data-duration-minutes="2880">48h</button>
+                <button class="duration-btn" type="button" data-duration-minutes="10080">7j</button>
+              </div>
+              <div class="ops-row">
+                <input name="cta" placeholder="Bouton ex : Voir l'offre">
+                <input name="endsAt" type="datetime-local">
+              </div>
+              <input name="url" placeholder="Lien de destination, ex : #offers ou lien PayPal">
+              <button class="btn gold" type="submit">Publier l'offre speciale</button>
+              <p class="lead" id="flashStatus"></p>
+            </div>
+            <aside class="offer-preview" aria-label="Preview de l'offre speciale">
+              <span class="micro" style="color:var(--gold)">Preview site</span>
+              <div class="offer-preview-card">
+                <div>
+                  <span class="micro" id="offerPreviewState">Inactive</span>
+                  <h3 id="offerPreviewTitle">Offre speciale</h3>
+                </div>
+                <p class="offer-preview-copy" id="offerPreviewCopy">Choisis une duree, active l'offre et elle apparaitra sur le site avec timer.</p>
+                <div class="offer-timer" id="offerPreviewTimer">--:--:--</div>
+              </div>
+            </aside>
           </div>
-          <input name="url" placeholder="Lien du bouton">
-          <button class="btn gold" type="submit">Publier la vente flash</button>
-          <p class="lead" id="flashStatus"></p>
         </form>
       </div>
       <div class="logs-grid">
@@ -566,6 +772,7 @@
     let analytics = { online: 0, visitorsToday: 0, pageViewsToday: 0, topPages: [] };
     let siteConfig = { flash: {} };
     const demoMode = new URLSearchParams(location.search).get("demo") === "1";
+    let offerPreviewInterval = null;
 
     function escapeHTML(value) {
       return String(value ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -613,6 +820,46 @@
       return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
     }
 
+    function formatCountdown(value) {
+      const end = new Date(value);
+      if (Number.isNaN(end.getTime())) return "Duree libre";
+      const ms = Math.max(0, end.getTime() - Date.now());
+      const total = Math.floor(ms / 1000);
+      const days = Math.floor(total / 86400);
+      const hours = Math.floor((total % 86400) / 3600);
+      const minutes = Math.floor((total % 3600) / 60);
+      const seconds = total % 60;
+      if (total <= 0) return "Expiree";
+      return days > 0
+        ? `${days}j ${String(hours).padStart(2, "0")}h ${String(minutes).padStart(2, "0")}m`
+        : `${String(hours).padStart(2, "0")}h ${String(minutes).padStart(2, "0")}m ${String(seconds).padStart(2, "0")}s`;
+    }
+
+    function setOfferDuration(minutes) {
+      const form = document.getElementById("flashForm");
+      const end = new Date(Date.now() + Number(minutes) * 60000);
+      form.elements.endsAt.value = localInputDate(end.toISOString());
+      document.querySelectorAll(".duration-btn").forEach(button => {
+        button.classList.toggle("active", button.dataset.durationMinutes === String(minutes));
+      });
+      updateOfferPreview();
+    }
+
+    function updateOfferPreview() {
+      const form = document.getElementById("flashForm");
+      if (!form) return;
+      const active = form.elements.active.checked;
+      const title = form.elements.title.value.trim() || "Offre speciale";
+      const copy = form.elements.copy.value.trim() || "Choisis une duree, active l'offre et elle apparaitra sur le site avec timer.";
+      const endsAt = form.elements.endsAt.value;
+      document.getElementById("offerPreviewState").textContent = active ? "Active sur le site" : "Preview inactive";
+      document.getElementById("offerPreviewTitle").textContent = title;
+      document.getElementById("offerPreviewCopy").textContent = copy;
+      document.getElementById("offerPreviewTimer").textContent = formatCountdown(endsAt);
+      const endTime = endsAt ? new Date(endsAt).getTime() : 0;
+      document.getElementById("flashState").textContent = active && endTime && endTime <= Date.now() ? "Expiree" : active ? "Active" : "Inactive";
+    }
+
     function fillFlashForm() {
       const flash = siteConfig.flash || {};
       const form = document.getElementById("flashForm");
@@ -622,7 +869,7 @@
       form.elements.cta.value = flash.cta || "";
       form.elements.url.value = flash.url || "";
       form.elements.endsAt.value = localInputDate(flash.endsAt);
-      document.getElementById("flashState").textContent = flash.active ? "Active" : "Inactive";
+      updateOfferPreview();
     }
 
     function referralFor(item) {
@@ -631,6 +878,26 @@
       const pending = requests.filter(child => String(child.usedReferralCode || "").toUpperCase() === code && child.status === "pending").length;
       const reward = approved >= 10 ? "1 mois gratuit" : approved >= 5 ? "Bot -50%" : "Aucun palier";
       return { code, approved, pending, reward };
+    }
+
+    function productCount(item) {
+      if (Array.isArray(item.products) && item.products.length) return item.products.length;
+      const text = String(item.product || "").toLowerCase();
+      const markets = ["btc", "gold", "nasdaq"].filter(market => text.includes(market));
+      return Math.max(1, markets.length);
+    }
+
+    function productPills(item) {
+      const source = Array.isArray(item.products) && item.products.length ? item.products.join(" ") : item.product || "";
+      const text = source.toLowerCase();
+      const markets = [
+        ["btc", "BTC"],
+        ["gold", "Gold"],
+        ["nasdaq", "Nasdaq"]
+      ].filter(([key]) => text.includes(key));
+      return (markets.length ? markets : [["gold", "Setup"]])
+        .map(([key, label]) => `<span class="product-pill ${key}">${label}</span>`)
+        .join("");
     }
 
     async function api(path, options = {}) {
@@ -654,7 +921,9 @@
       const rejected = requests.filter(item => item.status === "rejected").length;
       const referralTotal = requests.filter(item => item.status === "approved" && item.usedReferralCode).length;
       const activeClients = requests.filter(item => item.status === "approved" && new Date(item.subscriptionEnd).getTime() > Date.now()).length;
-      const subscriptionRevenue = activeClients * 49.99;
+      const subscriptionRevenue = requests
+        .filter(item => item.status === "approved" && new Date(item.subscriptionEnd).getTime() > Date.now())
+        .reduce((sum, item) => sum + productCount(item) * 49.99, 0);
       const confirmedDonations = donations.filter(item => item.status === "confirmed");
       const confirmedDonationTotal = confirmedDonations.reduce((sum, item) => sum + Number(item.amount || 0), 0);
       const totalCash = subscriptionRevenue + confirmedDonationTotal;
@@ -729,7 +998,7 @@
               <div><span class="micro">E-mail PayPal</span><strong>${escapeHTML(item.email)}</strong></div>
               <div><span class="micro">TradingView</span><strong style="color:var(--cyan)">${escapeHTML(item.tradingview)}</strong></div>
               <div><span class="micro">Fin abonnement</span><strong>${escapeHTML(formatDate(item.subscriptionEnd))}</strong><span class="micro">${escapeHTML(remaining(item.subscriptionEnd))}</span></div>
-              <div><span class="micro">Offre</span><strong>${escapeHTML(item.product)}</strong></div>
+              <div><span class="micro">Offre</span><strong>${escapeHTML(item.product)}</strong><span class="product-pills">${productPills(item)}</span></div>
               <div><span class="micro">Code parrain</span><strong style="color:var(--gold)">${escapeHTML(referral.code || "-")}</strong><span class="micro">${referral.approved} valides / ${referral.pending} attente</span></div>
               <div><span class="micro">Code utilise</span><strong>${escapeHTML(item.usedReferralCode || "-")}</strong><span class="micro">${escapeHTML(referral.reward)}</span></div>
             </div>
@@ -771,9 +1040,9 @@
         ];
         donations = [{ id: "don-demo-1", created_at: now.toISOString(), status: "confirmed", name: "Supporter Demo", email: "donateur@email.com", amount: 25, message: "Don confirme par PayPal", transaction_id: "PAYPAL-DON-DEMO", source: "paypal_webhook", verified: true, verification_status: "SUCCESS" }];
         donationTotal = 25;
-        analytics = { online: 7, visitorsToday: 42, pageViewsToday: 118, updated_at: now.toISOString(), topPages: [{ page: "/vente-v12.html", views: 81 }, { page: "/vente-v12.html#offers", views: 22 }, { page: "/client.html", views: 15 }] };
+        analytics = { online: 7, visitorsToday: 42, pageViewsToday: 118, updated_at: now.toISOString(), topPages: [{ page: "/vente.html", views: 81 }, { page: "/vente.html#offers", views: 22 }, { page: "/client.html", views: 15 }] };
         chatMessages = [{ created_at: now.toISOString(), sender: "client", name: "Prospect Demo", email: "prospect@email.com", message: "Bonjour, je veux le Nasdaq." }];
-        siteConfig = { flash: { active: true, title: "Offre flash membre", copy: "BTC, Gold ou Nasdaq : 49,99 EUR / mois par algo.", cta: "Acceder", url: "vente-v12.html#offers", endsAt: "" } };
+        siteConfig = { flash: { active: true, title: "Offre speciale membre", copy: "BTC, Gold ou Nasdaq : 49,99 EUR / mois par algo.", cta: "Voir l'offre", url: "vente.html#offers", endsAt: new Date(Date.now() + 48 * 60 * 60000).toISOString() } };
         document.getElementById("desk").classList.remove("hidden");
         document.getElementById("loginStatus").textContent = "Mode test charge.";
         render();
@@ -854,6 +1123,14 @@
       const status = document.getElementById("flashStatus");
       const data = Object.fromEntries(new FormData(form).entries());
       data.active = form.elements.active.checked;
+      if (data.active && !data.endsAt) {
+        setOfferDuration(2880);
+        data.endsAt = form.elements.endsAt.value;
+      }
+      data.title = data.title || "Offre speciale Institutional Trading";
+      data.copy = data.copy || "Acces limite dans le temps. Le timer est affiche sur le site.";
+      data.cta = data.cta || "Voir l'offre";
+      data.url = data.url || "#offers";
       status.textContent = "Publication...";
       try {
         const payload = await api("/api/admin/site-config", {
@@ -861,12 +1138,18 @@
           body: JSON.stringify(data)
         });
         siteConfig = payload.config || siteConfig;
-        status.textContent = "Vente flash publiee.";
+        status.textContent = data.active ? `Offre publiee. Fin : ${formatDate(data.endsAt)}` : "Offre desactivee.";
         render();
       } catch (error) {
         status.textContent = "Impossible de publier.";
       }
     });
+
+    document.getElementById("flashForm").addEventListener("input", updateOfferPreview);
+    document.querySelectorAll(".duration-btn").forEach(button => {
+      button.addEventListener("click", () => setOfferDuration(button.dataset.durationMinutes));
+    });
+    offerPreviewInterval = setInterval(updateOfferPreview, 1000);
 
     if (demoMode) {
       document.getElementById("password").value = "demo";

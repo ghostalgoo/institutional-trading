@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -18,6 +18,7 @@
       --line: rgba(244,240,230,.14);
       --line-2: rgba(244,240,230,.24);
       --gold: #d2a247;
+      --btc: #ff8a21;
       --green: #00c783;
       --cyan: #26b7ff;
       --red: #ef4560;
@@ -58,25 +59,22 @@
 
     .nav {
       position: fixed;
-      inset: 0 0 auto;
+      inset: 12px 0 auto;
       z-index: 100;
-      border-bottom: 1px solid rgba(210,162,71,.12);
-      background:
-        radial-gradient(circle at 18% 0, rgba(210,162,71,.13), transparent 28%),
-        linear-gradient(180deg, rgba(3,4,6,.9), rgba(3,4,6,.68));
-      box-shadow: 0 18px 70px rgba(0,0,0,.28);
-      backdrop-filter: blur(22px);
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      pointer-events: none;
+      transition: background .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+
+    .nav.is-scrolled {
+      background: transparent;
+      box-shadow: none;
     }
 
     .nav::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: -1px;
-      width: min(860px, 70vw);
-      height: 1px;
-      transform: translateX(-50%);
-      background: linear-gradient(90deg, transparent, rgba(210,162,71,.62), transparent);
+      display: none;
     }
 
     .boot-loader {
@@ -270,6 +268,12 @@
       to { transform: translateX(130%); }
     }
 
+    @keyframes headerSweep {
+      0%, 100% { transform: translateX(-72%); opacity: .18; }
+      48% { opacity: .72; }
+      76% { transform: translateX(72%); opacity: .20; }
+    }
+
     @keyframes candlePulse {
       50% { transform: translateY(-10px) scaleY(1.12); filter: brightness(1.25); }
     }
@@ -284,12 +288,63 @@
     }
 
     .nav-inner {
-      min-height: 66px;
+      min-height: 68px;
       display: grid;
-      grid-template-columns: minmax(260px, 330px) 1fr auto;
+      grid-template-columns: minmax(230px, 320px) auto auto auto;
       justify-content: space-between;
-      gap: 18px;
+      gap: 14px;
       align-items: center;
+      padding: 8px 10px 8px 14px;
+      border: 1px solid rgba(244,240,230,.13);
+      border-radius: 24px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.025)),
+        radial-gradient(circle at 12% 0, rgba(210,162,71,.16), transparent 25%),
+        radial-gradient(circle at 84% 0, rgba(38,183,255,.12), transparent 28%),
+        rgba(5,7,10,.82);
+      box-shadow: 0 24px 86px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.1);
+      backdrop-filter: blur(24px);
+      pointer-events: auto;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transition: min-height .24s ease, background .24s ease, border-color .24s ease, box-shadow .24s ease;
+    }
+
+    .nav-inner::before,
+    .nav-inner::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .nav-inner::before {
+      inset: 0;
+      background:
+        linear-gradient(110deg, transparent 0 38%, rgba(255,255,255,.16), transparent 58%),
+        radial-gradient(circle at var(--nav-glow-x, 82%) 50%, rgba(38,183,255,.18), transparent 18rem);
+      transform: translateX(-72%);
+      animation: headerSweep 7s ease-in-out infinite;
+    }
+
+    .nav-inner::after {
+      left: 18px;
+      right: 18px;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,138,33,.45), rgba(210,162,71,.62), rgba(38,183,255,.45), transparent);
+      opacity: .72;
+    }
+
+    .nav.is-scrolled .nav-inner {
+      min-height: 60px;
+      border-color: rgba(244,240,230,.18);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.1), rgba(255,255,255,.03)),
+        radial-gradient(circle at 72% 0, rgba(210,162,71,.14), transparent 22%),
+        rgba(3,4,6,.92);
+      box-shadow: 0 22px 92px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.1);
     }
 
     .brand {
@@ -300,8 +355,8 @@
     }
 
     .brand-logo {
-      width: 52px;
-      height: 48px;
+      width: 48px;
+      height: 46px;
       flex: 0 0 auto;
       overflow: hidden;
       border: 1px solid rgba(210,162,71,.34);
@@ -340,43 +395,35 @@
     .nav-links {
       display: flex;
       justify-content: center;
-      gap: clamp(14px, 2.5vw, 34px);
-      padding: 0;
+      gap: 4px;
+      min-height: 44px;
+      padding: 5px;
       color: rgba(244,240,230,.62);
-      border: 0;
-      background: transparent;
+      border: 1px solid rgba(244,240,230,.09);
+      border-radius: 999px;
+      background: rgba(255,255,255,.04);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
     }
 
     .nav-links a {
       position: relative;
-      min-height: 34px;
+      min-height: 32px;
       display: inline-flex;
       align-items: center;
-      padding: 0;
+      padding: 0 13px;
       border: 0;
-      border-radius: 0;
-      transition: color .2s ease;
+      border-radius: 999px;
+      transition: color .2s ease, background .2s ease, transform .2s ease;
     }
 
     .nav-links a::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 3px;
-      height: 1px;
-      transform: scaleX(0);
-      transform-origin: left center;
-      background: linear-gradient(90deg, var(--gold), transparent);
-      transition: transform .24s ease;
+      display: none;
     }
 
     .nav-links a:hover {
       color: var(--paper);
-    }
-
-    .nav-links a:hover::after {
-      transform: scaleX(1);
+      background: rgba(244,240,230,.08);
+      transform: translateY(-1px);
     }
 
     .nav-actions {
@@ -386,40 +433,141 @@
     }
 
     .nav-actions .btn {
-      min-height: 36px;
-      padding: 0 15px;
+      min-height: 44px;
+      padding: 0 17px;
       border-radius: 999px;
       border-color: rgba(244,240,230,.14);
-      background: rgba(255,255,255,.018);
+      background: rgba(255,255,255,.045);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
     }
 
     .nav-actions .btn.gold {
-      box-shadow: 0 0 34px rgba(210,162,71,.2);
+      color: #07090c;
+      border-color: rgba(210,162,71,.75);
+      background: linear-gradient(135deg, #fff0a6, var(--gold), #ff9b26);
+      box-shadow: 0 0 34px rgba(210,162,71,.24), inset 0 1px 0 rgba(255,255,255,.35);
+    }
+
+    .nav-socials {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 44px;
+      padding: 5px;
+      border: 1px solid rgba(244,240,230,.12);
+      border-radius: 999px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.025)),
+        rgba(3,5,9,.48);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 16px 46px rgba(0,0,0,.24);
+    }
+
+    .nav-socials span {
+      padding: 0 8px 0 7px;
+      color: rgba(244,240,230,.55);
+      font-size: 9px;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .nav-social {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(244,240,230,.13);
+      border-radius: 999px;
+      color: var(--paper);
+      font-size: 9px;
+      font-weight: 950;
+      letter-spacing: .04em;
+      background: rgba(255,255,255,.05);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+
+    .nav-social:hover {
+      transform: translateY(-2px) scale(1.04);
+    }
+
+    .nav-social.telegram {
+      border-color: rgba(38,183,255,.36);
+      background: rgba(38,183,255,.10);
+      box-shadow: 0 0 26px rgba(38,183,255,.14), inset 0 1px 0 rgba(255,255,255,.1);
+    }
+
+    .nav-social.discord {
+      border-color: rgba(139,92,246,.42);
+      background: rgba(139,92,246,.12);
+      box-shadow: 0 0 26px rgba(139,92,246,.16), inset 0 1px 0 rgba(255,255,255,.1);
     }
 
     .flash-bar {
       position: fixed;
       left: 50%;
-      top: 72px;
+      top: 86px;
       z-index: 98;
-      width: min(980px, calc(100% - 32px));
+      width: min(1120px, calc(100% - 32px));
       transform: translateX(-50%);
       display: none;
+      grid-template-columns: minmax(0, 1fr) auto auto;
       align-items: center;
-      justify-content: space-between;
       gap: 16px;
-      padding: 12px 14px;
+      padding: 12px;
       border: 1px solid rgba(210,162,71,.42);
-      background: rgba(8,10,13,.92);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 18% 0, rgba(255,138,33,.18), transparent 24rem),
+        radial-gradient(circle at 82% 0, rgba(38,183,255,.16), transparent 24rem),
+        linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.03)),
+        rgba(8,10,13,.94);
       color: var(--paper);
       box-shadow: 0 24px 70px rgba(0,0,0,.32);
       backdrop-filter: blur(18px);
+      overflow: hidden;
     }
 
-    .flash-bar.active { display: flex; }
-    .flash-bar strong { font-size: 14px; }
+    .flash-bar::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+      transform: translateX(-110%);
+      animation: offerScan 7s ease-in-out infinite;
+    }
+
+    .flash-bar.active { display: grid; }
+    .flash-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .flash-bar strong { font-size: 14px; color: var(--gold); }
     .flash-bar span { color: rgba(244,240,230,.72); font-size: 12px; font-weight: 820; }
+    .flash-countdown {
+      position: relative;
+      z-index: 1;
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 14px;
+      border: 1px solid rgba(244,240,230,.16);
+      border-radius: 999px;
+      color: var(--paper);
+      background: rgba(0,0,0,.22);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
     .flash-bar .btn { min-height: 34px; padding: 0 12px; }
 
     .btn {
@@ -3454,11 +3602,12 @@
     .chat-body {
       display: grid;
       gap: 10px;
-      max-height: 240px;
-      overflow: auto;
+      max-height: none;
+      overflow: hidden;
     }
 
-    .chat-msg {
+    .chat-msg,
+    .confidential-note {
       padding: 10px;
       color: rgba(244,240,230,.82);
       background: rgba(244,240,230,.06);
@@ -3476,6 +3625,29 @@
 
     .chat-msg.client {
       background: rgba(244,240,230,.075);
+    }
+
+    .confidential-note {
+      display: grid;
+      gap: 8px;
+      color: rgba(244,240,230,.74);
+      background:
+        radial-gradient(circle at 0 0, rgba(38,183,255,.13), transparent 15rem),
+        rgba(244,240,230,.045);
+    }
+
+    .confidential-note strong {
+      color: var(--paper);
+      font-size: 15px;
+      line-height: 1.15;
+    }
+
+    .confidential-note span {
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
     }
 
     .chat-msg b {
@@ -3582,6 +3754,73 @@
       color: #4e5b55;
       font-weight: 820;
       line-height: 1.45;
+    }
+
+    .setup-picker {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .setup-choice {
+      position: relative;
+      min-width: 0;
+      cursor: pointer;
+    }
+
+    .setup-choice input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .setup-choice-body {
+      min-height: 112px;
+      display: grid;
+      align-content: space-between;
+      gap: 10px;
+      padding: 15px;
+      border: 1px solid rgba(244,240,230,.14);
+      border-radius: 18px;
+      color: rgba(244,240,230,.78);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.025)),
+        rgba(5,7,10,.52);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease;
+    }
+
+    .setup-choice-body strong {
+      color: var(--paper);
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .setup-choice-body span {
+      color: rgba(244,240,230,.58);
+      font-size: 11px;
+      font-weight: 850;
+      line-height: 1.35;
+    }
+
+    .setup-choice.btc .setup-choice-body strong { color: var(--btc); }
+    .setup-choice.gold .setup-choice-body strong { color: var(--gold); }
+    .setup-choice.nasdaq .setup-choice-body strong { color: var(--cyan); }
+
+    .setup-choice input:checked + .setup-choice-body {
+      transform: translateY(-3px);
+      color: var(--paper);
+      border-color: currentColor;
+      background:
+        radial-gradient(circle at 82% 0, color-mix(in srgb, currentColor 22%, transparent), transparent 18rem),
+        linear-gradient(135deg, rgba(255,255,255,.13), rgba(255,255,255,.035)),
+        rgba(5,7,10,.72);
+      box-shadow: 0 18px 56px rgba(0,0,0,.26), 0 0 40px color-mix(in srgb, currentColor 18%, transparent), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .setup-choice input:focus-visible + .setup-choice-body {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
     }
 
     #contact {
@@ -3808,13 +4047,16 @@
     footer {
       padding: 34px 0;
       color: rgba(244,240,230,.68);
-      background: #050608;
+      background:
+        radial-gradient(circle at 18% 0, rgba(210,162,71,.12), transparent 24rem),
+        radial-gradient(circle at 82% 0, rgba(38,183,255,.10), transparent 24rem),
+        #050608;
     }
 
     .footer-inner {
-      display: flex;
-      justify-content: space-between;
-      gap: 18px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
       font-size: 11px;
       font-weight: 850;
       letter-spacing: .08em;
@@ -3823,21 +4065,21 @@
 
     [data-reveal] {
       opacity: 0;
-      filter: blur(10px);
+      filter: none;
       transform: translate3d(0, 36px, 0) scale(.985);
-      transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1), filter .7s ease;
+      transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1);
     }
 
     [data-reveal].visible,
     .hero [data-reveal] {
       opacity: 1;
-      filter: blur(0);
       transform: none;
     }
 
     @media (max-width: 1180px) {
       .nav-inner { grid-template-columns: 1fr auto; }
       .nav-links { display: none; }
+      .nav-socials { display: none; }
       .hero-grid,
       .section-head,
       .process-grid,
@@ -3887,7 +4129,7 @@
     @media (max-width: 760px) {
       .wrap { width: min(var(--max), calc(100% - 28px)); }
       .nav-actions .btn:not(.gold) { display: none; }
-      .nav-inner { min-height: 70px; gap: 12px; }
+      .nav-inner { min-height: 66px; gap: 12px; border-radius: 20px; }
       .brand-logo { width: 48px; height: 40px; }
       .brand strong { font-size: 11px; }
       .brand-copy span { display: none; }
@@ -3902,6 +4144,23 @@
       .hero-actions .btn {
         width: 100%;
       }
+
+      .flash-bar {
+        top: 82px;
+        grid-template-columns: 1fr;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .flash-countdown,
+      .flash-bar .btn {
+        width: 100%;
+      }
+
+      .setup-picker {
+        grid-template-columns: 1fr;
+      }
+
       .proof-strip,
       .stat-metrics,
       .product-points,
@@ -3977,6 +4236,1287 @@
       }
       .market-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
+
+    /* Premium polish pass: hero + offers + mobile only */
+    .hero {
+      min-height: 104vh;
+      background:
+        linear-gradient(90deg, rgba(3,4,7,.96) 0%, rgba(3,4,7,.78) 34%, rgba(3,4,7,.24) 100%),
+        radial-gradient(circle at 14% 72%, rgba(255,122,24,.24), transparent 32rem),
+        radial-gradient(circle at 74% 20%, rgba(38,183,255,.20), transparent 34rem),
+        url("assets/trading-command-center-bg-v2.png") center / cover no-repeat;
+    }
+
+    .hero::before {
+      background:
+        linear-gradient(rgba(244,240,230,.038) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244,240,230,.032) 1px, transparent 1px),
+        radial-gradient(ellipse 60% 42% at 20% 78%, rgba(0,199,131,.20), transparent 70%),
+        radial-gradient(ellipse 44% 32% at 82% 22%, rgba(210,162,71,.18), transparent 66%),
+        linear-gradient(180deg, transparent 0 62%, rgba(5,6,8,.96));
+      background-size: 76px 76px, 76px 76px, auto, auto, auto;
+      animation: premiumGridDrift 28s linear infinite;
+    }
+
+    .hero-copy {
+      position: relative;
+      max-width: 760px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+
+    .hero-copy::after {
+      content: "";
+      position: absolute;
+      left: 24px;
+      right: 48%;
+      bottom: -18px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--cyan), transparent);
+      box-shadow: 0 0 32px rgba(210,162,71,.38);
+      pointer-events: none;
+    }
+
+    .hero h1 {
+      max-width: 760px;
+      font-size: clamp(62px, 6.05vw, 112px);
+      text-shadow: 0 20px 72px rgba(0,0,0,.62);
+    }
+
+    .hero .lead {
+      max-width: 660px;
+      color: rgba(244,240,230,.86);
+      font-size: clamp(16px, 1.05vw, 19px);
+    }
+
+    .hero-actions .btn {
+      min-height: 48px;
+      border-radius: 999px;
+      box-shadow: 0 18px 46px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.10);
+    }
+
+    .hero-actions .btn.gold {
+      background: linear-gradient(135deg, #fff0a8 0%, var(--gold) 48%, #ff8a21 100%);
+      box-shadow: 0 22px 70px rgba(255,138,33,.30), 0 0 34px rgba(210,162,71,.20);
+    }
+
+    .social-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .social-link {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 0 15px;
+      border: 1px solid rgba(244,240,230,.14);
+      border-radius: 999px;
+      color: rgba(244,240,230,.92);
+      background: rgba(255,255,255,.055);
+      box-shadow: 0 14px 38px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.08);
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transition: transform .22s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease;
+    }
+
+    .social-link::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: currentColor;
+      box-shadow: 0 0 18px currentColor;
+    }
+
+    .social-link:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,.085);
+    }
+
+    .social-link.telegram {
+      color: #6ed4ff;
+      border-color: rgba(110,212,255,.24);
+    }
+
+    .social-link.discord {
+      color: #a9b7ff;
+      border-color: rgba(169,183,255,.24);
+    }
+
+    .community-card {
+      margin-top: 22px;
+      padding: 20px;
+      border: 1px solid rgba(244,240,230,.13);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 12% 0, rgba(38,183,255,.16), transparent 18rem),
+        radial-gradient(circle at 100% 18%, rgba(139,92,246,.14), transparent 18rem),
+        linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
+      box-shadow: 0 24px 78px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .community-card p {
+      margin-top: 10px;
+      color: rgba(244,240,230,.72);
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 760;
+    }
+
+    .proof-strip {
+      overflow: hidden;
+      border-radius: 20px;
+      background: rgba(8,10,13,.72);
+      box-shadow: 0 26px 90px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .proof-strip strong {
+      letter-spacing: -.04em;
+    }
+
+    .tv-shell {
+      border-color: rgba(210,162,71,.34);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 84% 0, rgba(38,183,255,.16), transparent 20rem),
+        radial-gradient(circle at 18% 100%, rgba(255,138,33,.12), transparent 22rem),
+        rgba(7,9,12,.94);
+      box-shadow: 0 72px 170px rgba(0,0,0,.62), 0 0 74px rgba(38,183,255,.12), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .tv-shell::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 7;
+      pointer-events: none;
+      border-radius: inherit;
+      background: linear-gradient(115deg, transparent 0 42%, rgba(255,255,255,.11), transparent 58%);
+      transform: translateX(-120%);
+      animation: premiumPanelSweep 7s ease-in-out infinite;
+    }
+
+    .float-card,
+    .execution-card {
+      border-radius: 18px;
+      border-color: rgba(244,240,230,.18);
+      background: rgba(7,9,12,.86);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 28px 90px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    #offers {
+      position: relative;
+      color: var(--paper);
+      background:
+        radial-gradient(circle at 12% 0, rgba(210,162,71,.16), transparent 28rem),
+        radial-gradient(circle at 50% 0, rgba(38,183,255,.12), transparent 30rem),
+        radial-gradient(circle at 88% 10%, rgba(255,138,33,.14), transparent 30rem),
+        #050608;
+    }
+
+    #offers .section-head {
+      border-color: rgba(244,240,230,.12);
+    }
+
+    #offers .section-head h2 {
+      color: var(--paper);
+      background: linear-gradient(180deg, #fff8e8 0%, #e2d6bd 72%, rgba(210,162,71,.8) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 42px rgba(210,162,71,.13);
+    }
+
+    #offers .eyebrow {
+      color: var(--gold);
+    }
+
+    .algo-card {
+      position: relative;
+      min-height: 560px;
+      min-width: 0;
+      aspect-ratio: auto;
+      padding: clamp(24px, 2.1vw, 34px);
+      border-radius: 30px;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+    }
+
+    .algo-card:hover {
+      transform: translateY(-12px) rotateX(2deg);
+      box-shadow: 0 44px 130px rgba(0,0,0,.38), 0 0 70px rgba(210,162,71,.12);
+    }
+
+    .algo-card.gold {
+      border-color: rgba(210,162,71,.36);
+      background:
+        radial-gradient(circle at 86% 0, rgba(210,162,71,.24), transparent 20rem),
+        linear-gradient(145deg, #11100b, #07090c 72%);
+    }
+
+    .algo-card.nasdaq {
+      border-color: rgba(38,183,255,.34);
+      background:
+        radial-gradient(circle at 86% 0, rgba(38,183,255,.25), transparent 20rem),
+        linear-gradient(145deg, #07101d, #06090e 74%);
+    }
+
+    .algo-card.btc {
+      border-color: rgba(255,138,33,.38);
+      background:
+        radial-gradient(circle at 86% 0, rgba(255,138,33,.25), transparent 20rem),
+        linear-gradient(145deg, #130b05, #07090c 74%);
+    }
+
+    .algo-card.gold:hover {
+      border-color: rgba(210,162,71,.72);
+      box-shadow: 0 48px 140px rgba(0,0,0,.42), 0 0 82px rgba(210,162,71,.18);
+    }
+
+    .algo-card.nasdaq:hover {
+      border-color: rgba(38,183,255,.72);
+      box-shadow: 0 48px 140px rgba(0,0,0,.42), 0 0 82px rgba(38,183,255,.18);
+    }
+
+    .algo-card.btc:hover {
+      border-color: rgba(255,138,33,.74);
+      box-shadow: 0 48px 140px rgba(0,0,0,.42), 0 0 82px rgba(255,138,33,.19);
+    }
+
+    .algo-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.10), transparent 28% 68%, rgba(255,255,255,.05)),
+        linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+      background-size: auto, 220% 100%;
+      opacity: .46;
+      animation: cardLightMove 8s ease-in-out infinite;
+    }
+
+    .algo-card::after {
+      position: absolute;
+      right: -16px;
+      bottom: -18px;
+      z-index: 0;
+      pointer-events: none;
+      font-size: clamp(92px, 8vw, 150px);
+      line-height: .78;
+      font-weight: 950;
+      letter-spacing: -.08em;
+      opacity: .18;
+      mix-blend-mode: screen;
+    }
+
+    .algo-card.gold::after {
+      content: "GOLD";
+      color: rgba(210,162,71,.78);
+      text-shadow: 0 0 48px rgba(210,162,71,.35);
+    }
+
+    .algo-card.nasdaq::after {
+      content: "NDX";
+      color: rgba(38,183,255,.76);
+      text-shadow: 0 0 48px rgba(38,183,255,.32);
+    }
+
+    .algo-card.btc::after {
+      content: "BTC";
+      color: rgba(255,138,33,.78);
+      text-shadow: 0 0 48px rgba(255,138,33,.35);
+    }
+
+    .algo-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .algo-card h3 {
+      font-size: clamp(30px, 2.35vw, 42px);
+      letter-spacing: -.02em;
+    }
+
+    .offer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .offer-badge {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      border: 1px solid rgba(244,240,230,.14);
+      border-radius: 999px;
+      color: rgba(244,240,230,.82);
+      background: rgba(255,255,255,.07);
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .offer-badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 18px currentColor;
+    }
+
+    .algo-card.gold .offer-badge,
+    .algo-card.gold .offer-metrics strong {
+      color: var(--gold);
+    }
+
+    .algo-card.nasdaq .offer-badge,
+    .algo-card.nasdaq .offer-metrics strong {
+      color: var(--cyan);
+    }
+
+    .algo-card.btc .offer-badge,
+    .algo-card.btc .offer-metrics strong {
+      color: var(--btc);
+    }
+
+    .offer-signal {
+      position: relative;
+      height: 82px;
+      display: flex;
+      align-items: end;
+      gap: 7px;
+      margin: 14px 0 2px;
+      padding: 24px 14px 12px;
+      border: 1px solid rgba(244,240,230,.12);
+      border-radius: 18px;
+      background:
+        linear-gradient(rgba(244,240,230,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244,240,230,.045) 1px, transparent 1px),
+        rgba(3,5,8,.28);
+      background-size: 28px 28px, 28px 28px, auto;
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+    }
+
+    .offer-signal::before {
+      content: "module pulse";
+      position: absolute;
+      left: 14px;
+      top: 10px;
+      color: rgba(244,240,230,.55);
+      font-size: 9px;
+      font-weight: 950;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .offer-signal::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+      transform: translateX(-105%);
+      animation: offerScan 5.8s ease-in-out infinite;
+    }
+
+    .offer-signal span {
+      flex: 1 1 0;
+      height: var(--h, 50%);
+      min-width: 8px;
+      border-radius: 999px 999px 5px 5px;
+      background: currentColor;
+      opacity: .72;
+      box-shadow: 0 0 24px currentColor;
+      transform-origin: bottom;
+      animation: pulseBars 3.8s ease-in-out infinite;
+      animation-delay: var(--d, 0s);
+    }
+
+    .algo-card.gold .offer-signal { color: var(--gold); }
+    .algo-card.nasdaq .offer-signal { color: var(--cyan); }
+    .algo-card.btc .offer-signal { color: var(--btc); }
+
+    .offer-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .offer-metrics div {
+      min-height: 76px;
+      display: grid;
+      align-content: center;
+      gap: 6px;
+      padding: 12px;
+      border: 1px solid rgba(244,240,230,.12);
+      border-radius: 16px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.025));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .offer-metrics strong {
+      color: var(--paper);
+      font-size: clamp(22px, 1.7vw, 30px);
+      line-height: 1;
+      letter-spacing: -.035em;
+    }
+
+    .offer-note {
+      margin-top: 14px;
+      color: rgba(244,240,230,.56);
+      font-size: 12px;
+      line-height: 1.5;
+      font-weight: 760;
+    }
+
+    .algo-services {
+      display: flex;
+      flex-wrap: wrap;
+      overflow: visible;
+      border-radius: 0;
+      border-color: transparent;
+      gap: 8px;
+      border: 0;
+      background: transparent;
+    }
+
+    .algo-services span {
+      width: auto;
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(244,240,230,.14);
+      border-radius: 999px;
+      color: rgba(255,248,235,.94);
+      background: rgba(255,255,255,.075);
+      font-size: 13px;
+      line-height: 1.2;
+      padding: 0 12px;
+      text-shadow: 0 1px 14px rgba(0,0,0,.48);
+    }
+
+    .price-main strong {
+      font-size: clamp(46px, 3.4vw, 64px);
+      letter-spacing: -.045em;
+    }
+
+    .price-actions .btn.gold {
+      min-height: 54px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #fff2aa, var(--gold), #ff8a21);
+    }
+
+    footer {
+      border-top: 1px solid rgba(244,240,230,.10);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+    }
+
+    .footer-inner {
+      align-items: start;
+    }
+
+    .footer-brand {
+      display: grid;
+      gap: 8px;
+    }
+
+    .footer-brand strong {
+      color: var(--paper);
+      font-size: 14px;
+      letter-spacing: .12em;
+    }
+
+    .footer-brand span,
+    .footer-copy,
+    .footer-disclaimer {
+      color: rgba(244,240,230,.58);
+    }
+
+    .footer-disclaimer {
+      grid-column: 1 / -1;
+      max-width: 980px;
+      line-height: 1.7;
+      text-transform: none;
+      letter-spacing: .02em;
+      font-size: 12px;
+    }
+
+    .footer-copy {
+      grid-column: 1 / -1;
+      padding-top: 16px;
+      border-top: 1px solid rgba(244,240,230,.08);
+    }
+
+    .legal-section {
+      position: relative;
+      color: var(--paper);
+      background:
+        radial-gradient(circle at 15% 0, rgba(210,162,71,.14), transparent 28rem),
+        radial-gradient(circle at 88% 0, rgba(38,183,255,.12), transparent 28rem),
+        linear-gradient(180deg, #050608, #070a0f 58%, #050608);
+      border-top: 1px solid rgba(244,240,230,.08);
+      border-bottom: 1px solid rgba(244,240,230,.08);
+    }
+
+    .legal-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .legal-card {
+      min-height: 300px;
+      padding: 22px;
+      border: 1px solid rgba(244,240,230,.13);
+      border-radius: 22px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.025)),
+        rgba(8,10,14,.78);
+      box-shadow: 0 24px 80px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.08);
+      scroll-margin-top: 112px;
+      transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+    }
+
+    .legal-card:target,
+    .legal-card.is-highlighted {
+      border-color: rgba(210,162,71,.56);
+      box-shadow: 0 30px 100px rgba(0,0,0,.34), 0 0 70px rgba(210,162,71,.14), inset 0 1px 0 rgba(255,255,255,.10);
+      transform: translateY(-4px);
+    }
+
+    .legal-card h3 {
+      margin-top: 10px;
+      color: var(--paper);
+      font-size: clamp(24px, 1.7vw, 34px);
+      line-height: .98;
+      letter-spacing: -.035em;
+    }
+
+    .legal-card ul {
+      display: grid;
+      gap: 10px;
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .legal-card li {
+      position: relative;
+      padding-left: 18px;
+      color: rgba(244,240,230,.70);
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 760;
+    }
+
+    .legal-card li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .62em;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 16px rgba(210,162,71,.42);
+    }
+
+    /* Premium pass: professional header, animated numbers, richer market blocks. */
+    #stats {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      color: var(--paper);
+      background:
+        radial-gradient(circle at 10% 0, rgba(255,138,33,.16), transparent 30rem),
+        radial-gradient(circle at 48% 16%, rgba(210,162,71,.14), transparent 32rem),
+        radial-gradient(circle at 90% 10%, rgba(38,183,255,.15), transparent 34rem),
+        linear-gradient(180deg, #06080d 0%, #0a0d13 48%, #040609 100%);
+    }
+
+    #stats::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(244,240,230,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244,240,230,.04) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: linear-gradient(180deg, transparent, #000 12%, #000 86%, transparent);
+      animation: premiumGridDrift 18s linear infinite;
+    }
+
+    #stats .section-head {
+      border-color: rgba(244,240,230,.13);
+    }
+
+    #stats .section-head h2 {
+      color: var(--paper);
+      text-shadow: 0 0 44px rgba(38,183,255,.14);
+    }
+
+    #stats .stats-grid {
+      gap: 22px;
+      perspective: 1400px;
+    }
+
+    #stats .stat-card {
+      position: relative;
+      color: var(--paper);
+      border: 1px solid rgba(244,240,230,.12);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 0 0, rgba(255,255,255,.09), transparent 24rem),
+        linear-gradient(145deg, rgba(15,20,29,.95), rgba(6,8,12,.96));
+      box-shadow: 0 36px 120px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.08);
+      transform-style: preserve-3d;
+      transition: transform .34s ease, border-color .34s ease, box-shadow .34s ease;
+    }
+
+    #stats .stat-card:hover {
+      transform: translateY(-10px) rotateX(1.4deg);
+      border-color: rgba(244,240,230,.24);
+      box-shadow: 0 52px 150px rgba(0,0,0,.46), 0 0 80px rgba(38,183,255,.1), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    #stats .stat-card::before,
+    #stats .stat-card::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    #stats .stat-card::before {
+      inset: 0;
+      border-radius: inherit;
+      background:
+        linear-gradient(115deg, transparent 0 38%, rgba(255,255,255,.12), transparent 58%),
+        radial-gradient(circle at 85% 8%, rgba(255,255,255,.12), transparent 19rem);
+      opacity: .5;
+      transform: translateX(-42%);
+      animation: cardLightMove 9s ease-in-out infinite;
+    }
+
+    #stats .stat-card::after {
+      top: 18px;
+      bottom: 18px;
+      left: 0;
+      width: 4px;
+      border-radius: 0 999px 999px 0;
+    }
+
+    #stats .stat-card:nth-child(1)::after {
+      background: #ff8a21;
+      box-shadow: 0 0 34px rgba(255,138,33,.58);
+    }
+
+    #stats .stat-card:nth-child(2)::after {
+      background: var(--gold);
+      box-shadow: 0 0 34px rgba(210,162,71,.58);
+    }
+
+    #stats .stat-card:nth-child(3)::after {
+      background: var(--cyan);
+      box-shadow: 0 0 34px rgba(38,183,255,.58);
+    }
+
+    #stats .stat-title {
+      position: relative;
+      z-index: 1;
+      border-bottom-color: rgba(244,240,230,.12);
+      background: rgba(255,255,255,.035);
+    }
+
+    #stats .tag {
+      border-radius: 999px;
+      box-shadow: 0 12px 34px rgba(0,0,0,.22);
+    }
+
+    #stats .metric {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      border-right-color: rgba(244,240,230,.1);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.014)),
+        rgba(255,255,255,.02);
+    }
+
+    #stats .metric::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(100deg, transparent, rgba(255,255,255,.13), transparent);
+      transform: translateX(-120%);
+      animation: metricSweep 5.8s ease-in-out infinite;
+    }
+
+    #stats .metric strong,
+    .proof-strip strong {
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -.045em;
+      text-shadow: 0 0 30px rgba(255,255,255,.12);
+    }
+
+    #stats .metric strong.count-ready,
+    .proof-strip strong.count-ready {
+      filter: drop-shadow(0 0 16px rgba(38,183,255,.08));
+    }
+
+    #stats .metric strong.count-tick,
+    .proof-strip strong.count-tick {
+      animation: numberPop .42s cubic-bezier(.2,.9,.2,1);
+    }
+
+    .proof-strip div {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .proof-strip div::before {
+      content: "";
+      position: absolute;
+      inset: auto 14px 0;
+      height: 2px;
+      pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(38,183,255,.58), rgba(210,162,71,.58), transparent);
+      opacity: .68;
+      transform: scaleX(.62);
+      transform-origin: left center;
+    }
+
+    #products {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(7,9,12,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(7,9,12,.045) 1px, transparent 1px),
+        radial-gradient(circle at 12% 12%, rgba(255,138,33,.22), transparent 26rem),
+        radial-gradient(circle at 50% 0, rgba(210,162,71,.22), transparent 30rem),
+        radial-gradient(circle at 88% 14%, rgba(38,183,255,.22), transparent 30rem),
+        linear-gradient(180deg, #fffaf0 0%, #eef8ff 46%, #f8f2e5 100%);
+      background-size: 62px 62px, 62px 62px, auto, auto, auto, auto;
+    }
+
+    #products::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(115deg, transparent 0 35%, rgba(255,255,255,.52), transparent 56%),
+        radial-gradient(circle at 50% 0, rgba(255,255,255,.92), transparent 30rem);
+      opacity: .42;
+      mix-blend-mode: screen;
+    }
+
+    #products .section-head > p.lead {
+      display: block;
+      max-width: 580px;
+      color: rgba(7,9,12,.62);
+      font-weight: 780;
+    }
+
+    .products {
+      position: relative;
+      z-index: 1;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: stretch;
+      gap: 24px;
+      perspective: 1500px;
+    }
+
+    .products .product-card {
+      position: relative;
+      min-height: 560px;
+      display: grid;
+      align-content: stretch;
+      gap: 22px;
+      padding: clamp(22px, 2vw, 30px);
+      overflow: hidden;
+      border-radius: 34px;
+      color: var(--paper);
+      border: 1px solid rgba(244,240,230,.14);
+      background: linear-gradient(145deg, #0b1018, #05070b 72%);
+      box-shadow: 0 40px 120px rgba(5,7,11,.18), inset 0 1px 0 rgba(255,255,255,.08);
+      transform-style: preserve-3d;
+      transition: transform .32s ease, box-shadow .32s ease, border-color .32s ease;
+    }
+
+    .products .product-card.nasdaq-card {
+      grid-column: auto;
+    }
+
+    .products .product-card:hover {
+      transform: translateY(-12px) rotateX(2deg);
+      box-shadow: 0 48px 140px rgba(5,7,11,.28), 0 0 70px rgba(38,183,255,.14), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .products .product-card::before,
+    .products .product-card::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .products .product-card::before {
+      inset: 0;
+      opacity: .72;
+      background:
+        radial-gradient(circle at 82% 8%, rgba(255,255,255,.18), transparent 17rem),
+        linear-gradient(120deg, rgba(255,255,255,.12), transparent 22% 72%, rgba(255,255,255,.08));
+    }
+
+    .products .product-card::after {
+      right: -18px;
+      bottom: -18px;
+      font-size: clamp(86px, 11vw, 170px);
+      font-weight: 950;
+      letter-spacing: -.08em;
+      line-height: .8;
+      opacity: .24;
+      mix-blend-mode: screen;
+    }
+
+    .products .product-card:nth-child(1) {
+      border-color: rgba(255,138,33,.32);
+      background:
+        radial-gradient(circle at 100% 0, rgba(255,138,33,.30), transparent 20rem),
+        linear-gradient(145deg, #1a0d05, #07090e 72%);
+    }
+
+    .products .product-card:nth-child(1)::after {
+      content: "BTC";
+      color: rgba(255,138,33,.72);
+      text-shadow: 0 0 42px rgba(255,138,33,.32);
+    }
+
+    .products .product-card:nth-child(2) {
+      border-color: rgba(210,162,71,.34);
+      background:
+        radial-gradient(circle at 100% 0, rgba(210,162,71,.30), transparent 20rem),
+        linear-gradient(145deg, #191205, #07090e 72%);
+    }
+
+    .products .product-card:nth-child(2)::after {
+      content: "GOLD";
+      color: rgba(210,162,71,.66);
+      text-shadow: 0 0 42px rgba(210,162,71,.30);
+    }
+
+    .products .product-card:nth-child(3) {
+      border-color: rgba(38,183,255,.34);
+      background:
+        radial-gradient(circle at 100% 0, rgba(38,183,255,.28), transparent 20rem),
+        linear-gradient(145deg, #06172a, #07090e 72%);
+    }
+
+    .products .product-card:nth-child(3)::after {
+      content: "NDX";
+      color: rgba(38,183,255,.66);
+      text-shadow: 0 0 42px rgba(38,183,255,.30);
+    }
+
+    .products .product-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .products .product-card h3 {
+      color: var(--paper);
+      max-width: 100%;
+      font-size: clamp(30px, 2.5vw, 44px);
+      line-height: .94;
+      letter-spacing: -.045em;
+      text-shadow: 0 0 30px rgba(0,0,0,.26);
+      white-space: normal;
+    }
+
+    .market-module-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-start;
+    }
+
+    .market-pill {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      border: 1px solid rgba(244,240,230,.15);
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.1);
+      color: rgba(244,240,230,.78);
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .market-pill::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 18px currentColor;
+    }
+
+    .market-visual {
+      position: relative;
+      min-height: 142px;
+      overflow: hidden;
+      border: 1px solid rgba(244,240,230,.12);
+      border-radius: 24px;
+      background:
+        linear-gradient(rgba(244,240,230,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244,240,230,.055) 1px, transparent 1px),
+        rgba(255,255,255,.045);
+      background-size: 38px 38px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+    }
+
+    .market-visual::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+      transform: translateX(-110%);
+      animation: premiumPanelSweep 6.8s ease-in-out infinite;
+    }
+
+    .market-visual svg {
+      position: absolute;
+      inset: 18px 14px;
+      width: calc(100% - 28px);
+      height: calc(100% - 36px);
+      filter: drop-shadow(0 0 18px currentColor);
+    }
+
+    .market-visual path {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 900;
+      stroke-dashoffset: 900;
+      animation: drawMarketLine 4.6s ease-in-out infinite;
+    }
+
+    .market-visual .thin {
+      opacity: .34;
+      stroke-width: 2;
+      animation-delay: .18s;
+    }
+
+    .market-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .market-stats div {
+      min-height: 72px;
+      display: grid;
+      align-content: center;
+      gap: 7px;
+      padding: 14px;
+      border: 1px solid rgba(244,240,230,.12);
+      border-radius: 18px;
+      background: rgba(255,255,255,.065);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .market-stats strong {
+      font-size: clamp(24px, 2vw, 34px);
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+
+    .market-copy {
+      min-height: 62px;
+      color: rgba(244,240,230,.72);
+      font-size: 14px;
+      line-height: 1.55;
+      font-weight: 740;
+    }
+
+    .market-module-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid rgba(244,240,230,.11);
+    }
+
+    .market-module-actions .btn {
+      min-height: 46px;
+      border-radius: 999px;
+      padding-inline: 18px;
+    }
+
+    .market-note {
+      color: rgba(244,240,230,.58);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .products .product-card:nth-child(1) .market-pill,
+    .products .product-card:nth-child(1) .market-visual,
+    .products .product-card:nth-child(1) .market-stats strong {
+      color: #ff8a21;
+    }
+
+    .products .product-card:nth-child(2) .market-pill,
+    .products .product-card:nth-child(2) .market-visual,
+    .products .product-card:nth-child(2) .market-stats strong {
+      color: var(--gold);
+    }
+
+    .products .product-card:nth-child(3) .market-pill,
+    .products .product-card:nth-child(3) .market-visual,
+    .products .product-card:nth-child(3) .market-stats strong {
+      color: var(--cyan);
+    }
+
+    @keyframes drawMarketLine {
+      0% { stroke-dashoffset: 900; opacity: .3; }
+      42%, 72% { stroke-dashoffset: 0; opacity: 1; }
+      100% { stroke-dashoffset: -900; opacity: .35; }
+    }
+
+    @keyframes metricSweep {
+      0%, 65%, 100% { transform: translateX(-120%); opacity: 0; }
+      78% { opacity: .68; }
+      92% { transform: translateX(120%); opacity: 0; }
+    }
+
+    @keyframes numberPop {
+      0% { transform: translateY(7px) scale(.96); filter: brightness(.8); }
+      70% { transform: translateY(-2px) scale(1.035); filter: brightness(1.35); }
+      100% { transform: none; filter: none; }
+    }
+
+    @keyframes premiumGridDrift {
+      to { background-position: 76px 76px, 76px 76px, 0 0, 0 0, 0 0; }
+    }
+
+    @keyframes premiumPanelSweep {
+      0%, 72%, 100% { transform: translateX(-125%); opacity: 0; }
+      82% { opacity: .7; }
+      92% { transform: translateX(125%); opacity: 0; }
+    }
+
+    @keyframes cardLightMove {
+      0%, 100% { background-position: 0 0, -120% 0; }
+      52% { background-position: 0 0, 120% 0; }
+    }
+
+    @keyframes offerScan {
+      0%, 58%, 100% { transform: translateX(-110%); opacity: 0; }
+      70% { opacity: .58; }
+      86% { transform: translateX(110%); opacity: 0; }
+    }
+
+    @keyframes pulseBars {
+      0%, 100% { transform: scaleY(.84); opacity: .54; }
+      50% { transform: scaleY(1); opacity: .9; }
+    }
+
+    @media (max-width: 1180px) {
+      .products {
+        grid-template-columns: 1fr;
+      }
+
+      .products .product-card {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .hero {
+        min-height: auto;
+        padding: 96px 0 52px;
+        background-position: 62% center;
+      }
+
+      .hero-copy {
+        padding: 20px;
+        border-radius: 22px;
+      }
+
+      .hero h1 {
+        font-size: clamp(44px, 13vw, 64px);
+        line-height: .88;
+      }
+
+      .hero .lead {
+        max-width: none;
+        font-size: 15px;
+      }
+
+      .social-strip {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .social-link {
+        justify-content: center;
+        width: 100%;
+      }
+
+      .proof-strip {
+        margin-top: 24px;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .proof-strip div {
+        min-height: 82px;
+      }
+
+      .trading-desk {
+        display: block;
+        min-height: 470px;
+      }
+
+      .tv-shell {
+        inset: 18px 0 26px;
+        transform: none;
+        border-radius: 20px;
+      }
+
+      .tv-body {
+        grid-template-columns: 1fr;
+      }
+
+      .float-card,
+      .execution-card,
+      .order-book {
+        display: none;
+      }
+
+      #tvWidget {
+        min-height: 360px;
+      }
+
+      .local-zone {
+        left: 10%;
+        right: 8%;
+        min-height: 40px;
+        font-size: 9px;
+      }
+
+      .signal-badge {
+        min-width: 0;
+        max-width: calc(100% - 34px);
+      }
+
+      .price-ladder {
+        display: none;
+      }
+
+      .algo-card {
+        min-height: auto;
+        aspect-ratio: auto;
+      }
+
+      #products {
+        background-size: 46px 46px, 46px 46px, auto, auto, auto, auto;
+      }
+
+      .products {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .products .product-card {
+        min-height: auto;
+        padding: 22px;
+        border-radius: 26px;
+      }
+
+      .market-module-top {
+        display: grid;
+      }
+
+      .market-pill {
+        justify-self: start;
+      }
+
+      .market-visual {
+        min-height: 124px;
+      }
+
+      .market-stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .market-module-actions {
+        display: grid;
+        align-items: stretch;
+      }
+
+      .market-module-actions .btn {
+        width: 100%;
+      }
+
+      .market-note {
+        white-space: normal;
+      }
+
+      .price-main strong {
+        font-size: 44px;
+      }
+
+      .footer-inner {
+        display: grid;
+        justify-content: stretch;
+        text-align: left;
+      }
+
+      .legal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .legal-card {
+        min-height: auto;
+      }
+    }
   </style>
 </head>
 <body>
@@ -4007,21 +5547,25 @@
         <span class="brand-copy"><strong>Institutional Trading</strong><span>BTC / Gold / Nasdaq</span></span>
       </a>
       <nav class="nav-links" aria-label="Navigation">
-        <a href="#stats">Stats</a>
-        <a href="#process">Methode</a>
-        <a href="#products">Produits</a>
-        <a href="#news">Macro</a>
+        <a href="#process">Desk</a>
+        <a href="#products">Setups</a>
         <a href="#offers">Offres</a>
+        <a href="#contact">Acces</a>
       </nav>
+      <div class="nav-socials" aria-label="Reseaux Institutional Trading">
+        <span>Reseaux</span>
+        <a class="nav-social telegram" href="https://t.me/+4mo1NA-AITE1MTZk" target="_blank" rel="noopener" aria-label="Telegram">TG</a>
+        <a class="nav-social discord" href="https://discord.gg/TRZZUFwzwP" target="_blank" rel="noopener" aria-label="Discord">DC</a>
+      </div>
       <div class="nav-actions">
         <a class="btn" href="client.html">Client</a>
-        <a class="btn" href="#donate">Soutien</a>
         <a class="btn gold" href="#offers">Acces</a>
       </div>
     </div>
   </header>
   <div class="flash-bar" id="flashBar">
-    <div><strong id="flashTitle"></strong><span id="flashCopy"></span></div>
+    <div class="flash-content"><strong id="flashTitle"></strong><span id="flashCopy"></span></div>
+    <div class="flash-countdown" id="flashCountdown">Temps limite</div>
     <a class="btn gold" id="flashCta" href="#offers">Offre</a>
   </div>
 
@@ -4031,7 +5575,7 @@
         <div class="hero-copy" data-reveal>
           <span class="eyebrow">TradingView scripts / BTC, Gold & Nasdaq</span>
           <h1>Trois setups. Une decision plus propre.</h1>
-          <p class="lead">Scripts TradingView premium pour BTC, Gold et Nasdaq.</p>
+          <p class="lead">Scripts TradingView premium pour BTC, Gold et Nasdaq. Un desk visuel pour filtrer le bruit, lire le contexte et executer manuellement avec plus de structure.</p>
           <div class="hero-actions">
             <a class="btn gold" href="#offers">S'abonner</a>
             <a class="btn" href="#process">Voir le desk</a>
@@ -4245,19 +5789,68 @@
       <div class="wrap">
         <div class="section-head">
           <div data-reveal><span class="eyebrow">Produits</span><h2>Trois algorithmes TradingView.</h2></div>
+          <p class="lead" data-reveal>Chaque setup garde sa logique de marche : BTC en flux continu, Gold en lecture session, Nasdaq en momentum indice.</p>
         </div>
         <div class="products">
           <article class="product-card" data-reveal>
-            <div><span class="eyebrow">Script BTC</span><h3>BTC INSTITUTIONAL SETUP</h3></div>
-            <div class="product-points"><div><span class="micro">Marche</span><strong>Crypto</strong></div><div><span class="micro">Session</span><strong class="green">24/7</strong></div><div><span class="micro">Acces</span><strong>Script TV</strong></div></div>
+            <div class="market-module-top">
+              <div><span class="eyebrow">Script BTC</span><h3>BTC Institutional Setup</h3></div>
+              <span class="market-pill">24/7</span>
+            </div>
+            <div class="market-visual" aria-hidden="true">
+              <svg viewBox="0 0 500 180" preserveAspectRatio="none">
+                <path class="thin" d="M8 130 C70 112 88 60 145 72 C198 84 198 128 255 105 C314 82 320 42 378 55 C425 66 438 118 492 70"></path>
+                <path d="M8 140 C56 134 72 92 118 105 C164 118 176 58 228 66 C286 75 290 124 342 88 C392 54 423 68 492 30"></path>
+              </svg>
+            </div>
+            <div class="market-stats">
+              <div><span class="micro">WR moyen</span><strong>85.3%</strong></div>
+              <div><span class="micro">PF moyen</span><strong>2.98</strong></div>
+              <div><span class="micro">Trades</span><strong>3600+</strong></div>
+              <div><span class="micro">Marche</span><strong>Crypto</strong></div>
+            </div>
+            <p class="market-copy">Module crypto pour surveiller les zones, alertes TradingView et invalidations sans execution automatique.</p>
+            <div class="market-module-actions"><span class="market-note">BTC / TradingView</span><a class="btn" href="#offers">Voir l'offre</a></div>
           </article>
           <article class="product-card" data-reveal>
-            <div><span class="eyebrow">Script Gold</span><h3>GOLD INSTITUTIONAL SETUP</h3></div>
-            <div class="product-points"><div><span class="micro">Marche</span><strong>Gold</strong></div><div><span class="micro">Session</span><strong class="gold-text">LDN / NY / ASIA</strong></div><div><span class="micro">Acces</span><strong>Script TV</strong></div></div>
+            <div class="market-module-top">
+              <div><span class="eyebrow">Script Gold</span><h3>Gold Institutional Setup</h3></div>
+              <span class="market-pill">Metals desk</span>
+            </div>
+            <div class="market-visual" aria-hidden="true">
+              <svg viewBox="0 0 500 180" preserveAspectRatio="none">
+                <path class="thin" d="M8 115 C55 84 112 92 145 72 C198 40 230 52 260 82 C300 122 342 104 382 78 C430 48 452 56 492 42"></path>
+                <path d="M8 142 C60 120 90 132 128 96 C172 54 220 62 258 92 C306 130 346 110 380 72 C424 22 456 40 492 24"></path>
+              </svg>
+            </div>
+            <div class="market-stats">
+              <div><span class="micro">WR moyen</span><strong>83.0%</strong></div>
+              <div><span class="micro">PF moyen</span><strong>2.70</strong></div>
+              <div><span class="micro">Trades</span><strong>5400+</strong></div>
+              <div><span class="micro">Session</span><strong>LDN / NY</strong></div>
+            </div>
+            <p class="market-copy">Lecture Gold orientee sessions, zones de reaction, contexte dollar/taux et validation manuelle.</p>
+            <div class="market-module-actions"><span class="market-note">XAUUSD / TradingView</span><a class="btn" href="#offers">Voir l'offre</a></div>
           </article>
           <article class="product-card nasdaq-card" data-reveal>
-            <div><span class="eyebrow">Script Nasdaq</span><h3>NASDAQ INSTITUTIONAL SETUP</h3></div>
-            <div class="product-points"><div><span class="micro">Marche</span><strong>US100</strong></div><div><span class="micro">Session</span><strong class="cyan">LDN / NY / ASIA</strong></div><div><span class="micro">Acces</span><strong>Script TV</strong></div></div>
+            <div class="market-module-top">
+              <div><span class="eyebrow">Script Nasdaq</span><h3>Nasdaq Institutional Setup</h3></div>
+              <span class="market-pill">US100</span>
+            </div>
+            <div class="market-visual" aria-hidden="true">
+              <svg viewBox="0 0 500 180" preserveAspectRatio="none">
+                <path class="thin" d="M8 128 C50 132 78 96 112 104 C152 114 160 70 206 78 C256 86 270 128 320 114 C382 96 410 42 492 58"></path>
+                <path d="M8 146 C52 142 76 118 118 126 C168 134 184 80 228 92 C276 105 284 62 330 74 C388 88 424 44 492 28"></path>
+              </svg>
+            </div>
+            <div class="market-stats">
+              <div><span class="micro">WR moyen</span><strong>81.3%</strong></div>
+              <div><span class="micro">PF moyen</span><strong>3.40</strong></div>
+              <div><span class="micro">Trades</span><strong>4400+</strong></div>
+              <div><span class="micro">Session</span><strong>US / NY</strong></div>
+            </div>
+            <p class="market-copy">Module indices pour filtrer le momentum, les niveaux propres et les alertes autour de la session US.</p>
+            <div class="market-module-actions"><span class="market-note">Nasdaq / TradingView</span><a class="btn" href="#offers">Voir l'offre</a></div>
           </article>
         </div>
       </div>
@@ -4337,34 +5930,43 @@
         </div>
         <div class="pricing algo-offers">
           <article class="price-card algo-card gold" data-reveal>
-            <span class="eyebrow">Gold</span>
+            <div class="offer-top"><span class="eyebrow">Gold</span><span class="offer-badge">Metals desk</span></div>
             <h3>Gold Institutional</h3>
             <p class="lead">Algo Gold + formation + accompagnement.</p>
+            <div class="offer-signal" aria-hidden="true"><span style="--h:34%;--d:.05s"></span><span style="--h:58%;--d:.16s"></span><span style="--h:42%;--d:.28s"></span><span style="--h:74%;--d:.4s"></span><span style="--h:63%;--d:.52s"></span><span style="--h:82%;--d:.64s"></span></div>
+            <div class="offer-metrics"><div><span class="micro">WR moyen</span><strong>83.0%</strong></div><div><span class="micro">PF moyen</span><strong>2.70</strong></div><div><span class="micro">Trades</span><strong>5400+</strong></div></div>
             <div class="algo-services"><span>Algo TradingView</span><span>Formation incluse</span><span>Accompagnement</span><span>Support VIP</span></div>
             <div class="price-main"><strong>49,99 EUR</strong><span class="micro">par mois</span></div>
             <div class="price-actions">
               <a class="btn gold" href="https://www.paypal.com/ncp/payment/DCVU8JTEY7GJ4" target="_blank" rel="noopener">Payer Gold</a>
             </div>
+            <p class="offer-note">Setup vendu separement. Activation apres paiement et username TradingView.</p>
           </article>
           <article class="price-card algo-card nasdaq" data-reveal>
-            <span class="eyebrow">Nasdaq</span>
+            <div class="offer-top"><span class="eyebrow">Nasdaq</span><span class="offer-badge">Index model</span></div>
             <h3>Nasdaq Institutional</h3>
             <p class="lead">Algo Nasdaq + formation + accompagnement.</p>
+            <div class="offer-signal" aria-hidden="true"><span style="--h:44%;--d:.02s"></span><span style="--h:51%;--d:.14s"></span><span style="--h:69%;--d:.26s"></span><span style="--h:56%;--d:.38s"></span><span style="--h:88%;--d:.5s"></span><span style="--h:77%;--d:.62s"></span></div>
+            <div class="offer-metrics"><div><span class="micro">WR moyen</span><strong>81.3%</strong></div><div><span class="micro">PF moyen</span><strong>3.40</strong></div><div><span class="micro">Trades</span><strong>4400+</strong></div></div>
             <div class="algo-services"><span>Algo TradingView</span><span>Formation incluse</span><span>Accompagnement</span><span>Support VIP</span></div>
             <div class="price-main"><strong>49,99 EUR</strong><span class="micro">par mois</span></div>
             <div class="price-actions">
               <a class="btn gold" href="https://www.paypal.com/ncp/payment/VMTBQ5G9EMWTU" target="_blank" rel="noopener">Payer Nasdaq</a>
             </div>
+            <p class="offer-note">Setup vendu separement. Activation apres paiement et username TradingView.</p>
           </article>
           <article class="price-card algo-card btc" data-reveal>
-            <span class="eyebrow">BTC</span>
+            <div class="offer-top"><span class="eyebrow">BTC</span><span class="offer-badge">Crypto 24/7</span></div>
             <h3>BTC Institutional</h3>
             <p class="lead">Algo BTC + formation + accompagnement.</p>
+            <div class="offer-signal" aria-hidden="true"><span style="--h:66%;--d:.04s"></span><span style="--h:38%;--d:.16s"></span><span style="--h:84%;--d:.28s"></span><span style="--h:49%;--d:.4s"></span><span style="--h:72%;--d:.52s"></span><span style="--h:92%;--d:.64s"></span></div>
+            <div class="offer-metrics"><div><span class="micro">WR moyen</span><strong>85.3%</strong></div><div><span class="micro">PF moyen</span><strong>2.98</strong></div><div><span class="micro">Trades</span><strong>3600+</strong></div></div>
             <div class="algo-services"><span>Algo TradingView</span><span>Formation incluse</span><span>Accompagnement</span><span>Support VIP</span></div>
             <div class="price-main"><strong>49,99 EUR</strong><span class="micro">par mois</span></div>
             <div class="price-actions">
               <a class="btn gold" href="https://www.paypal.com/ncp/payment/SB6UU4KPJ974A" target="_blank" rel="noopener">Payer BTC</a>
             </div>
+            <p class="offer-note">Setup vendu separement. Activation apres paiement et username TradingView.</p>
           </article>
         </div>
       </div>
@@ -4389,11 +5991,22 @@
                 <input class="field" name="name" placeholder="Nom complet" required>
                 <input class="field" name="email" type="email" placeholder="E-mail PayPal" required>
               </div>
-              <select class="field" name="product">
-                <option>BTC Institutional Setup - 49,99 EUR / mois</option>
-                <option>Gold Institutional Setup - 49,99 EUR / mois</option>
-                <option>Nasdaq Institutional Setup - 49,99 EUR / mois</option>
-              </select>
+              <div class="setup-picker" aria-label="Choix des algorithmes">
+                <label class="setup-choice btc">
+                  <input type="checkbox" name="selectedSetup" value="BTC Institutional Setup - 49,99 EUR / mois">
+                  <span class="setup-choice-body"><strong>BTC</strong><span>Crypto 24/7 · 49,99 EUR / mois</span></span>
+                </label>
+                <label class="setup-choice gold">
+                  <input type="checkbox" name="selectedSetup" value="Gold Institutional Setup - 49,99 EUR / mois">
+                  <span class="setup-choice-body"><strong>Gold</strong><span>LDN / NY / ASIA · 49,99 EUR / mois</span></span>
+                </label>
+                <label class="setup-choice nasdaq">
+                  <input type="checkbox" name="selectedSetup" value="Nasdaq Institutional Setup - 49,99 EUR / mois">
+                  <span class="setup-choice-body"><strong>Nasdaq</strong><span>US100 · 49,99 EUR / mois</span></span>
+                </label>
+              </div>
+              <input type="hidden" name="product" id="selectedProductInput">
+              <p class="legal-line">Selectionnez 1, 2 ou 3 algorithmes. Chaque setup reste facture separement a 49,99 EUR / mois.</p>
               <div class="form-row">
                 <input class="field" name="tradingview" placeholder="Username TradingView exact" required>
                 <input class="field" name="clientPassword" type="password" placeholder="Mot de passe espace membre" minlength="6" required>
@@ -4418,6 +6031,15 @@
               <div class="access-step"><b>02</b><div><strong>Activation</strong><span>E-mail, username TradingView et espace membre.</span></div><i></i></div>
               <div class="access-step"><b>03</b><div><strong>Acces</strong><span>Scripts prives, suivi et espace membre.</span></div><i></i></div>
             </div>
+            <div class="community-card">
+              <span class="eyebrow">Communaute</span>
+              <h3 style="margin-top:8px">Telegram & Discord.</h3>
+              <p>Telegram pour les annonces rapides. Discord pour le support, les questions et le suivi apres activation.</p>
+              <div class="social-strip">
+                <a class="social-link telegram" href="https://t.me/+4mo1NA-AITE1MTZk" target="_blank" rel="noopener">Telegram</a>
+                <a class="social-link discord" href="https://discord.gg/TRZZUFwzwP" target="_blank" rel="noopener">Discord</a>
+              </div>
+            </div>
             <p id="formStatus"></p>
           </article>
         </div>
@@ -4425,15 +6047,74 @@
     </section>
   </main>
 
+  <section class="section legal-section" id="legal">
+    <div class="wrap">
+      <div class="section-head">
+        <div data-reveal><span class="eyebrow">Cadre client</span><h2>Reglement, acces et risques.</h2></div>
+        <p class="lead" data-reveal>Ces informations fixent le fonctionnement de l'achat, de l'activation TradingView et de l'utilisation des scripts.</p>
+      </div>
+      <div class="legal-grid">
+        <article class="legal-card" id="reglement" data-reveal>
+          <span class="eyebrow">Reglement</span>
+          <h3>Fonctionnement de l'achat.</h3>
+          <ul>
+            <li>Chaque setup est vendu separement : Gold, BTC ou Nasdaq.</li>
+            <li>Le prix affiche est de 49,99 EUR par mois et par setup.</li>
+            <li>Le paiement s'effectue via PayPal avec le lien du produit choisi.</li>
+            <li>Apres paiement, le client envoie son e-mail PayPal, son ID transaction et son username TradingView.</li>
+            <li>L'acces est active apres verification manuelle du paiement et des informations transmises.</li>
+          </ul>
+        </article>
+        <article class="legal-card" id="conditions" data-reveal>
+          <span class="eyebrow">Conditions</span>
+          <h3>Acces aux scripts.</h3>
+          <ul>
+            <li>Les scripts sont prevus pour une utilisation dans un workflow TradingView.</li>
+            <li>L'acces est personnel et ne doit pas etre partage, revendu ou diffuse.</li>
+            <li>Le client reste responsable de son compte TradingView, de son broker et de son execution.</li>
+            <li>Les alertes et signaux n'executent aucun ordre automatiquement.</li>
+            <li>La resiliation se gere depuis PayPal ou via le support si une assistance est necessaire.</li>
+          </ul>
+        </article>
+        <article class="legal-card" id="confidentialite" data-reveal>
+          <span class="eyebrow">Confidentialite</span>
+          <h3>Donnees client.</h3>
+          <ul>
+            <li>Les donnees demandees servent a verifier le paiement, activer TradingView et assurer le support.</li>
+            <li>Les informations collectees peuvent inclure nom, e-mail, username TradingView, ID transaction et preuve PayPal.</li>
+            <li>Les donnees ne sont pas revendues.</li>
+            <li>Une demande de suppression ou de correction peut etre envoyee via le formulaire de contact ou le support.</li>
+            <li>Les services tiers comme PayPal, TradingView, Telegram et Discord appliquent aussi leurs propres regles.</li>
+          </ul>
+        </article>
+        <article class="legal-card" id="risk-disclaimer" data-reveal>
+          <span class="eyebrow">Disclaimer</span>
+          <h3>Risque trading.</h3>
+          <ul>
+            <li>Le trading comporte un risque de perte en capital.</li>
+            <li>Les performances affichees, backtests, win rates et profit factors ne garantissent aucun resultat futur.</li>
+            <li>Institutional Trading fournit des outils techniques, pas un conseil financier.</li>
+            <li>Chaque decision, position, taille de lot, stop loss et execution reste sous la responsabilite du trader.</li>
+            <li>Ne tradez pas avec de l'argent que vous ne pouvez pas vous permettre de perdre.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <div class="chat-widget" id="chatWidget">
     <button class="chat-toggle btn gold" type="button" id="chatToggle">Chat support</button>
     <div class="chat-panel">
       <div class="chat-head">
         <span class="eyebrow">Support direct</span>
-        <h3 style="margin-top:8px">Parler a l'admin.</h3>
+        <h3 style="margin-top:8px">Message confidentiel.</h3>
       </div>
       <div class="chat-body" id="chatBody">
-        <div class="chat-msg admin"><b>Admin</b>Bonjour, laissez votre message. Je reponds des que possible.</div>
+        <div class="confidential-note">
+          <span>Confidentiel</span>
+          <strong>Votre message part directement dans le panel admin.</strong>
+          <p>Il n'est pas affiche ici apres envoi. Vous recevez simplement une confirmation.</p>
+        </div>
       </div>
       <form class="chat-form" id="chatForm">
         <input class="field" name="name" placeholder="Nom" required>
@@ -4445,12 +6126,22 @@
     </div>
   </div>
 
-  <footer><div class="wrap footer-inner"><span>Institutional Trading - Scripts TradingView BTC / Gold / Nasdaq</span><span>Pas un conseil financier</span></div></footer>
+  <footer>
+    <div class="wrap footer-inner">
+      <div class="footer-brand">
+        <strong>Institutional Trading</strong>
+        <span>Scripts TradingView BTC / Gold / Nasdaq</span>
+      </div>
+      <p class="footer-disclaimer">Pas un conseil financier. Le trading comporte un risque de perte. Les performances affichees, backtests, win rates et profit factors ne garantissent aucun resultat futur. Les scripts TradingView servent d'aide a la lecture du marche et n'executent aucun ordre automatiquement.</p>
+      <span class="footer-copy">Copyright 2026 Institutional Trading. Tous droits reserves.</span>
+    </div>
+  </footer>
 
   <script>
     const tickerItems = [["XAUUSD","+0.03%","up"],["BTCUSD","-0.05%","down"],["ETHUSD","+0.42%","up"],["NASDAQ","+0.18%","up"],["S&P 500","+0.11%","up"],["DXY","-0.08%","down"],["US10Y","+0.04%","up"],["GOLD","London / NY","up"],["BTC","24/7","up"]];
     let donationPaymentUrl = "";
     let donationEmail = "Mehdi.parisville@outlook.com";
+    const supportEmail = "Mehdi.parisville@outlook.com";
     const steps = [
       ["01 / Contexte", "Le script trie le contexte.", "Structure, tendance, range, cassure, reprise, invalidation. Le signal reste filtre avant l'alerte.", "Structure", "BTC / Gold", "Propre", "Pret"],
       ["02 / Zones", "La zone devient la decision.", "Liquidite, reaction prix, invalidation et objectifs sont poses avant la notification.", "Zones", "Liquidite", "Trace", "Surveiller"],
@@ -4463,9 +6154,44 @@
     let tradeMovieProgress = 0;
     let movieCanvas, movieCtx, movieDpr = 1;
     let wowCandles = [];
+    let flashTimer = null;
 
     function escapeHTML(value) {
       return String(value ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+    }
+
+    function defaultDonationUrl() {
+      return `https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=${encodeURIComponent(donationEmail)}&currency_code=EUR&item_name=Institutional%20Trading%20Donation&custom=donation`;
+    }
+
+    function saveFallbackRecord(key, data) {
+      try {
+        const list = JSON.parse(localStorage.getItem(key) || "[]");
+        list.unshift({ ...data, savedAt: new Date().toISOString() });
+        localStorage.setItem(key, JSON.stringify(list.slice(0, 20)));
+      } catch (error) {}
+    }
+
+    function openSupportEmail(subject, data) {
+      const body = Object.entries(data)
+        .filter(([, value]) => value !== undefined && value !== null && String(value).trim() !== "")
+        .map(([key, value]) => `${key}: ${String(value).slice(0, 900)}`)
+        .join("\n");
+      const mailto = `mailto:${supportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailto;
+    }
+
+    function compactProductLabel(products) {
+      if (!products.length) return "";
+      if (products.length === 1) return products[0];
+      const names = products.map(product => {
+        const text = product.toLowerCase();
+        if (text.includes("btc")) return "BTC";
+        if (text.includes("gold")) return "Gold";
+        if (text.includes("nasdaq")) return "Nasdaq";
+        return product.split(" ")[0];
+      });
+      return `${names.join(" + ")} Institutional Setups - 49,99 EUR / mois par setup`;
     }
 
     function initTicker() {
@@ -4488,11 +6214,66 @@
       frame();
     }
 
+    function initStickyHeader() {
+      const nav = document.querySelector(".nav");
+      if (!nav) return;
+      const update = () => nav.classList.toggle("is-scrolled", scrollY > 18);
+      update();
+      addEventListener("scroll", update, { passive: true });
+    }
+
     function initReveal() {
       const observer = new IntersectionObserver(entries => entries.forEach(entry => {
         if (entry.isIntersecting) entry.target.classList.add("visible");
       }), { threshold: .12 });
       document.querySelectorAll("[data-reveal]").forEach(node => observer.observe(node));
+    }
+
+    function initNumberEffects() {
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+      const targets = [...document.querySelectorAll(".proof-strip strong, #stats .metric strong")];
+      const numbers = targets.map(node => {
+        const raw = node.textContent.trim();
+        if (raw.includes("/") || /[A-Za-z]/.test(raw)) return null;
+        const match = raw.match(/^(\d+(?:[.,]\d+)?)(.*)$/);
+        if (!match) return null;
+        const source = match[1].replace(",", ".");
+        const decimals = source.includes(".") ? source.split(".")[1].length : 0;
+        const target = Number(source);
+        if (!Number.isFinite(target)) return null;
+        node.dataset.finalValue = raw;
+        node.classList.add("count-ready");
+        return { node, target, suffix: match[2] || "", decimals, done: false };
+      }).filter(Boolean);
+
+      const format = item => value => `${value.toFixed(item.decimals)}${item.suffix}`;
+      const animate = item => {
+        if (item.done) return;
+        item.done = true;
+        const start = performance.now();
+        const duration = 980 + Math.min(920, item.target * 8);
+        const formatter = format(item);
+        item.node.classList.add("count-tick");
+        requestAnimationFrame(function frame(now) {
+          const progress = Math.min(1, (now - start) / duration);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          item.node.textContent = formatter(item.target * eased);
+          if (progress < 1) {
+            requestAnimationFrame(frame);
+          } else {
+            item.node.textContent = item.node.dataset.finalValue;
+            setTimeout(() => item.node.classList.remove("count-tick"), 500);
+          }
+        });
+      };
+
+      const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const item = numbers.find(candidate => candidate.node === entry.target);
+        if (item) animate(item);
+      }), { threshold: .45 });
+
+      numbers.forEach(item => observer.observe(item.node));
     }
 
     function initScroll() {
@@ -4951,10 +6732,16 @@
         const status = document.getElementById("formStatus");
         const button = event.target.querySelector("button");
         const data = Object.fromEntries(new FormData(event.target).entries());
+        const products = [...event.target.querySelectorAll("input[name='selectedSetup']:checked")].map(input => input.value);
         const proofFile = event.target.elements.paymentProofImage.files[0];
         status.textContent = "Envoi de la demande...";
         button.disabled = true;
         try {
+          if (!products.length) throw new Error("missing_products");
+          data.products = products;
+          data.product = compactProductLabel(products);
+          const hiddenProduct = document.getElementById("selectedProductInput");
+          if (hiddenProduct) hiddenProduct.value = data.product;
           if (!proofFile) throw new Error("proof_image");
           data.paymentProofImage = await proofImageToDataURL(proofFile);
           const response = await fetch("/api/access-requests", {
@@ -4967,7 +6754,15 @@
           status.textContent = "Demande recue. Le support revient vers vous rapidement.";
           event.target.reset();
         } catch (error) {
-          status.textContent = "Impossible d'envoyer la demande. Reessayez dans un instant.";
+          if (error.message === "missing_products") {
+            status.textContent = "Choisissez au moins un algo : BTC, Gold ou Nasdaq.";
+            button.disabled = false;
+            return;
+          }
+          const fallback = { ...data, paymentProofImage: proofFile ? `Fichier selectionne : ${proofFile.name}` : "Non fourni", page: location.href };
+          saveFallbackRecord("tiAccessFallbackRequests", fallback);
+          status.textContent = "Backend indisponible ici : demande sauvegardee dans ce navigateur et e-mail support prepare. Joignez la preuve PayPal si besoin.";
+          openSupportEmail("Demande acces Institutional Trading", fallback);
         } finally {
           button.disabled = false;
         }
@@ -4976,15 +6771,48 @@
 
     function renderFlash(flash) {
       const bar = document.getElementById("flashBar");
+      const countdown = document.getElementById("flashCountdown");
+      if (flashTimer) {
+        clearInterval(flashTimer);
+        flashTimer = null;
+      }
       if (!bar || !flash || !flash.active || !flash.title) {
         if (bar) bar.classList.remove("active");
         return;
       }
+      const endDate = flash.endsAt ? new Date(flash.endsAt) : null;
+      if (endDate && Number.isFinite(endDate.getTime()) && endDate.getTime() <= Date.now()) {
+        bar.classList.remove("active");
+        return;
+      }
       document.getElementById("flashTitle").textContent = flash.title;
-      document.getElementById("flashCopy").textContent = flash.copy ? ` - ${flash.copy}` : "";
+      document.getElementById("flashCopy").textContent = flash.copy || "";
       const cta = document.getElementById("flashCta");
       cta.textContent = flash.cta || "Voir l'offre";
       cta.href = flash.url || "#offers";
+      const updateCountdown = () => {
+        if (!countdown) return;
+        if (!endDate || !Number.isFinite(endDate.getTime())) {
+          countdown.textContent = "Offre active";
+          return;
+        }
+        const remaining = Math.max(0, endDate.getTime() - Date.now());
+        if (!remaining) {
+          bar.classList.remove("active");
+          if (flashTimer) clearInterval(flashTimer);
+          return;
+        }
+        const totalSeconds = Math.floor(remaining / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        countdown.textContent = days > 0
+          ? `${days}j ${String(hours).padStart(2, "0")}h ${String(minutes).padStart(2, "0")}m`
+          : `${String(hours).padStart(2, "0")}h ${String(minutes).padStart(2, "0")}m ${String(seconds).padStart(2, "0")}s`;
+      };
+      updateCountdown();
+      flashTimer = setInterval(updateCountdown, 1000);
       bar.classList.add("active");
     }
 
@@ -4996,7 +6824,7 @@
         donationEmail = payload.donationEmail || donationEmail;
         renderFlash(payload.flash);
       } catch (error) {
-        donationPaymentUrl = "";
+        donationPaymentUrl = defaultDonationUrl();
       }
     }
 
@@ -5033,10 +6861,7 @@
           status.textContent = "Choisis un montant avant de continuer.";
           return;
         }
-        if (!donationPaymentUrl) {
-          status.textContent = "Lien PayPal don separe manquant. Aucun don n'est enregistre.";
-          return;
-        }
+        if (!donationPaymentUrl) donationPaymentUrl = defaultDonationUrl();
         button.disabled = true;
         const paypalUrl = new URL(donationPaymentUrl);
         paypalUrl.searchParams.set("amount", amount.toFixed(2));
@@ -5047,32 +6872,11 @@
       });
     }
 
-    function renderChat(messages = []) {
-      const body = document.getElementById("chatBody");
-      if (!body) return;
-      const base = `<div class="chat-msg admin"><b>Admin</b>Bonjour, laissez votre message. Je reponds des que possible.</div>`;
-      body.innerHTML = base + messages.slice(-12).map(item => {
-        const isAdmin = item.sender === "admin";
-        return `<div class="chat-msg ${isAdmin ? "admin" : "client"}"><b>${isAdmin ? "Admin" : "Vous"}</b>${escapeHTML(item.message || "")}</div>`;
-      }).join("");
-      body.scrollTop = body.scrollHeight;
-    }
-
-    async function loadChatThread(email) {
-      if (!email) return;
-      try {
-        const response = await fetch(`/api/chat/thread?email=${encodeURIComponent(email)}`, { cache: "no-store" });
-        const payload = await response.json();
-        if (payload.ok) renderChat(payload.messages || []);
-      } catch (error) {}
-    }
-
     function initChat() {
       const widget = document.getElementById("chatWidget");
       const form = document.getElementById("chatForm");
       const status = document.getElementById("chatStatus");
-      const savedEmail = localStorage.getItem("tiChatEmail") || "";
-      if (savedEmail) loadChatThread(savedEmail);
+      localStorage.removeItem("tiChatEmail");
       document.getElementById("chatToggle").addEventListener("click", () => widget.classList.toggle("open"));
       form.addEventListener("submit", async event => {
         event.preventDefault();
@@ -5088,17 +6892,16 @@
           });
           const payload = await response.json();
           if (!response.ok || !payload.ok) throw new Error("chat");
-          localStorage.setItem("tiChatEmail", data.email);
-          status.textContent = "Message envoye.";
-          form.message.value = "";
-          loadChatThread(data.email);
+          status.textContent = "Message confidentiel envoye dans le panel admin.";
+          form.reset();
         } catch (error) {
-          status.textContent = "Message non envoye. Reessayez.";
+          saveFallbackRecord("tiChatFallbackMessages", { ...data, page: location.href });
+          status.textContent = "Backend indisponible ici : message sauvegarde et e-mail support prepare.";
+          openSupportEmail("Message support Institutional Trading", data);
         } finally {
           button.disabled = false;
         }
       });
-      setInterval(() => loadChatThread(localStorage.getItem("tiChatEmail")), 15000);
     }
 
     function initHashScroll() {
@@ -5110,7 +6913,9 @@
 
     initTicker();
     initPointer();
+    initStickyHeader();
     initReveal();
+    initNumberEffects();
     initWowTerminal();
     initTradeMovie();
     initScroll();
@@ -5130,3 +6935,4 @@
   </script>
 </body>
 </html>
+

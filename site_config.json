@@ -1,1 +1,10 @@
-# No external Python package is required for the current site.
+{
+  "flash": {
+    "active": false,
+    "title": "",
+    "copy": "",
+    "cta": "Voir l'offre",
+    "url": "#offers",
+    "endsAt": ""
+  }
+}

@@ -1,0 +1,39 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="platinum" x1="92" y1="74" x2="414" y2="440" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset=".35" stop-color="#cfeaff"/>
+      <stop offset=".72" stop-color="#5aa8ff"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="prism" x1="110" y1="390" x2="402" y2="115" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00d5ff"/>
+      <stop offset=".45" stop-color="#0057ff"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+    <radialGradient id="bg" cx="50%" cy="44%" r="62%">
+      <stop stop-color="#0b3d70"/>
+      <stop offset=".58" stop-color="#06182d"/>
+      <stop offset="1" stop-color="#020913"/>
+    </radialGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0 0 0.7 0 0 0.62 0 0 1 0 1 0 0 0 0.9 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <path d="M256 55L414 146V328L256 457L98 328V146L256 55Z" fill="#031020" stroke="url(#platinum)" stroke-width="9"/>
+  <path d="M256 105L370 171V304L256 396L142 304V171L256 105Z" fill="#06182d" stroke="#1f74ff" stroke-opacity=".5" stroke-width="4"/>
+  <path d="M166 312H346" stroke="url(#platinum)" stroke-width="12" stroke-linecap="round"/>
+  <path d="M178 300L229 251L267 282L337 187" stroke="url(#prism)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+  <path d="M337 187L333 247" stroke="#ffffff" stroke-width="11" stroke-linecap="round"/>
+  <path d="M337 187L278 196" stroke="#ffffff" stroke-width="11" stroke-linecap="round"/>
+  <rect x="176" y="234" width="24" height="78" rx="7" fill="#06182d" stroke="#00d5ff" stroke-opacity=".8"/>
+  <rect x="232" y="204" width="24" height="108" rx="7" fill="#06182d" stroke="#0057ff" stroke-opacity=".85"/>
+  <rect x="288" y="248" width="24" height="64" rx="7" fill="#06182d" stroke="#ffffff" stroke-opacity=".78"/>
+  <circle cx="370" cy="132" r="16" fill="#00d5ff" filter="url(#glow)"/>
+</svg>

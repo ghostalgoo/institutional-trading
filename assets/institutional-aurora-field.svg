@@ -1,0 +1,44 @@
+<svg width="1920" height="1200" viewBox="0 0 1920 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="goldGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(230 160) rotate(37) scale(700 460)">
+      <stop stop-color="#f4c85e" stop-opacity=".48"/>
+      <stop offset=".45" stop-color="#a76d24" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#071015" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cyanGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1510 290) rotate(142) scale(720 520)">
+      <stop stop-color="#50e1ff" stop-opacity=".34"/>
+      <stop offset=".5" stop-color="#00f0a5" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#071015" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="beamGold" x1="-10" y1="120" x2="1830" y2="940" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f7d56e" stop-opacity=".42"/>
+      <stop offset=".38" stop-color="#f7d56e" stop-opacity=".04"/>
+      <stop offset="1" stop-color="#50e1ff" stop-opacity=".16"/>
+    </linearGradient>
+    <linearGradient id="beamCyan" x1="110" y1="1020" x2="1840" y2="320" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#50e1ff" stop-opacity=".28"/>
+      <stop offset=".42" stop-color="#00f0a5" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#f7d56e" stop-opacity=".22"/>
+    </linearGradient>
+    <pattern id="grid" width="88" height="88" patternUnits="userSpaceOnUse">
+      <path d="M88 0H0V88" stroke="white" stroke-opacity=".07" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1920" height="1200" fill="#101920"/>
+  <rect width="1920" height="1200" fill="url(#goldGlow)"/>
+  <rect width="1920" height="1200" fill="url(#cyanGlow)"/>
+  <rect width="1920" height="1200" fill="url(#grid)"/>
+  <path d="M-120 1040C260 875 470 704 756 654C1100 594 1248 408 2040 154" stroke="url(#beamCyan)" stroke-width="13" stroke-linecap="round"/>
+  <path d="M-80 170C405 230 616 412 894 474C1246 553 1488 670 2020 1050" stroke="url(#beamGold)" stroke-width="17" stroke-linecap="round"/>
+  <path d="M166 734L441 500H753L1006 321H1339L1610 185" stroke="#50e1ff" stroke-opacity=".16" stroke-width="3"/>
+  <path d="M198 805H510L730 708H1014L1272 584H1650" stroke="#f4c85e" stroke-opacity=".18" stroke-width="3"/>
+  <g opacity=".32">
+    <circle cx="441" cy="500" r="5" fill="#f4c85e"/>
+    <circle cx="753" cy="500" r="5" fill="#50e1ff"/>
+    <circle cx="1006" cy="321" r="5" fill="#00f0a5"/>
+    <circle cx="1272" cy="584" r="5" fill="#f4c85e"/>
+    <circle cx="1610" cy="185" r="5" fill="#50e1ff"/>
+  </g>
+  <path d="M0 0H1920V1200H0V0Z" fill="url(#grid)" opacity=".28"/>
+  <rect width="1920" height="1200" fill="black" opacity=".18"/>
+</svg>
