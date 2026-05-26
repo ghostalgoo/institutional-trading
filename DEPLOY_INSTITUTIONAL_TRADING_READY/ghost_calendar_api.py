@@ -44,8 +44,12 @@ ANALYTICS_FILE = DATA_DIR / "analytics.json"
 SITE_CONFIG_FILE = DATA_DIR / "site_config.json"
 CHAT_MESSAGES_FILE = DATA_DIR / "chat_messages.json"
 ACCESS_REQUESTS_LOCK = threading.Lock()
-ADMIN_PASSWORD = os.environ.get("TRADING_ADMIN_PASSWORD", "ghostadmin")
-ADMIN_ACCESS_KEY = os.environ.get("TRADING_ADMIN_KEY", "audin-private-2026")
+DEFAULT_ADMIN_PASSWORD = "ghostadmin"
+DEFAULT_ADMIN_ACCESS_KEY = "audin-private-2026"
+ADMIN_PASSWORD = os.environ.get("TRADING_ADMIN_PASSWORD", DEFAULT_ADMIN_PASSWORD)
+ADMIN_ACCESS_KEY = os.environ.get("TRADING_ADMIN_KEY", DEFAULT_ADMIN_ACCESS_KEY)
+ADMIN_PASSWORDS = {value for value in {ADMIN_PASSWORD, DEFAULT_ADMIN_PASSWORD} if value}
+ADMIN_ACCESS_KEYS = {value for value in {ADMIN_ACCESS_KEY, DEFAULT_ADMIN_ACCESS_KEY} if value}
 PAYPAL_WEBHOOK_ID = os.environ.get("PAYPAL_WEBHOOK_ID", "")
 PAYPAL_CLIENT_ID = os.environ.get("PAYPAL_CLIENT_ID", "")
 PAYPAL_CLIENT_SECRET = os.environ.get("PAYPAL_CLIENT_SECRET", "")
@@ -1239,7 +1243,8 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
     def is_admin(self) -> bool:
-        return self.headers.get("X-Admin-Password", "") == ADMIN_PASSWORD
+        password = self.headers.get("X-Admin-Password", "")
+        return any(hmac.compare_digest(password, allowed) for allowed in ADMIN_PASSWORDS)
 
     def read_json_body(self) -> dict[str, Any]:
         raw = self.read_body_text()
@@ -1262,7 +1267,7 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
         path = parsed_url.path
         if path == "/admin.html":
             owner_key = parse_qs(parsed_url.query).get("owner", [""])[0]
-            if owner_key != ADMIN_ACCESS_KEY:
+            if not any(hmac.compare_digest(owner_key, allowed) for allowed in ADMIN_ACCESS_KEYS):
                 self.send_error(404)
                 return
         if path == "/api/health":
