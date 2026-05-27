@@ -44,6 +44,7 @@ ANALYTICS_FILE = DATA_DIR / "analytics.json"
 SITE_CONFIG_FILE = DATA_DIR / "site_config.json"
 CHAT_MESSAGES_FILE = DATA_DIR / "chat_messages.json"
 VIP_MESSAGES_FILE = DATA_DIR / "vip_messages.json"
+CLIENT_SESSIONS_FILE = DATA_DIR / "client_sessions.json"
 ACCESS_REQUESTS_LOCK = threading.Lock()
 DEFAULT_ADMIN_PASSWORD = "ghostadmin"
 DEFAULT_ADMIN_ACCESS_KEY = "audin-private-2026"
@@ -78,6 +79,8 @@ SUPABASE_SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
 SUPABASE_STATE_TABLE = os.environ.get("SUPABASE_STATE_TABLE", "site_state")
 SUPABASE_ENABLED = bool(SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY)
 SUPABASE_TIMEOUT_SECONDS = 8
+MAINTENANCE_MODE = os.environ.get("TRADING_MAINTENANCE_MODE", "").lower() in {"1", "true", "yes", "on"}
+MAINTENANCE_BYPASS_KEY = os.environ.get("TRADING_MAINTENANCE_BYPASS_KEY", ADMIN_ACCESS_KEY)
 
 
 def now_paris() -> datetime:
@@ -537,6 +540,14 @@ def save_vip_messages(messages: list[dict[str, Any]]) -> None:
     save_state("vip_messages", VIP_MESSAGES_FILE, messages[:800])
 
 
+def load_client_sessions() -> dict[str, Any]:
+    return load_state("client_sessions", CLIENT_SESSIONS_FILE, {}, dict)
+
+
+def save_client_sessions(sessions: dict[str, Any]) -> None:
+    save_state("client_sessions", CLIENT_SESSIONS_FILE, sessions)
+
+
 def create_chat_message(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
     email = clean_text(data.get("email"), 180).lower()
     message = clean_text(data.get("message"), 1200)
@@ -949,6 +960,117 @@ def public_client_payload(item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def client_session_key(item: dict[str, Any]) -> str:
+    email = clean_text(item.get("email"), 180).lower()
+    if email:
+        return email
+    return clean_text(item.get("id"), 120) or f"client-{uuid4().hex[:8]}"
+
+
+def product_count_for_item(item: dict[str, Any]) -> int:
+    products = item.get("products") if isinstance(item.get("products"), list) else normalize_products(item)
+    if products:
+        return max(1, min(3, len(products)))
+    text = clean_text(item.get("product"), 320).lower()
+    markets = [name for name in ("btc", "gold", "nasdaq") if name in text]
+    return max(1, len(markets))
+
+
+def client_remaining_minutes(subscription_end: Any) -> int:
+    parsed = parse_provider_date(subscription_end)
+    if not parsed:
+        return 0
+    return max(0, int((parsed - now_paris()).total_seconds() // 60))
+
+
+def record_client_session(item: dict[str, Any], source: str = "login") -> dict[str, Any]:
+    now = now_paris()
+    payload = public_client_payload(item)
+    session = {
+        "id": clean_text(item.get("id"), 120),
+        "name": clean_text(item.get("name"), 120),
+        "email": clean_text(item.get("email"), 180),
+        "tradingview": clean_text(item.get("tradingview"), 120),
+        "status": clean_text(item.get("status"), 40),
+        "product": clean_text(item.get("product"), 320),
+        "products": item.get("products") if isinstance(item.get("products"), list) else payload.get("products", []),
+        "subscriptionEnd": clean_text(item.get("subscriptionEnd"), 80),
+        "daysRemaining": payload.get("daysRemaining", 0),
+        "lastSeen": now.isoformat(),
+        "source": clean_text(source, 40) or "login",
+    }
+    sessions = load_client_sessions()
+    sessions[client_session_key(item)] = session
+    cutoff = now - timedelta(days=30)
+    sessions = {
+        key: value for key, value in sessions.items()
+        if isinstance(value, dict) and (parse_provider_date(value.get("lastSeen")) or now) >= cutoff
+    }
+    save_client_sessions(sessions)
+    return session
+
+
+def admin_client_overview() -> dict[str, Any]:
+    requests = load_access_requests()
+    sessions = load_client_sessions()
+    now = now_paris()
+    online_cutoff = now - timedelta(minutes=3)
+    clients: list[dict[str, Any]] = []
+    for item in requests:
+        if not isinstance(item, dict):
+            continue
+        payload = public_client_payload(item)
+        key = client_session_key(item)
+        session = sessions.get(key) if isinstance(sessions.get(key), dict) else {}
+        last_seen = clean_text(session.get("lastSeen"), 80)
+        last_seen_dt = parse_provider_date(last_seen)
+        subscription_end = clean_text(item.get("subscriptionEnd"), 80)
+        remaining_minutes = client_remaining_minutes(subscription_end)
+        online = bool(last_seen_dt and last_seen_dt >= online_cutoff)
+        status = clean_text(item.get("status"), 40) or "pending"
+        clients.append({
+            "id": clean_text(item.get("id"), 120),
+            "created_at": clean_text(item.get("created_at"), 80),
+            "updated_at": clean_text(item.get("updated_at"), 80),
+            "status": status,
+            "name": clean_text(item.get("name"), 120),
+            "email": clean_text(item.get("email"), 180),
+            "tradingview": clean_text(item.get("tradingview"), 120),
+            "product": clean_text(item.get("product"), 320),
+            "products": item.get("products") if isinstance(item.get("products"), list) else payload.get("products", []),
+            "subscriptionStart": clean_text(item.get("subscriptionStart"), 80),
+            "subscriptionEnd": subscription_end,
+            "daysRemaining": payload.get("daysRemaining", 0),
+            "minutesRemaining": remaining_minutes,
+            "online": online,
+            "lastSeen": last_seen,
+            "lastSeenSource": clean_text(session.get("source"), 40),
+            "productCount": product_count_for_item(item),
+        })
+    clients.sort(key=lambda item: (
+        0 if item.get("online") else 1,
+        0 if item.get("status") == "approved" and item.get("minutesRemaining", 0) > 0 else 1,
+        item.get("daysRemaining", 0),
+        item.get("name", ""),
+    ))
+    approved_active = [item for item in clients if item.get("status") == "approved" and item.get("minutesRemaining", 0) > 0]
+    expiring = [item for item in approved_active if item.get("daysRemaining", 0) <= 7]
+    expired = [item for item in clients if item.get("status") == "approved" and item.get("minutesRemaining", 0) <= 0]
+    return {
+        "ok": True,
+        "clients": clients,
+        "metrics": {
+            "total": len(clients),
+            "online": sum(1 for item in clients if item.get("online")),
+            "active": len(approved_active),
+            "pending": sum(1 for item in clients if item.get("status") == "pending"),
+            "expiring": len(expiring),
+            "expired": len(expired),
+        },
+        "updated_at": now.isoformat(),
+    }
+
+
 def create_access_request(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
     required = {
         "name": clean_text(data.get("name"), 120),
@@ -1227,8 +1349,17 @@ def client_login(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
         return False, {"ok": False, "error": "missing_fields"}
     item = find_client_for_login(data)
     if item:
-        return True, {"ok": True, "client": public_client_payload(item), "vip": public_vip_payload()}
+        session = record_client_session(item, "login")
+        return True, {"ok": True, "client": public_client_payload(item), "vip": public_vip_payload(), "session": session}
     return False, {"ok": False, "error": "not_found"}
+
+
+def client_ping(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
+    item = find_client_for_login(data)
+    if not item:
+        return False, {"ok": False, "error": "unauthorized"}
+    session = record_client_session(item, "heartbeat")
+    return True, {"ok": True, "client": public_client_payload(item), "vip": public_vip_payload(), "session": session}
 
 
 def create_vip_message(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
@@ -1237,6 +1368,8 @@ def create_vip_message(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
         return False, {"ok": False, "error": "unauthorized"}
     if item.get("status") != "approved":
         return False, {"ok": False, "error": "not_approved"}
+    if client_remaining_minutes(item.get("subscriptionEnd")) <= 0:
+        return False, {"ok": False, "error": "subscription_expired"}
     message = clean_text(data.get("message"), 1000)
     if not message:
         return False, {"ok": False, "error": "missing_message"}
@@ -1264,6 +1397,7 @@ def create_vip_message(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
         messages = load_vip_messages()
         messages.insert(0, payload)
         save_vip_messages(messages)
+    record_client_session(item, "message")
     return True, {"ok": True, "message": payload, "vip": public_vip_payload()}
 
 
@@ -1590,6 +1724,37 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
         password = self.headers.get("X-Admin-Password", "")
         return any(hmac.compare_digest(password, allowed) for allowed in ADMIN_PASSWORDS)
 
+    def maintenance_bypass(self, parsed_url: Any) -> bool:
+        preview_key = clean_text(parse_qs(parsed_url.query).get("preview", [""])[0], 120)
+        if preview_key and MAINTENANCE_BYPASS_KEY and hmac.compare_digest(preview_key, MAINTENANCE_BYPASS_KEY):
+            return True
+        owner_key = clean_text(parse_qs(parsed_url.query).get("owner", [""])[0], 120)
+        return bool(owner_key and any(hmac.compare_digest(owner_key, allowed) for allowed in ADMIN_ACCESS_KEYS))
+
+    def should_show_maintenance(self, parsed_url: Any) -> bool:
+        if not MAINTENANCE_MODE or self.maintenance_bypass(parsed_url):
+            return False
+        path = parsed_url.path
+        if path in {"/ops", "/ops/", "/admin.html", "/maintenance.html"}:
+            return False
+        if path.startswith("/api/") or path.startswith("/assets/"):
+            return False
+        return True
+
+    def send_maintenance(self) -> None:
+        file_path = ROOT / "maintenance.html"
+        if file_path.exists():
+            body = file_path.read_bytes()
+        else:
+            body = b"<!doctype html><meta charset=\"utf-8\"><title>Site en construction</title><h1>Site en construction</h1>"
+        self.send_response(503)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Retry-After", "3600")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
     def read_json_body(self) -> dict[str, Any]:
         raw = self.read_body_text()
         if not raw:
@@ -1609,6 +1774,9 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
     def do_GET(self) -> None:
         parsed_url = urlparse(self.path)
         path = parsed_url.path
+        if self.should_show_maintenance(parsed_url):
+            self.send_maintenance()
+            return
         if path in {"/ops", "/ops/"}:
             self.path = "/admin.html"
             super().do_GET()
@@ -1667,6 +1835,12 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
                 self.send_json({"ok": False, "error": "unauthorized"}, 401)
                 return
             self.send_json({"ok": True, "vip": public_vip_payload(), "updated_at": now_paris().isoformat()})
+            return
+        if path == "/api/admin/client-overview":
+            if not self.is_admin():
+                self.send_json({"ok": False, "error": "unauthorized"}, 401)
+                return
+            self.send_json(admin_client_overview())
             return
         if path == "/api/chat/thread":
             email = clean_text(parse_qs(parsed_url.query).get("email", [""])[0], 180).lower()
@@ -1764,6 +1938,10 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
         if path == "/api/client/login":
             ok, payload = client_login(data)
             self.send_json(payload, 200 if ok else 404)
+            return
+        if path == "/api/client/ping":
+            ok, payload = client_ping(data)
+            self.send_json(payload, 200 if ok else 401)
             return
         if path == "/api/client/vip/message":
             ok, payload = create_vip_message(data)

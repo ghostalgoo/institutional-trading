@@ -474,7 +474,7 @@
             <button class="btn dark" id="logoutBtn" type="button">Deconnexion</button>
           </div>
           <div class="status-grid">
-            <div><span class="micro">Jours restants</span><strong id="daysLeft">--</strong></div>
+            <div><span class="micro">Temps restant</span><strong id="daysLeft">--</strong></div>
             <div><span class="micro">TradingView</span><strong id="tvUser">--</strong></div>
             <div><span class="micro">Plan</span><strong id="clientPlan">--</strong></div>
             <div><span class="micro">Statut</span><strong id="clientStatus">--</strong></div>
@@ -550,6 +550,7 @@
     let vip = null;
     let activeRoom = "general";
     let countdownTimer = null;
+    let heartbeatTimer = null;
 
     const $ = selector => document.querySelector(selector);
     const fmtDate = value => {
@@ -557,6 +558,16 @@
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) return value;
       return new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Paris" }).format(date);
+    };
+    const exactRemaining = value => {
+      const end = new Date(value || "");
+      if (Number.isNaN(end.getTime())) return "--";
+      let diff = end.getTime() - Date.now();
+      if (diff <= 0) return "Expire";
+      const days = Math.floor(diff / 86400000); diff -= days * 86400000;
+      const hours = Math.floor(diff / 3600000); diff -= hours * 3600000;
+      const minutes = Math.floor(diff / 60000);
+      return days > 0 ? `${days}j ${hours}h ${minutes}m` : `${hours}h ${minutes}m`;
     };
     const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
     const productShort = products => {
@@ -586,11 +597,39 @@
       client = data.client;
       vip = data.vip || {};
       renderApp();
+      startHeartbeat();
+    }
+
+    function hasActiveAccess() {
+      const end = new Date(client?.subscriptionEnd || "");
+      return client && client.status === "approved" && !Number.isNaN(end.getTime()) && end.getTime() > Date.now();
+    }
+
+    function startHeartbeat() {
+      clearInterval(heartbeatTimer);
+      heartbeatTimer = setInterval(() => {
+        pingClient().catch(() => {});
+      }, 45000);
+      pingClient().catch(() => {});
+    }
+
+    async function pingClient() {
+      if (!auth) return;
+      const response = await fetch("/api/client/ping", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(auth)
+      });
+      const data = await response.json();
+      if (!response.ok || !data.ok) throw new Error(data.error || "ping");
+      client = data.client || client;
+      vip = data.vip || vip;
+      renderApp();
     }
 
     function renderApp() {
       $("#loginView").classList.add("hidden");
-      if (!client || client.status !== "approved") {
+      if (!hasActiveAccess()) {
         $("#lockedView").classList.remove("hidden");
         $("#floorView").classList.add("hidden");
         return;
@@ -608,7 +647,7 @@
         <p>${escapeHTML(announcement.copy || "")}</p>
         ${announcement.url ? `<a class="btn gold" style="margin-top:14px" href="${escapeHTML(announcement.url)}">${escapeHTML(announcement.cta || "Voir")}</a>` : ""}
       ` : "";
-      $("#daysLeft").textContent = client.daysRemaining ?? "--";
+      $("#daysLeft").textContent = exactRemaining(client.subscriptionEnd);
       $("#tvUser").textContent = client.tradingview || "--";
       $("#clientPlan").textContent = productShort(client.products);
       $("#clientStatus").textContent = "Actif";

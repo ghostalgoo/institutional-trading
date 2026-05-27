@@ -341,7 +341,7 @@
       top: 73px;
       z-index: 9;
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
       gap: 8px;
       margin: 0 0 18px;
       padding: 10px;
@@ -1188,6 +1188,202 @@
       background: rgba(0,0,0,.20);
     }
 
+    .client-command {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .client-kpis {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .client-kpi {
+      min-height: 132px;
+      padding: 18px;
+      border: 1px solid rgba(244,240,230,.14);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 84% 12%, rgba(38,183,255,.16), transparent 12rem),
+        linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.02)),
+        rgba(5,7,10,.82);
+      display: grid;
+      align-content: space-between;
+      box-shadow: 0 24px 80px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.07);
+    }
+
+    .client-kpi strong {
+      font-size: clamp(34px, 4vw, 58px);
+      line-height: .85;
+    }
+
+    .client-kpi.online {
+      border-color: rgba(0,199,131,.34);
+      background:
+        radial-gradient(circle at 78% 10%, rgba(0,199,131,.18), transparent 14rem),
+        rgba(5,7,10,.82);
+    }
+
+    .client-toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) repeat(3, minmax(150px, 190px));
+      gap: 10px;
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.035);
+    }
+
+    .client-ops-grid {
+      display: grid;
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .client-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+      gap: 1px;
+      border: 1px solid rgba(244,240,230,.13);
+      background: var(--line);
+      overflow: hidden;
+    }
+
+    .client-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 0 0, rgba(255,138,33,.10), transparent 17rem),
+        radial-gradient(circle at 98% 0, rgba(38,183,255,.13), transparent 19rem);
+      opacity: .9;
+    }
+
+    .client-card-main,
+    .client-card-side {
+      position: relative;
+      padding: 18px;
+      background: rgba(8,10,13,.9);
+    }
+
+    .client-card-main {
+      display: grid;
+      gap: 14px;
+    }
+
+    .client-topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: start;
+      padding-bottom: 13px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .client-topline h3 {
+      margin: 6px 0 0;
+      font-size: clamp(24px, 2.4vw, 38px);
+      line-height: .94;
+    }
+
+    .online-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: rgba(244,240,230,.72);
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .online-dot::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(244,240,230,.30);
+      box-shadow: 0 0 0 rgba(244,240,230,0);
+    }
+
+    .online-dot.live::before {
+      background: var(--green);
+      box-shadow: 0 0 22px rgba(0,199,131,.72);
+    }
+
+    .client-info-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .client-info-grid div {
+      min-height: 86px;
+      display: grid;
+      align-content: center;
+      gap: 8px;
+      padding: 13px;
+      background: rgba(5,6,8,.62);
+      overflow-wrap: anywhere;
+    }
+
+    .client-time {
+      min-height: 100%;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .time-hero {
+      padding: 16px;
+      border: 1px solid rgba(0,199,131,.25);
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at 0 0, rgba(0,199,131,.14), transparent 12rem),
+        rgba(255,255,255,.04);
+    }
+
+    .time-hero.expired {
+      border-color: rgba(239,69,96,.34);
+      background: radial-gradient(circle at 0 0, rgba(239,69,96,.18), transparent 12rem), rgba(255,255,255,.04);
+    }
+
+    .time-hero strong {
+      display: block;
+      margin-top: 8px;
+      font-size: clamp(26px, 3vw, 44px);
+      line-height: .9;
+    }
+
+    .time-bar {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+    }
+
+    .time-bar span {
+      display: block;
+      width: var(--w, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--green), var(--gold), var(--btc));
+      box-shadow: 0 0 24px rgba(0,199,131,.24);
+    }
+
+    .client-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .client-actions .wide { grid-column: 1 / -1; }
+
     .empty { padding: 38px; color: var(--muted); font-weight: 820; }
     .hidden { display: none; }
 
@@ -1215,6 +1411,10 @@
       .vip-grid,
       .vip-form-grid,
       .vip-type-row,
+      .client-kpis,
+      .client-toolbar,
+      .client-card,
+      .client-info-grid,
       .duration-grid { grid-template-columns: 1fr; }
       h1 { font-size: clamp(46px, 14vw, 72px); }
     }
@@ -1277,6 +1477,7 @@
       <nav class="ops-tabs" aria-label="Navigation admin">
         <button class="ops-tab active" type="button" data-tab="overview"><strong>Overview</strong><span id="tabOverviewMeta">cockpit</span></button>
         <button class="ops-tab" type="button" data-tab="sales"><strong>Achats</strong><span id="tabSalesMeta">validation</span></button>
+        <button class="ops-tab" type="button" data-tab="clients"><strong>Clients VIP</strong><span id="tabClientsMeta">online / temps</span></button>
         <button class="ops-tab" type="button" data-tab="promo"><strong>Promo</strong><span id="tabPromoMeta">offre live</span></button>
         <button class="ops-tab" type="button" data-tab="vip"><strong>VIP Floor</strong><span id="tabVipMeta">lives/setup S+</span></button>
         <button class="ops-tab" type="button" data-tab="support"><strong>Support</strong><span id="tabSupportMeta">tickets</span></button>
@@ -1303,6 +1504,38 @@
         <div class="pipeline-card"><span class="micro">Mois vendus</span><strong id="soldMonths">0</strong><span class="lead">Base estimee sur 49,99 EUR / setup.</span></div>
       </div>
       <div class="product-matrix" id="productMatrix" data-tab-panel="overview"></div>
+      <section class="client-command" data-tab-panel="clients">
+        <div class="client-kpis">
+          <article class="client-kpi online"><span class="micro">Connectes VIP</span><strong id="clientOnlineCount">0</strong><small>Clients actifs vus en direct</small></article>
+          <article class="client-kpi"><span class="micro">Actifs</span><strong id="clientActiveCount">0</strong><small>Acces VIP encore ouverts</small></article>
+          <article class="client-kpi"><span class="micro">Expire bientot</span><strong id="clientExpiringCount">0</strong><small>7 jours ou moins</small></article>
+          <article class="client-kpi"><span class="micro">Expires</span><strong id="clientExpiredCount">0</strong><small>A recharger apres paiement</small></article>
+          <article class="client-kpi"><span class="micro">En attente</span><strong id="clientPendingCount">0</strong><small>Validation a faire</small></article>
+        </div>
+        <div class="panel table-wrap">
+          <div class="section-title micro"><span>Clients / VIP / recharges</span><span id="clientMeta">0 client</span></div>
+          <div class="client-toolbar">
+            <input id="clientSearchInput" placeholder="Rechercher email, nom, TradingView, setup...">
+            <select id="clientStatusFilter">
+              <option value="all">Tous</option>
+              <option value="online">Connectes</option>
+              <option value="active">Actifs</option>
+              <option value="expiring">Expire bientot</option>
+              <option value="expired">Expires</option>
+              <option value="pending">En attente</option>
+            </select>
+            <select id="clientProductFilter">
+              <option value="all">Tous produits</option>
+              <option value="btc">BTC</option>
+              <option value="gold">Gold</option>
+              <option value="nasdaq">Nasdaq</option>
+            </select>
+            <button class="btn" type="button" id="clientRefresh">Rafraichir clients</button>
+          </div>
+          <div class="client-ops-grid" id="clientOpsGrid"></div>
+          <div class="empty hidden" id="clientEmptyState">Aucun client trouve.</div>
+        </div>
+      </section>
       <div class="ops-grid" data-tab-row>
         <div class="panel ops-panel" data-tab-panel="signals">
           <div class="section-title micro"><span>Audience site</span><span id="analyticsUpdated">Actif</span></div>
@@ -1522,7 +1755,7 @@
   </main>
 
   <script>
-    let adminPassword = sessionStorage.getItem("tiAdminPassword") || "";
+    let adminPassword = localStorage.getItem("tiAdminPassword") || sessionStorage.getItem("tiAdminPassword") || "";
     let requests = [];
     let paypalEvents = [];
     let donations = [];
@@ -1531,6 +1764,7 @@
     let analytics = { online: 0, visitorsToday: 0, pageViewsToday: 0, topPages: [] };
     let siteConfig = { flash: {} };
     let vipState = { announcement: {}, events: [], resources: [], rooms: [], messages: [] };
+    let clientOverview = { clients: [], metrics: {} };
     const demoMode = new URLSearchParams(location.search).get("demo") === "1";
     let offerPreviewInterval = null;
     let activeTab = "overview";
@@ -1577,6 +1811,46 @@
       if (Number.isNaN(date.getTime())) return "--";
       const days = Math.max(0, Math.floor((date.getTime() - Date.now()) / 86400000));
       return days === 0 ? "expire ou aujourd'hui" : `${days} j restants`;
+    }
+
+    function preciseRemaining(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "Aucune date";
+      let ms = date.getTime() - Date.now();
+      if (ms <= 0) return "Expire";
+      const days = Math.floor(ms / 86400000);
+      ms -= days * 86400000;
+      const hours = Math.floor(ms / 3600000);
+      ms -= hours * 3600000;
+      const minutes = Math.floor(ms / 60000);
+      return days > 0 ? `${days}j ${hours}h ${minutes}m` : `${hours}h ${minutes}m`;
+    }
+
+    function addDaysToSubscription(value, days) {
+      const current = new Date(value);
+      const base = !Number.isNaN(current.getTime()) && current.getTime() > Date.now() ? current : new Date();
+      return new Date(base.getTime() + Number(days) * 86400000).toISOString();
+    }
+
+    function lastSeenLabel(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "Jamais connecte";
+      const minutes = Math.max(0, Math.floor((Date.now() - date.getTime()) / 60000));
+      if (minutes < 1) return "a l'instant";
+      if (minutes < 60) return `il y a ${minutes} min`;
+      const hours = Math.floor(minutes / 60);
+      if (hours < 24) return `il y a ${hours}h`;
+      return formatDate(value);
+    }
+
+    function subscriptionProgress(client) {
+      const end = new Date(client.subscriptionEnd);
+      const start = new Date(client.subscriptionStart || client.created_at);
+      if (Number.isNaN(end.getTime())) return 0;
+      const total = end.getTime() - (Number.isNaN(start.getTime()) ? Date.now() - 30 * 86400000 : start.getTime());
+      const left = end.getTime() - Date.now();
+      if (total <= 0) return 0;
+      return Math.max(0, Math.min(100, Math.round((left / total) * 100)));
     }
 
     function money(value) {
@@ -1807,6 +2081,86 @@
       });
     }
 
+    function filteredClients() {
+      const clients = Array.isArray(clientOverview.clients) ? clientOverview.clients : [];
+      const search = (document.getElementById("clientSearchInput")?.value || "").toLowerCase().trim();
+      const status = document.getElementById("clientStatusFilter")?.value || "all";
+      const product = document.getElementById("clientProductFilter")?.value || "all";
+      return clients.filter(client => {
+        const haystack = [
+          client.name,
+          client.email,
+          client.tradingview,
+          client.product,
+          ...(Array.isArray(client.products) ? client.products : [])
+        ].join(" ").toLowerCase();
+        const minutes = Number(client.minutesRemaining || 0);
+        const statusOk =
+          status === "all" ||
+          (status === "online" && client.online) ||
+          (status === "active" && client.status === "approved" && minutes > 0) ||
+          (status === "expiring" && client.status === "approved" && minutes > 0 && Number(client.daysRemaining || 0) <= 7) ||
+          (status === "expired" && client.status === "approved" && minutes <= 0) ||
+          (status === "pending" && client.status === "pending");
+        const productOk = product === "all" || haystack.includes(product);
+        const searchOk = !search || haystack.includes(search);
+        return statusOk && productOk && searchOk;
+      });
+    }
+
+    function renderClientOps() {
+      const metrics = clientOverview.metrics || {};
+      const clients = filteredClients();
+      document.getElementById("tabClientsMeta").textContent = `${metrics.online || 0} online / ${metrics.active || 0} actifs`;
+      document.getElementById("clientOnlineCount").textContent = metrics.online || 0;
+      document.getElementById("clientActiveCount").textContent = metrics.active || 0;
+      document.getElementById("clientExpiringCount").textContent = metrics.expiring || 0;
+      document.getElementById("clientExpiredCount").textContent = metrics.expired || 0;
+      document.getElementById("clientPendingCount").textContent = metrics.pending || 0;
+      document.getElementById("clientMeta").textContent = `${clients.length} affiche${clients.length > 1 ? "s" : ""} / ${metrics.total || 0}`;
+      document.getElementById("clientEmptyState").classList.toggle("hidden", clients.length !== 0);
+      document.getElementById("clientOpsGrid").innerHTML = clients.map(client => {
+        const percent = subscriptionProgress(client);
+        const expired = Number(client.minutesRemaining || 0) <= 0;
+        return `
+          <article class="client-card">
+            <div class="client-card-main">
+              <div class="client-topline">
+                <div>
+                  <span class="online-dot ${client.online ? "live" : ""}">${client.online ? "Connecte maintenant" : `Offline - ${escapeHTML(lastSeenLabel(client.lastSeen))}`}</span>
+                  <h3>${escapeHTML(client.name || "Client")}</h3>
+                </div>
+                <span class="status ${escapeHTML(client.status || "pending")}">${escapeHTML(client.status || "pending")}</span>
+              </div>
+              <div class="client-info-grid">
+                <div><span class="micro">Email</span><strong>${escapeHTML(client.email || "-")}</strong></div>
+                <div><span class="micro">TradingView</span><strong style="color:var(--cyan)">${escapeHTML(client.tradingview || "-")}</strong></div>
+                <div><span class="micro">Produit</span><strong>${escapeHTML(client.product || "-")}</strong><span class="product-pills">${productPills(client)}</span></div>
+                <div><span class="micro">Derniere activite</span><strong>${escapeHTML(lastSeenLabel(client.lastSeen))}</strong><span class="micro">${escapeHTML(client.lastSeenSource || "session")}</span></div>
+              </div>
+            </div>
+            <aside class="client-card-side">
+              <div class="client-time">
+                <div class="time-hero ${expired ? "expired" : ""}">
+                  <span class="micro">${expired ? "Acces a recharger" : "Temps restant exact"}</span>
+                  <strong>${escapeHTML(preciseRemaining(client.subscriptionEnd))}</strong>
+                  <span class="micro">Fin : ${escapeHTML(formatDate(client.subscriptionEnd))}</span>
+                </div>
+                <div class="time-bar"><span style="--w:${percent}%"></span></div>
+                <div class="client-actions">
+                  <button class="btn green" type="button" data-client-extend="${escapeHTML(client.id)}" data-days="30">+1 mois</button>
+                  <button class="btn green" type="button" data-client-extend="${escapeHTML(client.id)}" data-days="90">+3 mois</button>
+                  <button class="btn" type="button" data-client-extend="${escapeHTML(client.id)}" data-days="7">+7 jours</button>
+                  <button class="btn red" type="button" data-client-expire="${escapeHTML(client.id)}">Expirer</button>
+                  <a class="btn note wide" href="client.html" target="_blank" rel="noopener">Ouvrir panel client</a>
+                </div>
+              </div>
+            </aside>
+          </article>
+        `;
+      }).join("");
+    }
+
     function productStats() {
       const stats = Object.fromEntries(productDefs.map(product => [product.key, { ...product, declared: 0, approved: 0, pending: 0, revenue: 0 }]));
       requests.forEach(item => {
@@ -1951,6 +2305,7 @@
       fillFlashForm();
       fillVipForms();
       renderVipAdmin();
+      renderClientOps();
       document.getElementById("totalCount").textContent = total;
       document.getElementById("pendingCount").textContent = pending;
       document.getElementById("approvedCount").textContent = approved;
@@ -2093,19 +2448,32 @@
           rooms: ["general", "gold", "btc", "nasdaq", "macro", "formation"],
           messages: [{ id: "vip-demo", created_at: now.toISOString(), status: "pinned", room: "gold", sender: "admin", kind: "setup", priority: true, market: "Gold", grade: "S+", title: "Setup S+ Gold - zone de reaction", message: "Contexte propre. Attendre validation TradingView, invalidation stricte, execution manuelle seulement." }]
         };
+        clientOverview = {
+          metrics: { total: 3, online: 1, active: 2, pending: 1, expiring: 0, expired: 0 },
+          clients: requests.map((item, index) => ({
+            ...item,
+            online: index === 0,
+            lastSeen: index === 0 ? now.toISOString() : new Date(Date.now() - 3600000).toISOString(),
+            lastSeenSource: index === 0 ? "demo" : "offline",
+            daysRemaining: Math.max(0, Math.floor((new Date(item.subscriptionEnd).getTime() - Date.now()) / 86400000)),
+            minutesRemaining: Math.max(0, Math.floor((new Date(item.subscriptionEnd).getTime() - Date.now()) / 60000)),
+            productCount: productCount(item)
+          }))
+        };
         document.getElementById("desk").classList.remove("hidden");
         document.getElementById("loginStatus").textContent = "Mode test charge.";
         render();
         return;
       }
-      const [accessPayload, paypalPayload, donationPayload, analyticsPayload, configPayload, chatPayload, vipPayload] = await Promise.all([
+      const [accessPayload, paypalPayload, donationPayload, analyticsPayload, configPayload, chatPayload, vipPayload, clientPayload] = await Promise.all([
         api("/api/admin/access-requests"),
         api("/api/admin/paypal-events"),
         api("/api/admin/donations"),
         api("/api/admin/analytics"),
         api("/api/admin/site-config"),
         api("/api/admin/chat"),
-        api("/api/admin/vip")
+        api("/api/admin/vip"),
+        api("/api/admin/client-overview")
       ]);
       requests = accessPayload.requests || [];
       paypalEvents = paypalPayload.events || [];
@@ -2115,6 +2483,7 @@
       siteConfig = configPayload.config || siteConfig;
       chatMessages = chatPayload.messages || [];
       vipState = vipPayload.vip || vipState;
+      clientOverview = { clients: clientPayload.clients || [], metrics: clientPayload.metrics || {} };
       document.getElementById("desk").classList.remove("hidden");
       document.getElementById("loginStatus").textContent = "Administration chargee.";
       render();
@@ -2124,6 +2493,7 @@
       event.preventDefault();
       adminPassword = document.getElementById("password").value;
       sessionStorage.setItem("tiAdminPassword", adminPassword);
+      localStorage.setItem("tiAdminPassword", adminPassword);
       document.getElementById("loginStatus").textContent = "Connexion...";
       try {
         await loadRequests();
@@ -2143,6 +2513,48 @@
     ["searchInput", "statusFilter", "productFilter"].forEach(id => {
       document.getElementById(id).addEventListener("input", render);
       document.getElementById(id).addEventListener("change", render);
+    });
+
+    ["clientSearchInput", "clientStatusFilter", "clientProductFilter"].forEach(id => {
+      document.getElementById(id).addEventListener("input", renderClientOps);
+      document.getElementById(id).addEventListener("change", renderClientOps);
+    });
+
+    document.getElementById("clientRefresh").addEventListener("click", () => {
+      loadRequests().catch(() => document.getElementById("loginStatus").textContent = "Refresh clients impossible.");
+    });
+
+    document.getElementById("clientOpsGrid").addEventListener("click", async event => {
+      const extendButton = event.target.closest("button[data-client-extend]");
+      const expireButton = event.target.closest("button[data-client-expire]");
+      const button = extendButton || expireButton;
+      if (!button) return;
+      const id = extendButton ? extendButton.dataset.clientExtend : expireButton.dataset.clientExpire;
+      const current = requests.find(item => item.id === id) || (clientOverview.clients || []).find(item => item.id === id);
+      if (!current) return;
+      const nextEnd = extendButton
+        ? addDaysToSubscription(current.subscriptionEnd, Number(extendButton.dataset.days || 30))
+        : new Date(Date.now() - 60000).toISOString();
+      button.disabled = true;
+      try {
+        await api("/api/admin/access-requests/status", {
+          method: "POST",
+          body: JSON.stringify({
+            id,
+            status: "approved",
+            adminNote: extendButton
+              ? `Recharge admin +${extendButton.dataset.days || 30} jours apres paiement.`
+              : "Acces expire manuellement depuis Clients VIP.",
+            subscriptionEnd: nextEnd
+          })
+        });
+        document.getElementById("loginStatus").textContent = extendButton ? "Recharge appliquee." : "Acces expire.";
+        await loadRequests();
+      } catch (error) {
+        document.getElementById("loginStatus").textContent = "Action client impossible.";
+      } finally {
+        button.disabled = false;
+      }
     });
 
     document.getElementById("manualPurchaseForm").addEventListener("submit", async event => {
@@ -2356,7 +2768,9 @@
       loadRequests();
     } else if (adminPassword) {
       document.getElementById("password").value = adminPassword;
-      loadRequests().catch(() => sessionStorage.removeItem("tiAdminPassword"));
+      loadRequests().catch(() => {
+        document.getElementById("loginStatus").textContent = "Session admin conservee. Revalide si le serveur vient de redemarrer.";
+      });
     }
   </script>
 </body>
