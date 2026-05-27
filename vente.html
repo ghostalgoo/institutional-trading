@@ -85,10 +85,13 @@
       place-items: center;
       color: var(--paper);
       background:
-        radial-gradient(circle at 50% 42%, rgba(210,162,71,.24), transparent 26%),
-        radial-gradient(circle at 35% 60%, rgba(0,199,125,.12), transparent 28%),
-        linear-gradient(135deg, rgba(38,183,255,.06), transparent 34%, rgba(210,162,71,.08)),
+        linear-gradient(rgba(244,240,230,.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244,240,230,.022) 1px, transparent 1px),
+        radial-gradient(circle at 50% 43%, rgba(210,162,71,.22), transparent 22rem),
+        radial-gradient(circle at 32% 60%, rgba(0,199,125,.11), transparent 24rem),
+        radial-gradient(circle at 72% 34%, rgba(38,183,255,.10), transparent 25rem),
         #050608;
+      background-size: 44px 44px, 44px 44px, auto, auto, auto, auto;
       transition: opacity .7s ease, visibility .7s ease;
       animation: loaderAutoHide .7s ease 3.05s forwards;
     }
@@ -101,16 +104,20 @@
 
     .loader-desk {
       position: relative;
-      width: min(460px, calc(100% - 44px));
+      width: min(520px, calc(100% - 44px));
       display: grid;
       justify-items: center;
-      gap: 17px;
-      padding: 34px 28px;
-      border: 1px solid rgba(210,162,71,.2);
-      border-radius: 18px;
-      background: linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.018));
-      box-shadow: 0 54px 180px rgba(0,0,0,.64), inset 0 1px 0 rgba(255,255,255,.11);
+      gap: 15px;
+      padding: 30px;
+      border: 1px solid rgba(210,162,71,.28);
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 50% 0, rgba(210,162,71,.20), transparent 15rem),
+        linear-gradient(145deg, rgba(255,255,255,.085), rgba(255,255,255,.018)),
+        rgba(6,8,11,.78);
+      box-shadow: 0 54px 180px rgba(0,0,0,.64), 0 0 110px rgba(210,162,71,.10), inset 0 1px 0 rgba(255,255,255,.12);
       backdrop-filter: blur(26px);
+      overflow: hidden;
     }
 
     .loader-desk::before,
@@ -121,17 +128,22 @@
     }
 
     .loader-desk::before {
-      inset: 16px;
-      border: 1px solid rgba(244,240,230,.07);
-      border-radius: 14px;
+      inset: 14px;
+      border: 1px solid rgba(244,240,230,.08);
+      border-radius: 24px;
+      background:
+        linear-gradient(rgba(244,240,230,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244,240,230,.03) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(180deg, transparent, #000 15%, #000 85%, transparent);
     }
 
     .loader-desk::after {
-      left: 28px;
-      right: 28px;
-      top: 0;
+      left: 36px;
+      right: 36px;
+      top: 16px;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(210,162,71,.8), transparent);
+      background: linear-gradient(90deg, transparent, rgba(210,162,71,.9), rgba(38,183,255,.55), transparent);
       animation: loaderScan 1.4s ease-in-out infinite alternate;
     }
 
@@ -144,15 +156,17 @@
 
     .loader-logo {
       position: relative;
-      width: 168px;
-      height: 148px;
+      width: 132px;
+      height: 132px;
       display: grid;
       place-items: center;
       overflow: hidden;
-      border: 1px solid rgba(210,162,71,.28);
-      border-radius: 18px;
-      background: #030405;
-      box-shadow: 0 0 0 1px rgba(255,255,255,.04), 0 0 80px rgba(210,162,71,.2);
+      border: 1px solid rgba(210,162,71,.34);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(210,162,71,.22), transparent 7rem),
+        #030405;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.04), 0 24px 80px rgba(0,0,0,.45), 0 0 70px rgba(210,162,71,.18);
     }
 
     .loader-logo::before {
@@ -168,19 +182,19 @@
     .loader-logo img {
       position: relative;
       z-index: 1;
-      width: 100%;
-      height: 100%;
+      width: 92%;
+      height: 92%;
       object-fit: contain;
       object-position: center;
       transform: none;
-      border-radius: 15px;
+      border-radius: 23px;
     }
 
     .loader-title {
       margin: 0;
-      font-size: clamp(22px, 3.2vw, 34px);
+      font-size: clamp(24px, 3.4vw, 42px);
       line-height: .95;
-      letter-spacing: .04em;
+      letter-spacing: .02em;
       text-transform: uppercase;
     }
 
@@ -1358,10 +1372,12 @@
       align-content: space-between;
       gap: 13px;
       padding: 16px;
-      border: 1px solid rgba(244,240,230,.16);
+      border: 1px solid rgba(244,240,230,.13);
+      border-radius: 20px;
       background:
-        linear-gradient(135deg, rgba(244,240,230,.1), rgba(244,240,230,.025)),
-        rgba(6,8,11,.76);
+        radial-gradient(circle at 0 0, rgba(210,162,71,.09), transparent 10rem),
+        linear-gradient(135deg, rgba(244,240,230,.075), rgba(244,240,230,.018)),
+        rgba(6,8,11,.70);
       box-shadow: 0 28px 90px rgba(0,0,0,.42);
       backdrop-filter: blur(18px);
       opacity: calc(.04 + var(--deck-fan, 0) * .96);
@@ -1371,8 +1387,9 @@
     .orbit-card::before {
       content: "";
       position: absolute;
-      inset: -1px auto -1px -1px;
+      inset: 12px auto 12px 12px;
       width: 3px;
+      border-radius: 999px;
       background: var(--gold);
       opacity: .9;
     }
@@ -1401,6 +1418,7 @@
     .orbit-card .card-metric span {
       padding: 7px 9px;
       border: 1px solid rgba(244,240,230,.12);
+      border-radius: 999px;
       color: rgba(244,240,230,.86);
       background: rgba(244,240,230,.05);
       font-size: 10px;
@@ -1516,6 +1534,7 @@
       margin-top: 22px;
       padding: 13px 15px;
       border: 1px solid rgba(244,240,230,.13);
+      border-radius: 14px;
       color: rgba(244,240,230,.72);
       background: rgba(6,8,11,.42);
       box-shadow: 0 20px 70px rgba(0,0,0,.32);
@@ -1553,6 +1572,7 @@
 
     .rail i {
       height: 4px;
+      border-radius: 999px;
       background: rgba(255,255,255,.2);
     }
 
@@ -1562,8 +1582,11 @@
       position: relative;
       z-index: 4;
       min-height: 580px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(10,13,17,.86);
+      border: 1px solid rgba(244,240,230,.14);
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at 80% 6%, rgba(0,199,131,.12), transparent 18rem),
+        rgba(10,13,17,.86);
       box-shadow: 0 52px 130px rgba(0,0,0,.45);
       transform:
         translate3d(calc(var(--deck-open, 0) * -24px), calc(var(--deck-fan, 0) * 6px), calc(var(--deck-open, 0) * 80px))
@@ -1571,13 +1594,14 @@
         rotateY(calc(-10deg + var(--cinema-progress, 0) * 18deg))
         scale(calc(.94 + var(--deck-open, 0) * .08));
       transform-style: preserve-3d;
-      overflow: visible;
+      overflow: hidden;
     }
 
     .signal-board::after {
       content: "";
       position: absolute;
       inset: -1px;
+      border-radius: inherit;
       border: 1px solid rgba(0,199,131,.32);
       box-shadow: 0 0 70px rgba(0,199,131,.18), inset 0 0 44px rgba(0,199,131,.06);
       opacity: var(--deck-open, 0);
@@ -1591,7 +1615,9 @@
       justify-content: space-between;
       padding: 0 18px;
       border-bottom: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.035);
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.055), rgba(255,255,255,.022)),
+        rgba(255,255,255,.025);
     }
 
     .signal-body {
@@ -1602,12 +1628,15 @@
       overflow: hidden;
       background:
         radial-gradient(ellipse 68% 54% at 72% 26%, rgba(0,199,131,.1), transparent 68%),
+        linear-gradient(rgba(244,240,230,.026) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244,240,230,.022) 1px, transparent 1px),
         rgba(7,9,12,.5);
+      background-size: auto, 46px 46px, 46px 46px, auto;
     }
 
     .context-table {
       border-right: 1px solid rgba(255,255,255,.12);
-      background: rgba(7,9,12,.82);
+      background: rgba(7,9,12,.74);
       padding: 14px;
     }
 
@@ -1626,6 +1655,7 @@
       justify-self: stretch;
       text-align: center;
       padding: 7px;
+      border-radius: 8px;
       color: #08090b;
       background: var(--gold);
     }
@@ -1658,6 +1688,7 @@
       min-height: 54px;
       padding: 13px 16px;
       border: 1px solid rgba(0,199,131,.62);
+      border-radius: 12px;
       color: #ecfff6;
       background: rgba(0,199,131,.13);
       font-size: 11px;
@@ -4533,13 +4564,13 @@
     .broker-bonus {
       position: relative;
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
       align-items: center;
-      min-height: 148px;
-      padding: 26px 28px;
+      min-height: 92px;
+      padding: 18px 22px;
       border: 1px solid rgba(255,138,33,.32);
-      border-radius: 28px;
+      border-radius: 24px;
       background:
         radial-gradient(circle at 6% 0, rgba(255,138,33,.28), transparent 18rem),
         rgba(255,138,33,.08);
@@ -4551,10 +4582,10 @@
       content: attr(data-stamp);
       position: absolute;
       right: 18px;
-      bottom: -18px;
+      bottom: -20px;
       z-index: -1;
       color: rgba(244,240,230,.075);
-      font-size: clamp(70px, 8vw, 138px);
+      font-size: clamp(58px, 7vw, 112px);
       line-height: .78;
       font-weight: 950;
       letter-spacing: -.08em;
@@ -4620,19 +4651,12 @@
       box-shadow: 0 16px 42px rgba(255,138,33,.18);
     }
 
-    .broker-bonus strong {
+    .bonus-caption {
       color: var(--paper);
-      font-size: 23px;
+      font-size: 18px;
       line-height: 1.1;
-    }
-
-    .broker-bonus span {
-      display: block;
-      margin-top: 8px;
-      color: rgba(244,240,230,.68);
-      font-size: 12px;
-      line-height: 1.5;
-      font-weight: 780;
+      font-weight: 950;
+      letter-spacing: -.01em;
     }
 
     .copy-steps {
@@ -6625,10 +6649,7 @@
               </div>
               <div class="broker-bonus" data-stamp="VANTAGE">
                 <span class="bonus-value">500 EUR</span>
-                <div>
-                  <strong>Depot reel : bonus + bot offert.</strong>
-                  <span>Si vous ouvrez un compte reel, vous pouvez actuellement obtenir jusqu'a 150 EUR offerts pour un depot de 500 EUR minimum selon les offres disponibles. Pour tout depot de 500 EUR ou plus, 1 mois de bot est offert.</span>
-                </div>
+                <span class="bonus-caption">Bonus reseau + 1 mois de bot offert</span>
               </div>
             </div>
             <div class="broker-actions">
@@ -6668,10 +6689,7 @@
               </div>
               <div class="broker-bonus" data-stamp="GOLD X">
                 <span class="bonus-value">100%</span>
-                <div>
-                  <strong>Depot double possible selon promotion.</strong>
-                  <span>Aucun depot minimum requis pour ouvrir le compte. A partir de 500 EUR de depot, vous pouvez actuellement beneficier du depot double selon les offres promotionnelles disponibles.</span>
-                </div>
+                <span class="bonus-caption">Bonus Gold X selon promotion disponible</span>
               </div>
             </div>
             <div class="broker-actions">
