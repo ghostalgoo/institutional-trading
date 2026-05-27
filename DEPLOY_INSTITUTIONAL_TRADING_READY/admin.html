@@ -336,6 +336,70 @@
     .pipeline-card.gold { border-color: rgba(210,162,71,.32); }
     .pipeline-card.nasdaq { border-color: rgba(38,183,255,.32); }
 
+    .ops-tabs {
+      position: sticky;
+      top: 73px;
+      z-index: 9;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin: 0 0 18px;
+      padding: 10px;
+      border: 1px solid rgba(244,240,230,.13);
+      border-radius: 24px;
+      background: rgba(5,6,8,.78);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 20px 80px rgba(0,0,0,.30);
+    }
+
+    .ops-tab {
+      min-height: 54px;
+      display: grid;
+      place-items: center;
+      gap: 4px;
+      border: 1px solid rgba(244,240,230,.11);
+      border-radius: 18px;
+      color: rgba(244,240,230,.64);
+      background: rgba(255,255,255,.035);
+      cursor: pointer;
+      transition: transform .18s ease, color .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+
+    .ops-tab strong {
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .ops-tab span {
+      font-size: 10px;
+      color: rgba(244,240,230,.42);
+      font-weight: 850;
+    }
+
+    .ops-tab.active {
+      color: #07090c;
+      border-color: rgba(210,162,71,.74);
+      background: linear-gradient(135deg, #fff1a9, var(--gold), #ff8a21);
+      box-shadow: 0 22px 70px rgba(210,162,71,.22);
+    }
+
+    .ops-tab.active span { color: rgba(7,9,12,.72); }
+    .ops-tab:hover { transform: translateY(-2px); border-color: rgba(38,183,255,.45); }
+    .tab-hidden { display: none !important; }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .quick-actions .btn {
+      min-height: 42px;
+      background: rgba(255,255,255,.045);
+    }
+
     .product-matrix {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -566,7 +630,7 @@
 
     .chat-item {
       display: grid;
-      grid-template-columns: 150px minmax(0, 1fr) minmax(240px, 320px);
+      grid-template-columns: 150px minmax(0, 1fr) minmax(260px, 380px);
       gap: 12px;
       align-items: start;
       padding: 13px;
@@ -578,6 +642,16 @@
       display: grid;
       gap: 8px;
     }
+
+    .chat-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .status.open { color: #07090c; background: var(--gold); border-color: var(--gold); }
+    .status.resolved { color: #07090c; background: var(--green); border-color: var(--green); }
+    .status.deleted { color: #fff; background: rgba(244,240,230,.18); border-color: rgba(244,240,230,.18); }
 
     .request-card {
       display: grid;
@@ -715,6 +789,64 @@
       display: grid;
       gap: 12px;
       min-width: 0;
+    }
+
+    .promo-presets {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .preset-card {
+      min-height: 72px;
+      padding: 12px;
+      border: 1px solid rgba(244,240,230,.13);
+      border-radius: 18px;
+      color: var(--paper);
+      background:
+        radial-gradient(circle at 80% 10%, rgba(38,183,255,.14), transparent 12rem),
+        rgba(255,255,255,.045);
+      text-align: left;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .preset-card span {
+      display: block;
+      margin-top: 6px;
+      color: rgba(244,240,230,.52);
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
+    .preset-card:hover {
+      border-color: rgba(210,162,71,.50);
+      box-shadow: 0 18px 54px rgba(210,162,71,.12);
+    }
+
+    .promo-direct-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .promo-direct-grid button {
+      min-height: 40px;
+      border: 1px solid rgba(244,240,230,.13);
+      border-radius: 999px;
+      color: rgba(244,240,230,.78);
+      background: rgba(255,255,255,.04);
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .promo-direct-grid button:hover {
+      color: #07090c;
+      background: var(--gold);
+      border-color: var(--gold);
     }
 
     .offer-switch {
@@ -861,6 +993,8 @@
       .logs-grid,
       .ops-grid,
       .ops-hero-grid,
+      .ops-tabs,
+      .promo-presets,
       .pipeline-grid,
       .product-matrix,
       .control-deck,
@@ -931,7 +1065,21 @@
         <div class="stat"><span class="micro">Parrainages valides</span><strong id="referralCount">0</strong></div>
         <div class="stat"><span class="micro">Webhooks PayPal</span><strong id="webhookCount">0</strong></div>
       </div>
-      <div class="ops-hero">
+      <nav class="ops-tabs" aria-label="Navigation admin">
+        <button class="ops-tab active" type="button" data-tab="overview"><strong>Overview</strong><span>cockpit</span></button>
+        <button class="ops-tab" type="button" data-tab="sales"><strong>Achats</strong><span>validation</span></button>
+        <button class="ops-tab" type="button" data-tab="promo"><strong>Promo</strong><span>offre live</span></button>
+        <button class="ops-tab" type="button" data-tab="support"><strong>Support</strong><span>tickets</span></button>
+        <button class="ops-tab" type="button" data-tab="signals"><strong>Logs</strong><span>trafic/paypal</span></button>
+      </nav>
+      <div class="quick-actions">
+        <button class="btn" type="button" data-tab="sales">Verifier achats</button>
+        <button class="btn" type="button" data-tab="promo">Lancer promo</button>
+        <button class="btn" type="button" data-tab="support">Voir support</button>
+        <button class="btn" type="button" id="refreshAdmin">Rafraichir</button>
+        <a class="btn" href="/" target="_blank" rel="noopener">Ouvrir site</a>
+      </div>
+      <div class="ops-hero" data-tab-panel="overview">
         <div class="ops-hero-grid">
           <div>
             <span class="micro" style="color:var(--btc)">Option 2 / PayPal externe</span>
@@ -945,15 +1093,15 @@
           </div>
         </div>
       </div>
-      <div class="pipeline-grid">
+      <div class="pipeline-grid" data-tab-panel="overview">
         <div class="pipeline-card btc"><span class="micro">Achats declares</span><strong id="declaredCount">0</strong><span class="lead">Formulaires recus depuis le site.</span></div>
         <div class="pipeline-card gold"><span class="micro">A verifier</span><strong id="toVerifyCount">0</strong><span class="lead">Paiements a controler sur PayPal.</span></div>
         <div class="pipeline-card nasdaq"><span class="micro">Clients actifs</span><strong id="activeClientCount">0</strong><span class="lead">Acces TradingView ouverts.</span></div>
         <div class="pipeline-card"><span class="micro">Mois vendus</span><strong id="soldMonths">0</strong><span class="lead">Base estimee sur 49,99 EUR / setup.</span></div>
       </div>
-      <div class="product-matrix" id="productMatrix"></div>
-      <div class="ops-grid">
-        <div class="panel ops-panel">
+      <div class="product-matrix" id="productMatrix" data-tab-panel="overview"></div>
+      <div class="ops-grid" data-tab-row>
+        <div class="panel ops-panel" data-tab-panel="signals">
           <div class="section-title micro"><span>Audience site</span><span id="analyticsUpdated">Actif</span></div>
           <div class="stats" style="margin-bottom:0;grid-template-columns:repeat(3,minmax(0,1fr))">
             <div class="stat"><span class="micro">En ligne</span><strong id="onlineCount">0</strong></div>
@@ -962,7 +1110,7 @@
           </div>
           <div class="analytics-list" id="topPages"></div>
         </div>
-        <form class="panel ops-panel offer-command" id="flashForm">
+        <form class="panel ops-panel offer-command" id="flashForm" data-tab-panel="promo">
           <div class="section-title micro"><span>Offre speciale site</span><span id="flashState">Inactive</span></div>
           <div class="offer-command-body">
             <div class="offer-fields">
@@ -970,6 +1118,17 @@
                 <span>Activer sur le site</span>
                 <input type="checkbox" name="active" style="width:auto;min-height:auto">
               </label>
+              <div class="promo-presets" aria-label="Modeles de promotion">
+                <button class="preset-card" type="button" data-promo-preset="flash">Flash 24h<span>Urgence propre avec timer court</span></button>
+                <button class="preset-card" type="button" data-promo-preset="bundle">Multi-setup<span>Inciter BTC + Gold + Nasdaq</span></button>
+                <button class="preset-card" type="button" data-promo-preset="vip">Acces VIP<span>Positionnement premium rare</span></button>
+              </div>
+              <div class="promo-direct-grid" aria-label="Liens rapides promo">
+                <button type="button" data-promo-url="#offers">Offres</button>
+                <button type="button" data-promo-url="https://www.paypal.com/ncp/payment/SB6UU4KPJ974A">BTC PayPal</button>
+                <button type="button" data-promo-url="https://www.paypal.com/ncp/payment/DCVU8JTEY7GJ4">Gold PayPal</button>
+                <button type="button" data-promo-url="https://www.paypal.com/ncp/payment/VMTBQ5G9EMWTU">Nasdaq PayPal</button>
+              </div>
               <input name="title" placeholder="Titre ex : Offre speciale week-end">
               <textarea name="copy" placeholder="Message court affiche sur vente.html avec minuteur"></textarea>
               <div class="duration-grid" aria-label="Duree rapide">
@@ -1001,8 +1160,8 @@
           </div>
         </form>
       </div>
-      <div class="ops-grid">
-        <form class="quick-add" id="manualPurchaseForm">
+      <div class="ops-grid" data-tab-row>
+        <form class="quick-add" id="manualPurchaseForm" data-tab-panel="sales">
           <div class="section-title micro" style="padding:0 0 14px;border-bottom:1px solid var(--line)"><span>Ajouter un achat manuel</span><span>Option 2</span></div>
           <div class="quick-add-grid">
             <input name="name" placeholder="Nom client" required>
@@ -1034,17 +1193,17 @@
           </div>
           <p class="lead" id="manualPurchaseStatus"></p>
         </form>
-        <div class="panel ops-panel">
+        <div class="panel ops-panel" data-tab-panel="overview">
           <div class="section-title micro"><span>Activite recente</span><span id="activityCount">0</span></div>
           <div class="activity-tape" id="activityTape"></div>
         </div>
       </div>
-      <div class="logs-grid">
+      <div class="logs-grid" data-tab-panel="signals">
         <div class="panel donation-log hidden" id="donationLog"></div>
         <div class="panel webhook-log hidden" id="paypalLog"></div>
       </div>
-      <div class="panel chat-log hidden" id="chatLog"></div>
-      <div class="panel table-wrap">
+      <div class="panel chat-log hidden" id="chatLog" data-tab-panel="support"></div>
+      <div class="panel table-wrap" data-tab-panel="sales">
         <div class="section-title micro"><span>Demandes d'acces</span><span id="requestMeta">0 ligne</span></div>
         <div class="control-deck">
           <input id="searchInput" placeholder="Rechercher nom, email, TradingView, transaction...">
@@ -1078,6 +1237,7 @@
     let siteConfig = { flash: {} };
     const demoMode = new URLSearchParams(location.search).get("demo") === "1";
     let offerPreviewInterval = null;
+    let activeTab = "overview";
     const productDefs = [
       { key: "btc", label: "BTC", full: "BTC Institutional Setup - 49,99 EUR / mois" },
       { key: "gold", label: "Gold", full: "Gold Institutional Setup - 49,99 EUR / mois" },
@@ -1086,6 +1246,20 @@
 
     function escapeHTML(value) {
       return String(value ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+    }
+
+    function setActiveTab(tab) {
+      activeTab = tab || "overview";
+      document.querySelectorAll(".ops-tab").forEach(button => {
+        button.classList.toggle("active", button.dataset.tab === activeTab);
+      });
+      document.querySelectorAll("[data-tab-panel]").forEach(panel => {
+        panel.classList.toggle("tab-hidden", panel.dataset.tabPanel !== activeTab);
+      });
+      document.querySelectorAll("[data-tab-row]").forEach(row => {
+        const hasVisibleChild = Array.from(row.querySelectorAll("[data-tab-panel]")).some(panel => panel.dataset.tabPanel === activeTab);
+        row.classList.toggle("tab-hidden", !hasVisibleChild);
+      });
     }
 
     function formatDate(value) {
@@ -1179,6 +1353,42 @@
       form.elements.cta.value = flash.cta || "";
       form.elements.url.value = flash.url || "";
       form.elements.endsAt.value = localInputDate(flash.endsAt);
+      updateOfferPreview();
+    }
+
+    function applyPromoPreset(name) {
+      const form = document.getElementById("flashForm");
+      const presets = {
+        flash: {
+          title: "Fenetre d'acces 24h",
+          copy: "Activation prioritaire sur un setup Institutional Trading. Offre limitee avec timer live.",
+          cta: "Acceder maintenant",
+          url: "#offers",
+          minutes: 1440,
+        },
+        bundle: {
+          title: "Multi-setup execution plan",
+          copy: "Structure ton desk avec BTC, Gold et Nasdaq. Chaque setup reste vendu separement, activation manuelle apres verification.",
+          cta: "Voir les setups",
+          url: "#offers",
+          minutes: 2880,
+        },
+        vip: {
+          title: "Acces VIP TradingView",
+          copy: "Priorite support, activation privee et suivi d'acces pour traders qui veulent avancer vite et proprement.",
+          cta: "Demander l'acces",
+          url: "#access",
+          minutes: 10080,
+        },
+      };
+      const preset = presets[name];
+      if (!preset || !form) return;
+      form.elements.active.checked = true;
+      form.elements.title.value = preset.title;
+      form.elements.copy.value = preset.copy;
+      form.elements.cta.value = preset.cta;
+      form.elements.url.value = preset.url;
+      setOfferDuration(preset.minutes);
       updateOfferPreview();
     }
 
@@ -1387,16 +1597,21 @@
           <span class="micro">${escapeHTML(event.verified ? "verifie" : event.verification_status || event.reason || "")}</span>
         </div>
       `).join("")}` : "";
-      const clientMessages = chatMessages.filter(item => item.sender !== "admin");
+      const clientMessages = chatMessages.filter(item => item.sender !== "admin" && item.status !== "deleted");
       const chatLog = document.getElementById("chatLog");
       chatLog.classList.toggle("hidden", clientMessages.length === 0);
       chatLog.innerHTML = clientMessages.length ? `<div class="section-title micro"><span>Chat support</span><span>${clientMessages.length}</span></div>${clientMessages.slice(0, 12).map(message => `
         <div class="chat-item">
           <strong>${escapeHTML(formatDate(message.created_at))}</strong>
-          <span>${escapeHTML(message.name || "Client")} - ${escapeHTML(message.email || "")}<br><br>${escapeHTML(message.message || "")}</span>
+          <span><span class="status ${escapeHTML(message.status || "open")}">${escapeHTML(message.status || "open")}</span><br><br>${escapeHTML(message.name || "Client")} - ${escapeHTML(message.email || "")}<br><br>${escapeHTML(message.message || "")}</span>
           <div class="chat-reply">
             <textarea data-chat-reply="${escapeHTML(message.email || "")}" placeholder="Reponse admin"></textarea>
             <button class="btn gold" data-chat-send="${escapeHTML(message.email || "")}">Repondre</button>
+            <div class="chat-actions">
+              <button class="btn green" data-chat-status="resolved" data-chat-id="${escapeHTML(message.id || "")}">Resolu</button>
+              <button class="btn" data-chat-status="open" data-chat-id="${escapeHTML(message.id || "")}">Rouvrir</button>
+              <button class="btn red" data-chat-status="deleted" data-chat-id="${escapeHTML(message.id || "")}">Supprimer</button>
+            </div>
           </div>
         </div>
       `).join("")}` : "";
@@ -1442,6 +1657,7 @@
           </div>
         </article>
       `}).join("");
+      setActiveTab(activeTab);
     }
 
     async function loadRequests() {
@@ -1498,6 +1714,14 @@
       }
     });
 
+    document.querySelectorAll("[data-tab]").forEach(button => {
+      button.addEventListener("click", () => setActiveTab(button.dataset.tab));
+    });
+
+    document.getElementById("refreshAdmin").addEventListener("click", () => {
+      loadRequests().catch(() => document.getElementById("loginStatus").textContent = "Refresh impossible.");
+    });
+
     ["searchInput", "statusFilter", "productFilter"].forEach(id => {
       document.getElementById(id).addEventListener("input", render);
       document.getElementById(id).addEventListener("change", render);
@@ -1547,6 +1771,21 @@
     });
 
     document.getElementById("chatLog").addEventListener("click", async event => {
+      const statusButton = event.target.closest("button[data-chat-status]");
+      if (statusButton) {
+        const id = statusButton.dataset.chatId;
+        statusButton.disabled = true;
+        try {
+          await api("/api/admin/chat/status", {
+            method: "POST",
+            body: JSON.stringify({ id, status: statusButton.dataset.chatStatus })
+          });
+          await loadRequests();
+        } finally {
+          statusButton.disabled = false;
+        }
+        return;
+      }
       const button = event.target.closest("button[data-chat-send]");
       if (!button) return;
       const email = button.dataset.chatSend;
@@ -1563,6 +1802,18 @@
       } finally {
         button.disabled = false;
       }
+    });
+
+    document.querySelectorAll("[data-promo-preset]").forEach(button => {
+      button.addEventListener("click", () => applyPromoPreset(button.dataset.promoPreset));
+    });
+
+    document.querySelectorAll("[data-promo-url]").forEach(button => {
+      button.addEventListener("click", () => {
+        const form = document.getElementById("flashForm");
+        form.elements.url.value = button.dataset.promoUrl;
+        updateOfferPreview();
+      });
     });
 
     document.getElementById("flashForm").addEventListener("submit", async event => {

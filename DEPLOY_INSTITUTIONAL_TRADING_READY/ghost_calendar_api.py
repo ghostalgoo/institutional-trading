@@ -570,6 +570,32 @@ def reply_chat_message(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
     return True, {"ok": True, "message": item}
 
 
+def update_chat_status(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
+    message_id = clean_text(data.get("id"), 100)
+    email = clean_text(data.get("email"), 180).lower()
+    status = clean_text(data.get("status"), 40) or "open"
+    if status not in {"open", "resolved", "deleted"}:
+        return False, {"ok": False, "error": "invalid_status"}
+    if not message_id and not email:
+        return False, {"ok": False, "error": "missing_identifier"}
+    now = now_paris().isoformat()
+    with ACCESS_REQUESTS_LOCK:
+        messages = load_chat_messages()
+        changed = 0
+        for item in messages:
+            if message_id and clean_text(item.get("id"), 100) != message_id:
+                continue
+            if email and clean_text(item.get("email"), 180).lower() != email:
+                continue
+            item["status"] = status
+            item["updated_at"] = now
+            changed += 1
+        if not changed:
+            return False, {"ok": False, "error": "not_found"}
+        save_chat_messages(messages)
+    return True, {"ok": True, "updated": changed, "status": status}
+
+
 def default_site_config() -> dict[str, Any]:
     return {
         "flash": {
@@ -1407,7 +1433,10 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
             return
         if path == "/api/chat/thread":
             email = clean_text(parse_qs(parsed_url.query).get("email", [""])[0], 180).lower()
-            messages = [item for item in load_chat_messages() if clean_text(item.get("email"), 180).lower() == email] if email else []
+            messages = [
+                item for item in load_chat_messages()
+                if clean_text(item.get("email"), 180).lower() == email and item.get("status") != "deleted"
+            ] if email else []
             self.send_json({"ok": True, "messages": list(reversed(messages[-60:]))})
             return
         if path == "/api/public-config":
@@ -1486,6 +1515,13 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
                 self.send_json({"ok": False, "error": "unauthorized"}, 401)
                 return
             ok, payload = reply_chat_message(data)
+            self.send_json(payload, 200 if ok else 400)
+            return
+        if path == "/api/admin/chat/status":
+            if not self.is_admin():
+                self.send_json({"ok": False, "error": "unauthorized"}, 401)
+                return
+            ok, payload = update_chat_status(data)
             self.send_json(payload, 200 if ok else 400)
             return
         if path == "/api/client/login":
