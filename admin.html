@@ -388,18 +388,6 @@
     .ops-tab:hover { transform: translateY(-2px); border-color: rgba(38,183,255,.45); }
     .tab-hidden { display: none !important; }
 
-    .quick-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 18px;
-    }
-
-    .quick-actions .btn {
-      min-height: 42px;
-      background: rgba(255,255,255,.045);
-    }
-
     .product-matrix {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -849,6 +837,19 @@
       border-color: var(--gold);
     }
 
+    .promo-helper {
+      padding: 13px;
+      border: 1px solid rgba(38,183,255,.18);
+      border-radius: 18px;
+      color: rgba(244,240,230,.72);
+      background:
+        radial-gradient(circle at 10% 0, rgba(38,183,255,.12), transparent 12rem),
+        rgba(38,183,255,.055);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
     .offer-switch {
       min-height: 50px;
       display: flex;
@@ -1066,19 +1067,12 @@
         <div class="stat"><span class="micro">Webhooks PayPal</span><strong id="webhookCount">0</strong></div>
       </div>
       <nav class="ops-tabs" aria-label="Navigation admin">
-        <button class="ops-tab active" type="button" data-tab="overview"><strong>Overview</strong><span>cockpit</span></button>
-        <button class="ops-tab" type="button" data-tab="sales"><strong>Achats</strong><span>validation</span></button>
-        <button class="ops-tab" type="button" data-tab="promo"><strong>Promo</strong><span>offre live</span></button>
-        <button class="ops-tab" type="button" data-tab="support"><strong>Support</strong><span>tickets</span></button>
-        <button class="ops-tab" type="button" data-tab="signals"><strong>Logs</strong><span>trafic/paypal</span></button>
+        <button class="ops-tab active" type="button" data-tab="overview"><strong>Overview</strong><span id="tabOverviewMeta">cockpit</span></button>
+        <button class="ops-tab" type="button" data-tab="sales"><strong>Achats</strong><span id="tabSalesMeta">validation</span></button>
+        <button class="ops-tab" type="button" data-tab="promo"><strong>Promo</strong><span id="tabPromoMeta">offre live</span></button>
+        <button class="ops-tab" type="button" data-tab="support"><strong>Support</strong><span id="tabSupportMeta">tickets</span></button>
+        <button class="ops-tab" type="button" data-tab="signals"><strong>Logs</strong><span id="tabLogsMeta">trafic/paypal</span></button>
       </nav>
-      <div class="quick-actions">
-        <button class="btn" type="button" data-tab="sales">Verifier achats</button>
-        <button class="btn" type="button" data-tab="promo">Lancer promo</button>
-        <button class="btn" type="button" data-tab="support">Voir support</button>
-        <button class="btn" type="button" id="refreshAdmin">Rafraichir</button>
-        <a class="btn" href="/" target="_blank" rel="noopener">Ouvrir site</a>
-      </div>
       <div class="ops-hero" data-tab-panel="overview">
         <div class="ops-hero-grid">
           <div>
@@ -1124,11 +1118,12 @@
                 <button class="preset-card" type="button" data-promo-preset="vip">Acces VIP<span>Positionnement premium rare</span></button>
               </div>
               <div class="promo-direct-grid" aria-label="Liens rapides promo">
-                <button type="button" data-promo-url="#offers">Offres</button>
                 <button type="button" data-promo-url="https://www.paypal.com/ncp/payment/SB6UU4KPJ974A">BTC PayPal</button>
                 <button type="button" data-promo-url="https://www.paypal.com/ncp/payment/DCVU8JTEY7GJ4">Gold PayPal</button>
                 <button type="button" data-promo-url="https://www.paypal.com/ncp/payment/VMTBQ5G9EMWTU">Nasdaq PayPal</button>
+                <button type="button" data-promo-url="#offers">Page offres</button>
               </div>
+              <div class="promo-helper">La promo peut envoyer directement vers le PayPal du setup choisi. Apres paiement, le client revient declarer son achat pour validation manuelle dans l'onglet Achats.</div>
               <input name="title" placeholder="Titre ex : Offre speciale week-end">
               <textarea name="copy" placeholder="Message court affiche sur vente.html avec minuteur"></textarea>
               <div class="duration-grid" aria-label="Duree rapide">
@@ -1361,23 +1356,23 @@
       const presets = {
         flash: {
           title: "Fenetre d'acces 24h",
-          copy: "Activation prioritaire sur un setup Institutional Trading. Offre limitee avec timer live.",
-          cta: "Acceder maintenant",
-          url: "#offers",
+          copy: "Activation prioritaire BTC Institutional Setup. Paiement PayPal direct, declaration ensuite pour validation.",
+          cta: "Payer BTC maintenant",
+          url: "https://www.paypal.com/ncp/payment/SB6UU4KPJ974A",
           minutes: 1440,
         },
         bundle: {
-          title: "Multi-setup execution plan",
-          copy: "Structure ton desk avec BTC, Gold et Nasdaq. Chaque setup reste vendu separement, activation manuelle apres verification.",
-          cta: "Voir les setups",
-          url: "#offers",
+          title: "Acces Gold prioritaire",
+          copy: "Gold Institutional Setup en activation prioritaire. Paiement PayPal direct puis verification admin.",
+          cta: "Payer Gold maintenant",
+          url: "https://www.paypal.com/ncp/payment/DCVU8JTEY7GJ4",
           minutes: 2880,
         },
         vip: {
-          title: "Acces VIP TradingView",
-          copy: "Priorite support, activation privee et suivi d'acces pour traders qui veulent avancer vite et proprement.",
-          cta: "Demander l'acces",
-          url: "#access",
+          title: "Nasdaq access window",
+          copy: "Nasdaq Institutional Setup disponible avec timer live. Paiement PayPal direct, activation apres declaration.",
+          cta: "Payer Nasdaq maintenant",
+          url: "https://www.paypal.com/ncp/payment/VMTBQ5G9EMWTU",
           minutes: 10080,
         },
       };
