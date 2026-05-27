@@ -43,6 +43,7 @@ DONATIONS_FILE = DATA_DIR / "donations.json"
 ANALYTICS_FILE = DATA_DIR / "analytics.json"
 SITE_CONFIG_FILE = DATA_DIR / "site_config.json"
 CHAT_MESSAGES_FILE = DATA_DIR / "chat_messages.json"
+VIP_MESSAGES_FILE = DATA_DIR / "vip_messages.json"
 ACCESS_REQUESTS_LOCK = threading.Lock()
 DEFAULT_ADMIN_PASSWORD = "ghostadmin"
 DEFAULT_ADMIN_ACCESS_KEY = "audin-private-2026"
@@ -528,6 +529,14 @@ def save_chat_messages(messages: list[dict[str, Any]]) -> None:
     save_state("chat_messages", CHAT_MESSAGES_FILE, messages[:500])
 
 
+def load_vip_messages() -> list[dict[str, Any]]:
+    return load_state("vip_messages", VIP_MESSAGES_FILE, [], list)
+
+
+def save_vip_messages(messages: list[dict[str, Any]]) -> None:
+    save_state("vip_messages", VIP_MESSAGES_FILE, messages[:800])
+
+
 def create_chat_message(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
     email = clean_text(data.get("email"), 180).lower()
     message = clean_text(data.get("message"), 1200)
@@ -605,7 +614,34 @@ def default_site_config() -> dict[str, Any]:
             "cta": "Voir l'offre",
             "url": "#offers",
             "endsAt": "",
-        }
+        },
+        "vip": {
+            "announcement": {
+                "active": True,
+                "title": "Bienvenue dans le VIP Trading Floor",
+                "copy": "Retrouvez ici les lives formation, les notes marche et les salons prives reserves aux clients actifs.",
+                "cta": "Voir le prochain live",
+                "url": "#vip-calendar",
+            },
+            "events": [
+                {
+                    "id": "live-default-1",
+                    "title": "Live formation : structure, liquidites et execution",
+                    "startsAt": "",
+                    "duration": "60 min",
+                    "setup": "Gold / BTC / Nasdaq",
+                    "type": "Formation live",
+                    "link": "",
+                    "copy": "Session reservee aux membres actifs. Le lien sera publie dans le panel avant le live.",
+                }
+            ],
+            "resources": [
+                {"title": "Checklist avant execution", "tag": "Risque", "copy": "Contexte, session, invalidation, taille de position, alerte TradingView."},
+                {"title": "BOS / CHOCH / FVG", "tag": "Structure", "copy": "Comprendre la logique de structure et les zones qui comptent."},
+                {"title": "Sessions & liquidites", "tag": "Timing", "copy": "Adapter la lecture entre London, New York, Asia, BTC 24/7 et indices."},
+            ],
+            "rooms": ["general", "gold", "btc", "nasdaq", "macro", "formation"],
+        },
     }
 
 
@@ -616,6 +652,23 @@ def load_site_config() -> dict[str, Any]:
         flash = payload.get("flash")
         if isinstance(flash, dict):
             config["flash"].update({key: flash.get(key, config["flash"][key]) for key in config["flash"]})
+        vip = payload.get("vip")
+        if isinstance(vip, dict):
+            announcement = vip.get("announcement")
+            if isinstance(announcement, dict):
+                config["vip"]["announcement"].update({
+                    key: clean_text(announcement.get(key), 500) if key != "active" else bool(announcement.get(key))
+                    for key in config["vip"]["announcement"]
+                })
+            events = vip.get("events")
+            if isinstance(events, list):
+                config["vip"]["events"] = events[:30]
+            resources = vip.get("resources")
+            if isinstance(resources, list):
+                config["vip"]["resources"] = resources[:20]
+            rooms = vip.get("rooms")
+            if isinstance(rooms, list):
+                config["vip"]["rooms"] = [clean_text(room, 40) for room in rooms if clean_text(room, 40)][:12] or config["vip"]["rooms"]
     return config
 
 
@@ -644,6 +697,37 @@ def public_flash_payload() -> dict[str, Any]:
     if ends_at and ends_at <= now_paris():
         flash["active"] = False
     return flash
+
+
+def public_vip_payload() -> dict[str, Any]:
+    vip = load_site_config().get("vip", default_site_config()["vip"])
+    events = vip.get("events") if isinstance(vip.get("events"), list) else []
+    resources = vip.get("resources") if isinstance(vip.get("resources"), list) else []
+    rooms = vip.get("rooms") if isinstance(vip.get("rooms"), list) else default_site_config()["vip"]["rooms"]
+    clean_events = []
+    for event in events[:30]:
+        if not isinstance(event, dict):
+            continue
+        clean_events.append({
+            "id": clean_text(event.get("id"), 80) or f"event-{uuid4().hex[:8]}",
+            "title": clean_text(event.get("title"), 140),
+            "startsAt": clean_text(event.get("startsAt"), 80),
+            "duration": clean_text(event.get("duration"), 40),
+            "setup": clean_text(event.get("setup"), 80),
+            "type": clean_text(event.get("type"), 80),
+            "link": clean_text(event.get("link"), 400),
+            "copy": clean_text(event.get("copy"), 500),
+        })
+    return {
+        "announcement": vip.get("announcement") if isinstance(vip.get("announcement"), dict) else default_site_config()["vip"]["announcement"],
+        "events": clean_events,
+        "resources": [item for item in resources[:20] if isinstance(item, dict)],
+        "rooms": [clean_text(room, 40) for room in rooms if clean_text(room, 40)][:12],
+        "messages": [
+            message for message in load_vip_messages()
+            if isinstance(message, dict) and message.get("status") != "deleted"
+        ][:120],
+    }
 
 
 def load_analytics() -> dict[str, Any]:
@@ -972,6 +1056,54 @@ def update_site_config(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
     return True, {"ok": True, "config": config}
 
 
+def update_vip_config(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
+    config = load_site_config()
+    vip = config.get("vip") if isinstance(config.get("vip"), dict) else default_site_config()["vip"]
+    action = clean_text(data.get("action"), 40) or "announcement"
+    if action == "announcement":
+        announcement = vip.get("announcement") if isinstance(vip.get("announcement"), dict) else default_site_config()["vip"]["announcement"]
+        announcement["active"] = bool(data.get("active", True))
+        announcement["title"] = clean_text(data.get("title"), 140) or announcement.get("title", "")
+        announcement["copy"] = clean_text(data.get("copy"), 500) or announcement.get("copy", "")
+        announcement["cta"] = clean_text(data.get("cta"), 60) or "Voir"
+        announcement["url"] = clean_text(data.get("url"), 400) or "#vip-calendar"
+        vip["announcement"] = announcement
+    elif action == "event":
+        events = vip.get("events") if isinstance(vip.get("events"), list) else []
+        event_id = clean_text(data.get("id"), 80) or f"live-{now_paris():%Y%m%d%H%M%S}-{uuid4().hex[:6]}"
+        event = {
+            "id": event_id,
+            "title": clean_text(data.get("title"), 140) or "Live formation VIP",
+            "startsAt": clean_text(data.get("startsAt"), 80),
+            "duration": clean_text(data.get("duration"), 40) or "60 min",
+            "setup": clean_text(data.get("setup"), 80) or "Gold / BTC / Nasdaq",
+            "type": clean_text(data.get("type"), 80) or "Formation live",
+            "link": clean_text(data.get("link"), 400),
+            "copy": clean_text(data.get("copy"), 500),
+            "created_at": now_paris().isoformat(),
+        }
+        events = [item for item in events if not (isinstance(item, dict) and clean_text(item.get("id"), 80) == event_id)]
+        vip["events"] = [event] + events
+    elif action == "delete_event":
+        event_id = clean_text(data.get("id"), 80)
+        events = vip.get("events") if isinstance(vip.get("events"), list) else []
+        vip["events"] = [item for item in events if not (isinstance(item, dict) and clean_text(item.get("id"), 80) == event_id)]
+    elif action == "resource":
+        resources = vip.get("resources") if isinstance(vip.get("resources"), list) else []
+        resource = {
+            "title": clean_text(data.get("title"), 120) or "Ressource VIP",
+            "tag": clean_text(data.get("tag"), 40) or "VIP",
+            "copy": clean_text(data.get("copy"), 500),
+            "url": clean_text(data.get("url"), 400),
+        }
+        vip["resources"] = [resource] + resources[:19]
+    else:
+        return False, {"ok": False, "error": "invalid_action"}
+    config["vip"] = vip
+    save_site_config(config)
+    return True, {"ok": True, "vip": public_vip_payload()}
+
+
 def track_visit(data: dict[str, Any], headers: Any, client_ip: str) -> dict[str, Any]:
     session_id = clean_text(data.get("sessionId"), 80) or f"s-{uuid4().hex}"
     page = clean_text(data.get("page"), 180) or "/"
@@ -1070,12 +1202,12 @@ def update_access_request_status(data: dict[str, Any]) -> tuple[bool, dict[str, 
     return False, {"ok": False, "error": "not_found"}
 
 
-def client_login(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
+def find_client_for_login(data: dict[str, Any]) -> dict[str, Any] | None:
     email = clean_text(data.get("email"), 180).lower()
     password = clean_text(data.get("password"), 200)
     tradingview = clean_text(data.get("tradingview"), 120).lower()
     if not email or not (password or tradingview):
-        return False, {"ok": False, "error": "missing_fields"}
+        return None
 
     requests = load_access_requests()
     for item in requests:
@@ -1084,10 +1216,109 @@ def client_login(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
         stored_password = clean_text(item.get("passwordHash"), 500)
         if stored_password:
             if verify_password(password, stored_password):
-                return True, {"ok": True, "client": public_client_payload(item)}
+                return item
         elif tradingview and clean_text(item.get("tradingview"), 120).lower() == tradingview:
-            return True, {"ok": True, "client": public_client_payload(item)}
+            return item
+    return None
+
+
+def client_login(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
+    if not clean_text(data.get("email"), 180) or not (clean_text(data.get("password"), 200) or clean_text(data.get("tradingview"), 120)):
+        return False, {"ok": False, "error": "missing_fields"}
+    item = find_client_for_login(data)
+    if item:
+        return True, {"ok": True, "client": public_client_payload(item), "vip": public_vip_payload()}
     return False, {"ok": False, "error": "not_found"}
+
+
+def create_vip_message(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
+    item = find_client_for_login(data)
+    if not item:
+        return False, {"ok": False, "error": "unauthorized"}
+    if item.get("status") != "approved":
+        return False, {"ok": False, "error": "not_approved"}
+    message = clean_text(data.get("message"), 1000)
+    if not message:
+        return False, {"ok": False, "error": "missing_message"}
+    allowed_rooms = set(public_vip_payload().get("rooms", [])) or {"general"}
+    room = clean_text(data.get("room"), 40).lower() or "general"
+    if room not in allowed_rooms:
+        room = "general"
+    payload = {
+        "id": f"vip-{now_paris():%Y%m%d%H%M%S}-{uuid4().hex[:8]}",
+        "created_at": now_paris().isoformat(),
+        "status": "open",
+        "room": room,
+        "sender": "client",
+        "kind": "chat",
+        "priority": False,
+        "market": "",
+        "grade": "",
+        "title": "",
+        "name": clean_text(item.get("name"), 80) or "VIP",
+        "email": clean_text(item.get("email"), 180),
+        "products": item.get("products") if isinstance(item.get("products"), list) else normalize_products(item),
+        "message": message,
+    }
+    with ACCESS_REQUESTS_LOCK:
+        messages = load_vip_messages()
+        messages.insert(0, payload)
+        save_vip_messages(messages)
+    return True, {"ok": True, "message": payload, "vip": public_vip_payload()}
+
+
+def create_admin_vip_message(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
+    message = clean_text(data.get("message"), 1000)
+    if not message:
+        return False, {"ok": False, "error": "missing_message"}
+    allowed_rooms = set(public_vip_payload().get("rooms", [])) or {"general"}
+    room = clean_text(data.get("room"), 40).lower() or "general"
+    if room not in allowed_rooms:
+        room = "general"
+    kind = clean_text(data.get("kind"), 30) or "announcement"
+    if kind not in {"announcement", "setup", "note", "chat"}:
+        kind = "announcement"
+    pinned = bool(data.get("pinned"))
+    payload = {
+        "id": f"vip-{now_paris():%Y%m%d%H%M%S}-{uuid4().hex[:8]}",
+        "created_at": now_paris().isoformat(),
+        "status": "pinned" if pinned else "open",
+        "room": room,
+        "sender": "admin",
+        "kind": kind,
+        "priority": bool(data.get("priority")),
+        "market": clean_text(data.get("market"), 40),
+        "grade": clean_text(data.get("grade"), 20),
+        "title": clean_text(data.get("title"), 120),
+        "name": "Admin",
+        "email": "",
+        "products": ["Admin"],
+        "message": message,
+    }
+    with ACCESS_REQUESTS_LOCK:
+        messages = load_vip_messages()
+        messages.insert(0, payload)
+        save_vip_messages(messages)
+    return True, {"ok": True, "message": payload, "vip": public_vip_payload()}
+
+
+def update_vip_message_status(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
+    message_id = clean_text(data.get("id"), 100)
+    status = clean_text(data.get("status"), 30) or "open"
+    if status not in {"open", "pinned", "deleted"}:
+        return False, {"ok": False, "error": "invalid_status"}
+    changed = 0
+    with ACCESS_REQUESTS_LOCK:
+        messages = load_vip_messages()
+        for message in messages:
+            if clean_text(message.get("id"), 100) == message_id:
+                message["status"] = status
+                message["updated_at"] = now_paris().isoformat()
+                changed += 1
+        if not changed:
+            return False, {"ok": False, "error": "not_found"}
+        save_vip_messages(messages)
+    return True, {"ok": True, "vip": public_vip_payload()}
 
 
 def deep_find_email(value: Any) -> str:
@@ -1431,6 +1662,12 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
                 return
             self.send_json({"ok": True, "messages": load_chat_messages(), "updated_at": now_paris().isoformat()})
             return
+        if path == "/api/admin/vip":
+            if not self.is_admin():
+                self.send_json({"ok": False, "error": "unauthorized"}, 401)
+                return
+            self.send_json({"ok": True, "vip": public_vip_payload(), "updated_at": now_paris().isoformat()})
+            return
         if path == "/api/chat/thread":
             email = clean_text(parse_qs(parsed_url.query).get("email", [""])[0], 180).lower()
             messages = [
@@ -1527,6 +1764,31 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
         if path == "/api/client/login":
             ok, payload = client_login(data)
             self.send_json(payload, 200 if ok else 404)
+            return
+        if path == "/api/client/vip/message":
+            ok, payload = create_vip_message(data)
+            self.send_json(payload, 201 if ok else 401)
+            return
+        if path == "/api/admin/vip/config":
+            if not self.is_admin():
+                self.send_json({"ok": False, "error": "unauthorized"}, 401)
+                return
+            ok, payload = update_vip_config(data)
+            self.send_json(payload, 200 if ok else 400)
+            return
+        if path == "/api/admin/vip/message":
+            if not self.is_admin():
+                self.send_json({"ok": False, "error": "unauthorized"}, 401)
+                return
+            ok, payload = create_admin_vip_message(data)
+            self.send_json(payload, 201 if ok else 400)
+            return
+        if path == "/api/admin/vip/message/status":
+            if not self.is_admin():
+                self.send_json({"ok": False, "error": "unauthorized"}, 401)
+                return
+            ok, payload = update_vip_message_status(data)
+            self.send_json(payload, 200 if ok else 400)
             return
         self.send_json({"ok": False, "error": "not_found"}, 404)
 

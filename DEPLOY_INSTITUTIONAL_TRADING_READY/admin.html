@@ -1055,6 +1055,139 @@
     .product-pill.btc { color: var(--btc); border-color: rgba(255,138,33,.36); }
     .product-pill.gold { color: var(--gold); border-color: rgba(210,162,71,.36); }
     .product-pill.nasdaq { color: var(--cyan); border-color: rgba(38,183,255,.36); }
+
+    .vip-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(420px, .72fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .vip-command {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vip-command::after {
+      content: "VIP";
+      position: absolute;
+      right: -10px;
+      bottom: -22px;
+      color: rgba(210,162,71,.08);
+      font-size: 150px;
+      line-height: .75;
+      font-weight: 950;
+      letter-spacing: -.08em;
+      pointer-events: none;
+    }
+
+    .vip-form-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .vip-form-grid.full {
+      grid-template-columns: 1fr;
+    }
+
+    .vip-type-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .vip-type-row label {
+      min-height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 10px;
+      border: 1px solid rgba(244,240,230,.14);
+      border-radius: 16px;
+      background: rgba(255,255,255,.045);
+      cursor: pointer;
+    }
+
+    .vip-type-row label:has(input:checked) {
+      color: #07100c;
+      border-color: var(--green);
+      background: var(--green);
+    }
+
+    .vip-type-row input {
+      width: auto;
+      min-height: auto;
+      accent-color: var(--green);
+    }
+
+    .vip-preview {
+      min-height: 320px;
+      padding: 20px;
+      border: 1px solid rgba(0,199,131,.24);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 0 0, rgba(0,199,131,.18), transparent 16rem),
+        linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.018)),
+        rgba(4,7,10,.74);
+    }
+
+    .vip-message-list {
+      display: grid;
+      gap: 10px;
+      max-height: 560px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .vip-message {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid rgba(244,240,230,.13);
+      border-radius: 18px;
+      background: rgba(255,255,255,.045);
+    }
+
+    .vip-message.setup {
+      border-color: rgba(0,199,131,.34);
+      background: radial-gradient(circle at 0 0, rgba(0,199,131,.14), transparent 12rem), rgba(255,255,255,.045);
+    }
+
+    .vip-message.priority {
+      border-color: rgba(239,69,96,.34);
+      background: radial-gradient(circle at 0 0, rgba(239,69,96,.14), transparent 12rem), rgba(255,255,255,.045);
+    }
+
+    .vip-message-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: rgba(244,240,230,.72);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .vip-events {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .vip-event-card {
+      padding: 14px;
+      border: 1px solid rgba(244,240,230,.12);
+      border-radius: 18px;
+      background: rgba(0,0,0,.20);
+    }
+
     .empty { padding: 38px; color: var(--muted); font-weight: 820; }
     .hidden { display: none; }
 
@@ -1079,6 +1212,9 @@
       .webhook-item,
       .donation-item,
       .offer-command-body,
+      .vip-grid,
+      .vip-form-grid,
+      .vip-type-row,
       .duration-grid { grid-template-columns: 1fr; }
       h1 { font-size: clamp(46px, 14vw, 72px); }
     }
@@ -1142,6 +1278,7 @@
         <button class="ops-tab active" type="button" data-tab="overview"><strong>Overview</strong><span id="tabOverviewMeta">cockpit</span></button>
         <button class="ops-tab" type="button" data-tab="sales"><strong>Achats</strong><span id="tabSalesMeta">validation</span></button>
         <button class="ops-tab" type="button" data-tab="promo"><strong>Promo</strong><span id="tabPromoMeta">offre live</span></button>
+        <button class="ops-tab" type="button" data-tab="vip"><strong>VIP Floor</strong><span id="tabVipMeta">lives/setup S+</span></button>
         <button class="ops-tab" type="button" data-tab="support"><strong>Support</strong><span id="tabSupportMeta">tickets</span></button>
         <button class="ops-tab" type="button" data-tab="signals"><strong>Logs</strong><span id="tabLogsMeta">trafic/paypal</span></button>
       </nav>
@@ -1244,6 +1381,80 @@
           </div>
         </form>
       </div>
+      <div class="vip-grid" data-tab-panel="vip">
+        <form class="panel ops-panel vip-command" id="vipMessageForm">
+          <div class="section-title micro"><span>Signal room VIP</span><span>annonces / setups S+</span></div>
+          <div class="vip-type-row">
+            <label><input type="radio" name="kind" value="announcement" checked> Annonce</label>
+            <label><input type="radio" name="kind" value="setup"> Setup S+</label>
+            <label><input type="radio" name="kind" value="note"> Note marche</label>
+            <label><input type="checkbox" name="priority"> Important</label>
+          </div>
+          <div class="vip-form-grid">
+            <select name="room">
+              <option value="general">General</option>
+              <option value="gold">Gold</option>
+              <option value="btc">BTC</option>
+              <option value="nasdaq">Nasdaq</option>
+              <option value="macro">Macro</option>
+              <option value="formation">Formation</option>
+            </select>
+            <select name="market">
+              <option value="">Marche libre</option>
+              <option value="Gold">Gold</option>
+              <option value="BTC">BTC</option>
+              <option value="Nasdaq">Nasdaq</option>
+              <option value="Macro">Macro</option>
+            </select>
+            <input name="grade" placeholder="Grade ex : S+">
+            <label class="check-row"><input type="checkbox" name="pinned" style="width:auto;min-height:auto"> Epingler</label>
+          </div>
+          <div class="vip-form-grid full">
+            <input name="title" placeholder="Titre ex : Setup S+ Gold - London">
+            <textarea name="message" placeholder="Message VIP, annonce importante, setup S+, contexte, invalidation, target, rappel risque..." required></textarea>
+            <button class="btn gold" type="submit">Envoyer au VIP Floor</button>
+            <p class="lead" id="vipMessageStatus"></p>
+          </div>
+        </form>
+        <form class="panel ops-panel vip-command" id="vipEventForm">
+          <div class="section-title micro"><span>Calendrier formation live</span><span>client panel</span></div>
+          <div class="vip-form-grid">
+            <input name="title" placeholder="Titre live formation" required>
+            <input name="startsAt" type="datetime-local" required>
+            <input name="duration" placeholder="Duree ex : 60 min">
+            <select name="setup">
+              <option value="Gold / BTC / Nasdaq">Tous setups</option>
+              <option value="Gold">Gold</option>
+              <option value="BTC">BTC</option>
+              <option value="Nasdaq">Nasdaq</option>
+              <option value="Macro">Macro</option>
+            </select>
+          </div>
+          <div class="vip-form-grid full">
+            <input name="link" placeholder="Lien Zoom/Discord/Live prive optionnel">
+            <textarea name="copy" placeholder="Description courte affichee aux clients"></textarea>
+            <button class="btn gold" type="submit">Ajouter le live</button>
+            <p class="lead" id="vipEventStatus"></p>
+          </div>
+          <div class="vip-events" id="vipEvents"></div>
+        </form>
+        <form class="panel ops-panel vip-command" id="vipAnnouncementForm">
+          <div class="section-title micro"><span>Banniere VIP importante</span><span>haut panel client</span></div>
+          <div class="vip-form-grid full">
+            <label class="check-row"><input type="checkbox" name="active" checked style="width:auto;min-height:auto"> Afficher l'annonce</label>
+            <input name="title" placeholder="Titre annonce importante">
+            <textarea name="copy" placeholder="Texte annonce visible en haut du panel VIP"></textarea>
+            <input name="cta" placeholder="CTA ex : Voir le live">
+            <input name="url" placeholder="Lien ex : #vip-calendar ou Discord">
+            <button class="btn gold" type="submit">Publier l'annonce VIP</button>
+            <p class="lead" id="vipAnnouncementStatus"></p>
+          </div>
+        </form>
+        <div class="panel ops-panel vip-preview">
+          <div class="section-title micro"><span>Messages VIP</span><span id="vipMessageCount">0</span></div>
+          <div class="vip-message-list" id="vipMessageList"></div>
+        </div>
+      </div>
       <div class="ops-grid" data-tab-row>
         <form class="quick-add" id="manualPurchaseForm" data-tab-panel="sales">
           <div class="section-title micro" style="padding:0 0 14px;border-bottom:1px solid var(--line)"><span>Ajouter un achat manuel</span><span>Option 2</span></div>
@@ -1319,6 +1530,7 @@
     let donationTotal = 0;
     let analytics = { online: 0, visitorsToday: 0, pageViewsToday: 0, topPages: [] };
     let siteConfig = { flash: {} };
+    let vipState = { announcement: {}, events: [], resources: [], rooms: [], messages: [] };
     const demoMode = new URLSearchParams(location.search).get("demo") === "1";
     let offerPreviewInterval = null;
     let activeTab = "overview";
@@ -1651,6 +1863,54 @@
       return payload;
     }
 
+    function fillVipForms() {
+      const announcement = vipState.announcement || {};
+      const form = document.getElementById("vipAnnouncementForm");
+      if (!form) return;
+      form.elements.active.checked = announcement.active !== false;
+      form.elements.title.value = announcement.title || "";
+      form.elements.copy.value = announcement.copy || "";
+      form.elements.cta.value = announcement.cta || "";
+      form.elements.url.value = announcement.url || "";
+    }
+
+    function renderVipAdmin() {
+      const messages = Array.isArray(vipState.messages) ? vipState.messages : [];
+      const events = Array.isArray(vipState.events) ? vipState.events : [];
+      document.getElementById("tabVipMeta").textContent = `${events.length} live${events.length > 1 ? "s" : ""} / ${messages.length} msg`;
+      document.getElementById("vipMessageCount").textContent = messages.length;
+      document.getElementById("vipMessageList").innerHTML = messages.length ? messages.slice(0, 30).map(message => `
+        <article class="vip-message ${message.kind === "setup" ? "setup" : ""} ${message.priority ? "priority" : ""}">
+          <div class="vip-message-head">
+            <span>${escapeHTML(message.sender === "admin" ? "Admin" : message.name || "VIP")} - ${escapeHTML(message.room || "general")}</span>
+            <span>${escapeHTML(formatDate(message.created_at))}</span>
+          </div>
+          <div class="product-pills">
+            ${message.status === "pinned" ? `<span class="product-pill gold">Epingle</span>` : ""}
+            ${message.priority ? `<span class="product-pill btc">Important</span>` : ""}
+            ${message.kind ? `<span class="product-pill ${message.kind === "setup" ? "gold" : "nasdaq"}">${escapeHTML(message.kind === "setup" ? "Setup S+" : message.kind)}</span>` : ""}
+            ${message.market ? `<span class="product-pill nasdaq">${escapeHTML(message.market)}</span>` : ""}
+            ${message.grade ? `<span class="product-pill gold">${escapeHTML(message.grade)}</span>` : ""}
+          </div>
+          ${message.title ? `<h3>${escapeHTML(message.title)}</h3>` : ""}
+          <p class="lead">${escapeHTML(message.message || "")}</p>
+          <div class="chat-actions">
+            <button class="btn green" data-vip-status="pinned" data-vip-id="${escapeHTML(message.id || "")}">Epingler</button>
+            <button class="btn" data-vip-status="open" data-vip-id="${escapeHTML(message.id || "")}">Normal</button>
+            <button class="btn red" data-vip-status="deleted" data-vip-id="${escapeHTML(message.id || "")}">Supprimer</button>
+          </div>
+        </article>
+      `).join("") : `<p class="lead">Aucun message VIP pour le moment.</p>`;
+      document.getElementById("vipEvents").innerHTML = events.length ? events.slice(0, 8).map(event => `
+        <article class="vip-event-card">
+          <span class="product-pill gold">${escapeHTML(event.type || "Live")}</span>
+          <h3 style="margin:10px 0">${escapeHTML(event.title || "Live formation")}</h3>
+          <p class="lead">${escapeHTML(formatDate(event.startsAt))} - ${escapeHTML(event.duration || "60 min")} - ${escapeHTML(event.setup || "VIP")}</p>
+          ${event.link ? `<p class="lead" style="margin-top:8px">${escapeHTML(event.link)}</p>` : ""}
+        </article>
+      `).join("") : `<p class="lead">Aucun live formation planifie.</p>`;
+    }
+
     function render() {
       const total = requests.length;
       const pending = requests.filter(item => item.status === "pending").length;
@@ -1689,6 +1949,8 @@
         ? analytics.topPages.map(item => `<div class="analytics-line"><span>${escapeHTML(item.page)}</span><strong>${escapeHTML(item.views)}</strong></div>`).join("")
         : `<div class="analytics-line"><span>Aucune visite trackee</span><strong>0</strong></div>`;
       fillFlashForm();
+      fillVipForms();
+      renderVipAdmin();
       document.getElementById("totalCount").textContent = total;
       document.getElementById("pendingCount").textContent = pending;
       document.getElementById("approvedCount").textContent = approved;
@@ -1824,18 +2086,26 @@
         analytics = { online: 7, visitorsToday: 42, pageViewsToday: 118, updated_at: now.toISOString(), topPages: [{ page: "/vente.html", views: 81 }, { page: "/vente.html#offers", views: 22 }, { page: "/client.html", views: 15 }] };
         chatMessages = [{ created_at: now.toISOString(), sender: "client", name: "Prospect Demo", email: "prospect@email.com", message: "Bonjour, je veux le Nasdaq." }];
         siteConfig = { flash: { active: true, title: "Offre speciale membre", copy: "BTC, Gold ou Nasdaq : 49,99 EUR / mois par algo.", cta: "Voir l'offre", url: "vente.html#offers", endsAt: new Date(Date.now() + 48 * 60 * 60000).toISOString() } };
+        vipState = {
+          announcement: { active: true, title: "Annonce importante VIP", copy: "Live formation ce soir : structure, liquidites et executions propres.", cta: "Voir le live", url: "#vip-calendar" },
+          events: [{ id: "demo-live", title: "Live formation Gold X", startsAt: new Date(Date.now() + 3 * 3600000).toISOString(), duration: "60 min", setup: "Gold", type: "Formation live", link: "", copy: "Lecture London / New York + gestion du risque." }],
+          resources: [],
+          rooms: ["general", "gold", "btc", "nasdaq", "macro", "formation"],
+          messages: [{ id: "vip-demo", created_at: now.toISOString(), status: "pinned", room: "gold", sender: "admin", kind: "setup", priority: true, market: "Gold", grade: "S+", title: "Setup S+ Gold - zone de reaction", message: "Contexte propre. Attendre validation TradingView, invalidation stricte, execution manuelle seulement." }]
+        };
         document.getElementById("desk").classList.remove("hidden");
         document.getElementById("loginStatus").textContent = "Mode test charge.";
         render();
         return;
       }
-      const [accessPayload, paypalPayload, donationPayload, analyticsPayload, configPayload, chatPayload] = await Promise.all([
+      const [accessPayload, paypalPayload, donationPayload, analyticsPayload, configPayload, chatPayload, vipPayload] = await Promise.all([
         api("/api/admin/access-requests"),
         api("/api/admin/paypal-events"),
         api("/api/admin/donations"),
         api("/api/admin/analytics"),
         api("/api/admin/site-config"),
-        api("/api/admin/chat")
+        api("/api/admin/chat"),
+        api("/api/admin/vip")
       ]);
       requests = accessPayload.requests || [];
       paypalEvents = paypalPayload.events || [];
@@ -1844,6 +2114,7 @@
       analytics = analyticsPayload || analytics;
       siteConfig = configPayload.config || siteConfig;
       chatMessages = chatPayload.messages || [];
+      vipState = vipPayload.vip || vipState;
       document.getElementById("desk").classList.remove("hidden");
       document.getElementById("loginStatus").textContent = "Administration chargee.";
       render();
@@ -1998,6 +2269,87 @@
       button.addEventListener("click", () => setOfferDuration(button.dataset.durationMinutes));
     });
     offerPreviewInterval = setInterval(updateOfferPreview, 1000);
+
+    document.getElementById("vipMessageForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.target;
+      const status = document.getElementById("vipMessageStatus");
+      const data = Object.fromEntries(new FormData(form).entries());
+      data.priority = form.elements.priority.checked;
+      data.pinned = form.elements.pinned.checked;
+      status.textContent = "Envoi VIP...";
+      try {
+        const payload = await api("/api/admin/vip/message", {
+          method: "POST",
+          body: JSON.stringify(data)
+        });
+        vipState = payload.vip || vipState;
+        form.reset();
+        form.elements.kind.value = "announcement";
+        status.textContent = "Message publie dans le VIP Floor.";
+        renderVipAdmin();
+      } catch (error) {
+        status.textContent = "Impossible de publier le message VIP.";
+      }
+    });
+
+    document.getElementById("vipEventForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.target;
+      const status = document.getElementById("vipEventStatus");
+      const data = Object.fromEntries(new FormData(form).entries());
+      data.action = "event";
+      status.textContent = "Ajout du live...";
+      try {
+        const payload = await api("/api/admin/vip/config", {
+          method: "POST",
+          body: JSON.stringify(data)
+        });
+        vipState = payload.vip || vipState;
+        form.reset();
+        status.textContent = "Live ajoute au calendrier VIP.";
+        renderVipAdmin();
+      } catch (error) {
+        status.textContent = "Impossible d'ajouter le live.";
+      }
+    });
+
+    document.getElementById("vipAnnouncementForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.target;
+      const status = document.getElementById("vipAnnouncementStatus");
+      const data = Object.fromEntries(new FormData(form).entries());
+      data.action = "announcement";
+      data.active = form.elements.active.checked;
+      status.textContent = "Publication annonce...";
+      try {
+        const payload = await api("/api/admin/vip/config", {
+          method: "POST",
+          body: JSON.stringify(data)
+        });
+        vipState = payload.vip || vipState;
+        status.textContent = "Annonce VIP publiee.";
+        renderVipAdmin();
+      } catch (error) {
+        status.textContent = "Impossible de publier l'annonce VIP.";
+      }
+    });
+
+    document.getElementById("vipMessageList").addEventListener("click", async event => {
+      const button = event.target.closest("button[data-vip-status]");
+      if (!button) return;
+      button.disabled = true;
+      try {
+        const payload = await api("/api/admin/vip/message/status", {
+          method: "POST",
+          body: JSON.stringify({ id: button.dataset.vipId, status: button.dataset.vipStatus })
+        });
+        vipState = payload.vip || vipState;
+        renderVipAdmin();
+      } finally {
+        button.disabled = false;
+      }
+    });
 
     if (demoMode) {
       document.getElementById("password").value = "demo";
