@@ -758,6 +758,8 @@
       display: grid;
       gap: 16px;
       padding: 0;
+      grid-column: 1 / -1;
+      border-radius: 34px;
       background:
         radial-gradient(circle at 82% 0, rgba(38,183,255,.16), transparent 25rem),
         radial-gradient(circle at 10% 0, rgba(255,138,33,.14), transparent 22rem),
@@ -765,17 +767,25 @@
         rgba(7,9,12,.88);
     }
 
+    .offer-command .section-title {
+      min-height: 70px;
+      padding: 20px 24px;
+      background:
+        radial-gradient(circle at 18% 0, rgba(210,162,71,.14), transparent 22rem),
+        rgba(255,255,255,.025);
+    }
+
     .offer-command-body {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(300px, .78fr);
-      gap: 16px;
-      padding: 18px;
+      grid-template-columns: minmax(560px, .95fr) minmax(440px, .72fr);
+      gap: 24px;
+      padding: 24px;
     }
 
     .offer-fields,
     .offer-preview {
       display: grid;
-      gap: 12px;
+      gap: 16px;
       min-width: 0;
     }
 
@@ -786,17 +796,20 @@
     }
 
     .preset-card {
-      min-height: 72px;
-      padding: 12px;
-      border: 1px solid rgba(244,240,230,.13);
-      border-radius: 18px;
+      min-height: 118px;
+      padding: 18px;
+      border: 1px solid rgba(244,240,230,.16);
+      border-radius: 24px;
       color: var(--paper);
       background:
-        radial-gradient(circle at 80% 10%, rgba(38,183,255,.14), transparent 12rem),
+        radial-gradient(circle at 88% 0, rgba(38,183,255,.18), transparent 13rem),
+        linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.025)),
         rgba(255,255,255,.045);
       text-align: left;
       cursor: pointer;
       font-weight: 900;
+      font-size: 15px;
+      line-height: 1.05;
     }
 
     .preset-card span {
@@ -839,26 +852,55 @@
 
     .promo-price-builder {
       display: grid;
-      gap: 10px;
-      padding: 14px;
-      border: 1px solid rgba(210,162,71,.22);
-      border-radius: 22px;
+      gap: 16px;
+      padding: 22px;
+      border: 1px solid rgba(210,162,71,.34);
+      border-radius: 30px;
       background:
-        radial-gradient(circle at 80% 0, rgba(210,162,71,.16), transparent 14rem),
+        radial-gradient(circle at 12% 0, rgba(255,138,33,.18), transparent 18rem),
+        radial-gradient(circle at 80% 0, rgba(210,162,71,.18), transparent 18rem),
+        linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.02)),
         rgba(210,162,71,.055);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 24px 70px rgba(0,0,0,.22);
     }
 
     .promo-price-builder h4 {
       margin: 0;
-      font-size: 16px;
-      letter-spacing: -.01em;
+      font-size: clamp(26px, 3vw, 40px);
+      line-height: .92;
+      letter-spacing: -.03em;
+    }
+
+    .promo-price-builder .quick-add-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .promo-price-builder .check-row {
+      min-height: 76px;
+      justify-content: center;
+      border-radius: 22px;
+      font-size: 14px;
+      background: rgba(0,0,0,.18);
+    }
+
+    .promo-price-builder .check-row:has(input:checked) {
+      color: #07090c;
+      border-color: var(--gold);
+      background: linear-gradient(135deg, #fff0a6, var(--gold), var(--btc));
+      box-shadow: 0 18px 54px rgba(210,162,71,.20);
     }
 
     .promo-builder-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(110px, 160px) auto;
-      gap: 8px;
+      grid-template-columns: minmax(0, 1.1fr) minmax(130px, .35fr) minmax(160px, auto);
+      gap: 10px;
       align-items: center;
+    }
+
+    .promo-builder-grid input,
+    .promo-builder-grid .btn {
+      min-height: 60px;
+      border-radius: 18px;
     }
 
     .promo-helper {
@@ -915,49 +957,54 @@
 
     .offer-preview {
       align-content: stretch;
-      padding: 16px;
-      border: 1px solid rgba(244,240,230,.13);
-      border-radius: 22px;
+      position: sticky;
+      top: 160px;
+      min-height: 650px;
+      padding: 22px;
+      border: 1px solid rgba(210,162,71,.22);
+      border-radius: 32px;
       background:
         linear-gradient(rgba(244,240,230,.055) 1px, transparent 1px),
         linear-gradient(90deg, rgba(244,240,230,.045) 1px, transparent 1px),
-        rgba(3,5,8,.54);
+        radial-gradient(circle at 80% 10%, rgba(38,183,255,.14), transparent 22rem),
+        rgba(3,5,8,.62);
       background-size: 34px 34px, 34px 34px, auto;
     }
 
     .offer-preview-card {
       position: relative;
-      min-height: 210px;
+      min-height: 520px;
       display: grid;
       align-content: space-between;
       gap: 18px;
-      padding: 20px;
-      border: 1px solid rgba(210,162,71,.28);
-      border-radius: 24px;
+      padding: 30px;
+      border: 1px solid rgba(210,162,71,.36);
+      border-radius: 32px;
       background:
-        radial-gradient(circle at 82% 18%, rgba(210,162,71,.20), transparent 18rem),
-        radial-gradient(circle at 12% 16%, rgba(38,183,255,.13), transparent 16rem),
+        radial-gradient(circle at 82% 18%, rgba(210,162,71,.28), transparent 21rem),
+        radial-gradient(circle at 12% 16%, rgba(38,183,255,.18), transparent 18rem),
         linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.025)),
         rgba(5,7,10,.82);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.09), 0 30px 90px rgba(0,0,0,.26);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.09), 0 34px 110px rgba(0,0,0,.34);
       overflow: hidden;
     }
 
     .offer-preview-card::after {
       content: "LIVE";
       position: absolute;
-      right: -10px;
-      bottom: -16px;
-      color: rgba(210,162,71,.13);
-      font-size: 90px;
+      right: -24px;
+      bottom: -38px;
+      color: rgba(210,162,71,.10);
+      font-size: 172px;
       font-weight: 950;
       letter-spacing: -.08em;
     }
 
     .offer-preview-card h3 {
-      margin: 8px 0 0;
-      font-size: clamp(28px, 2.8vw, 44px);
-      line-height: .95;
+      margin: 10px 0 0;
+      font-size: clamp(44px, 4vw, 72px);
+      line-height: .88;
+      letter-spacing: -.04em;
     }
 
     .offer-preview-copy {
@@ -967,17 +1014,17 @@
     }
 
     .offer-timer {
-      min-height: 54px;
+      min-height: 68px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       width: fit-content;
-      padding: 0 16px;
-      border: 1px solid rgba(244,240,230,.16);
+      padding: 0 22px;
+      border: 1px solid rgba(210,162,71,.32);
       border-radius: 999px;
       color: var(--gold);
       background: rgba(0,0,0,.22);
-      font-size: 18px;
+      font-size: 22px;
       font-weight: 950;
       letter-spacing: .06em;
       font-variant-numeric: tabular-nums;
@@ -1143,7 +1190,10 @@
                 <button class="preset-card" type="button" data-promo-preset="vip">Promo 39 EUR<span>Montant libre sur PayPal Mehdi</span></button>
               </div>
               <div class="promo-price-builder">
-                <h4>Generateur PayPal Mehdi</h4>
+                <div>
+                  <span class="micro" style="color:var(--gold)">Offer builder</span>
+                  <h4>Pack promo sur mesure.</h4>
+                </div>
                 <div class="quick-add-grid">
                   <label class="check-row"><input type="checkbox" name="promoSetup" value="BTC"> BTC</label>
                   <label class="check-row"><input type="checkbox" name="promoSetup" value="Gold"> Gold</label>
@@ -1154,7 +1204,7 @@
                   <input name="promoPrice" type="number" min="1" step="0.01" placeholder="Prix EUR">
                   <button class="btn gold" type="button" id="generatePaypalOffer">Generer lien</button>
                 </div>
-                <div class="promo-helper" id="paypalBuilderStatus">Selectionne 1, 2 ou 3 algos, mets ton prix total, puis genere le lien PayPal direct.</div>
+                <div class="promo-helper" id="paypalBuilderStatus">Selectionne 1, 2 ou 3 algos, mets ton prix total, puis genere un lien PayPal Mehdi direct.</div>
               </div>
               <div class="promo-direct-grid" aria-label="Liens rapides promo">
                 <button type="button" data-promo-url="https://www.paypal.com/ncp/payment/SB6UU4KPJ974A">BTC PayPal</button>
