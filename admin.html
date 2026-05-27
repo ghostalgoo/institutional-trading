@@ -837,6 +837,30 @@
       border-color: var(--gold);
     }
 
+    .promo-price-builder {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid rgba(210,162,71,.22);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 80% 0, rgba(210,162,71,.16), transparent 14rem),
+        rgba(210,162,71,.055);
+    }
+
+    .promo-price-builder h4 {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: -.01em;
+    }
+
+    .promo-builder-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(110px, 160px) auto;
+      gap: 8px;
+      align-items: center;
+    }
+
     .promo-helper {
       padding: 13px;
       border: 1px solid rgba(38,183,255,.18);
@@ -996,6 +1020,7 @@
       .ops-hero-grid,
       .ops-tabs,
       .promo-presets,
+      .promo-builder-grid,
       .pipeline-grid,
       .product-matrix,
       .control-deck,
@@ -1114,8 +1139,22 @@
               </label>
               <div class="promo-presets" aria-label="Modeles de promotion">
                 <button class="preset-card" type="button" data-promo-preset="flash">Flash 24h<span>Urgence propre avec timer court</span></button>
-                <button class="preset-card" type="button" data-promo-preset="bundle">Multi-setup<span>Inciter BTC + Gold + Nasdaq</span></button>
-                <button class="preset-card" type="button" data-promo-preset="vip">Acces VIP<span>Positionnement premium rare</span></button>
+                <button class="preset-card" type="button" data-promo-preset="bundle">3 algos 130 EUR<span>BTC + Gold + Nasdaq en paiement direct</span></button>
+                <button class="preset-card" type="button" data-promo-preset="vip">Promo 39 EUR<span>Montant libre sur PayPal Mehdi</span></button>
+              </div>
+              <div class="promo-price-builder">
+                <h4>Generateur PayPal Mehdi</h4>
+                <div class="quick-add-grid">
+                  <label class="check-row"><input type="checkbox" name="promoSetup" value="BTC"> BTC</label>
+                  <label class="check-row"><input type="checkbox" name="promoSetup" value="Gold"> Gold</label>
+                  <label class="check-row"><input type="checkbox" name="promoSetup" value="Nasdaq"> Nasdaq</label>
+                </div>
+                <div class="promo-builder-grid">
+                  <input name="promoLabel" placeholder="Nom offre ex : Offre 3 algos">
+                  <input name="promoPrice" type="number" min="1" step="0.01" placeholder="Prix EUR">
+                  <button class="btn gold" type="button" id="generatePaypalOffer">Generer lien</button>
+                </div>
+                <div class="promo-helper" id="paypalBuilderStatus">Selectionne 1, 2 ou 3 algos, mets ton prix total, puis genere le lien PayPal direct.</div>
               </div>
               <div class="promo-direct-grid" aria-label="Liens rapides promo">
                 <button type="button" data-promo-url="https://www.paypal.com/ncp/payment/SB6UU4KPJ974A">BTC PayPal</button>
@@ -1123,7 +1162,7 @@
                 <button type="button" data-promo-url="https://www.paypal.com/ncp/payment/VMTBQ5G9EMWTU">Nasdaq PayPal</button>
                 <button type="button" data-promo-url="#offers">Page offres</button>
               </div>
-              <div class="promo-helper">La promo peut envoyer directement vers le PayPal du setup choisi. Apres paiement, le client revient declarer son achat pour validation manuelle dans l'onglet Achats.</div>
+              <div class="promo-helper">Les liens fixes gardent les abonnements classiques. Le generateur cree une URL PayPal avec le montant exact que tu choisis pour Mehdi.</div>
               <input name="title" placeholder="Titre ex : Offre speciale week-end">
               <textarea name="copy" placeholder="Message court affiche sur vente.html avec minuteur"></textarea>
               <div class="duration-grid" aria-label="Duree rapide">
@@ -1233,6 +1272,7 @@
     const demoMode = new URLSearchParams(location.search).get("demo") === "1";
     let offerPreviewInterval = null;
     let activeTab = "overview";
+    const paypalBusinessEmail = "Mehdi.parisville@outlook.com";
     const productDefs = [
       { key: "btc", label: "BTC", full: "BTC Institutional Setup - 49,99 EUR / mois" },
       { key: "gold", label: "Gold", full: "Gold Institutional Setup - 49,99 EUR / mois" },
@@ -1355,35 +1395,97 @@
       const form = document.getElementById("flashForm");
       const presets = {
         flash: {
-          title: "Fenetre d'acces 24h",
-          copy: "Activation prioritaire BTC Institutional Setup. Paiement PayPal direct, declaration ensuite pour validation.",
-          cta: "Payer BTC maintenant",
-          url: "https://www.paypal.com/ncp/payment/SB6UU4KPJ974A",
+          setups: ["BTC"],
+          price: "39",
+          label: "BTC promo 39 EUR",
+          title: "BTC Institutional - 39 EUR",
+          copy: "Fenetre promo limitee sur BTC Institutional Setup. Paiement PayPal Mehdi direct, declaration ensuite pour validation.",
+          cta: "Payer 39 EUR",
           minutes: 1440,
         },
         bundle: {
-          title: "Acces Gold prioritaire",
-          copy: "Gold Institutional Setup en activation prioritaire. Paiement PayPal direct puis verification admin.",
-          cta: "Payer Gold maintenant",
-          url: "https://www.paypal.com/ncp/payment/DCVU8JTEY7GJ4",
+          setups: ["BTC", "Gold", "Nasdaq"],
+          price: "130",
+          label: "BTC + Gold + Nasdaq - promo 130 EUR",
+          title: "Les 3 setups - 130 EUR",
+          copy: "Offre combinee BTC, Gold et Nasdaq. Paiement PayPal Mehdi direct, puis declaration de l'achat dans l'espace acces.",
+          cta: "Payer 130 EUR",
           minutes: 2880,
         },
         vip: {
-          title: "Nasdaq access window",
-          copy: "Nasdaq Institutional Setup disponible avec timer live. Paiement PayPal direct, activation apres declaration.",
-          cta: "Payer Nasdaq maintenant",
-          url: "https://www.paypal.com/ncp/payment/VMTBQ5G9EMWTU",
+          setups: ["Gold"],
+          price: "49.99",
+          label: "Gold Institutional Setup",
+          title: "Gold access window",
+          copy: "Gold Institutional Setup disponible avec timer live. Paiement PayPal Mehdi direct, activation apres declaration.",
+          cta: "Payer Gold",
           minutes: 10080,
         },
       };
       const preset = presets[name];
       if (!preset || !form) return;
       form.elements.active.checked = true;
+      form.querySelectorAll('input[name="promoSetup"]').forEach(input => {
+        input.checked = preset.setups.includes(input.value);
+      });
+      form.elements.promoPrice.value = preset.price;
+      form.elements.promoLabel.value = preset.label;
       form.elements.title.value = preset.title;
       form.elements.copy.value = preset.copy;
       form.elements.cta.value = preset.cta;
-      form.elements.url.value = preset.url;
+      form.elements.url.value = buildMehdiPayPalUrl(preset.price, preset.label);
       setOfferDuration(preset.minutes);
+      updateOfferPreview();
+    }
+
+    function selectedPromoSetups() {
+      return Array.from(document.querySelectorAll('input[name="promoSetup"]:checked')).map(input => input.value);
+    }
+
+    function parsePromoPrice(value) {
+      const number = Number(String(value || "").replace(",", "."));
+      return Number.isFinite(number) && number > 0 ? number : 0;
+    }
+
+    function buildMehdiPayPalUrl(amount, label) {
+      const price = parsePromoPrice(amount);
+      const itemName = String(label || "Institutional Trading Offer").trim();
+      const params = new URLSearchParams({
+        cmd: "_xclick",
+        business: paypalBusinessEmail,
+        item_name: itemName,
+        amount: price.toFixed(2),
+        currency_code: "EUR",
+        no_shipping: "1",
+        return: `${location.origin}/#contact`,
+        cancel_return: `${location.origin}/#offers`,
+      });
+      return `https://www.paypal.com/cgi-bin/webscr?${params.toString()}`;
+    }
+
+    function generateCustomPayPalOffer() {
+      const form = document.getElementById("flashForm");
+      const status = document.getElementById("paypalBuilderStatus");
+      const setups = selectedPromoSetups();
+      const price = parsePromoPrice(form.elements.promoPrice.value);
+      if (!setups.length) {
+        status.textContent = "Choisis au moins un setup : BTC, Gold ou Nasdaq.";
+        return;
+      }
+      if (!price) {
+        status.textContent = "Entre un prix valide en EUR, ex : 130 ou 39.";
+        return;
+      }
+      const label = form.elements.promoLabel.value.trim() || `${setups.join(" + ")} Institutional Setup${setups.length > 1 ? "s" : ""}`;
+      const title = setups.length === 3 ? `Les 3 setups - ${price.toFixed(2)} EUR` : `${setups.join(" + ")} - ${price.toFixed(2)} EUR`;
+      form.elements.active.checked = true;
+      form.elements.promoLabel.value = label;
+      form.elements.title.value = title.replace(".00", "");
+      form.elements.copy.value = `${setups.join(" + ")} en offre limitee. Paiement PayPal Mehdi direct, puis declaration de l'achat pour activation TradingView.`;
+      form.elements.cta.value = `Payer ${price.toFixed(2).replace(".", ",")} EUR`;
+      form.elements.url.value = buildMehdiPayPalUrl(price, label);
+      if (!form.elements.endsAt.value) setOfferDuration(1440);
+      status.textContent = `Lien PayPal genere pour ${price.toFixed(2).replace(".", ",")} EUR vers ${paypalBusinessEmail}.`;
       updateOfferPreview();
     }
 
@@ -1810,6 +1912,8 @@
         updateOfferPreview();
       });
     });
+
+    document.getElementById("generatePaypalOffer").addEventListener("click", generateCustomPayPalOffer);
 
     document.getElementById("flashForm").addEventListener("submit", async event => {
       event.preventDefault();
