@@ -19,7 +19,8 @@ Le `Procfile` contient deja cette commande.
 TRADING_ADMIN_PASSWORD=un-mot-de-passe-fort
 TRADING_ADMIN_KEY=un-lien-prive-long
 TRADING_DONATION_EMAIL=Mehdi.parisville@outlook.com
-TRADING_DATA_DIR=/opt/render/project/src/data
+SUPABASE_URL=https://votre-projet.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=sb_secret_...
 PAYPAL_WEBHOOK_ID=...
 PAYPAL_CLIENT_ID=...
 PAYPAL_CLIENT_SECRET=...
@@ -35,8 +36,10 @@ Ne pas activer `PAYPAL_WEBHOOK_ALLOW_UNVERIFIED` en production.
 
 ## Stockage
 
-Monter un volume persistant sur le dossier defini par `TRADING_DATA_DIR`.
-Sans volume ou base de donnees, les fichiers clients/admin peuvent etre perdus lors d'un redeploiement.
+Sur Render gratuit, utiliser Supabase pour conserver les donnees.
+Executer `supabase_schema.sql` dans le SQL Editor Supabase, puis ajouter `SUPABASE_URL` et `SUPABASE_SERVICE_ROLE_KEY` dans les variables Render.
+
+Le site garde aussi une copie fichier locale en fallback, mais sans disque persistant Render cette copie locale peut disparaitre au redeploiement.
 
 ## URLs apres publication
 
@@ -48,7 +51,7 @@ Sans volume ou base de donnees, les fichiers clients/admin peuvent etre perdus l
 ## Checklist publication
 
 1. Publier le dossier complet sur Render ou Railway en service Python.
-2. Ajouter un disque persistant et faire pointer `TRADING_DATA_DIR` dessus.
+2. Executer `supabase_schema.sql` dans Supabase.
 3. Mettre les variables de production.
 4. Dans PayPal Developer, creer un webhook vers `https://votre-domaine.com/api/paypal/webhook`.
 5. Copier le `PAYPAL_WEBHOOK_ID` dans les variables de production.

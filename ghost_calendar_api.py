@@ -72,6 +72,11 @@ DONATION_URL = os.environ.get(
     "TRADING_DONATION_URL",
     f"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business={quote(DONATION_EMAIL)}&currency_code=EUR&item_name=Institutional%20Trading%20Donation&custom=donation",
 )
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
+SUPABASE_SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
+SUPABASE_STATE_TABLE = os.environ.get("SUPABASE_STATE_TABLE", "site_state")
+SUPABASE_ENABLED = bool(SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY)
+SUPABASE_TIMEOUT_SECONDS = 8
 
 
 def now_paris() -> datetime:
@@ -410,60 +415,117 @@ def clean_image_data(value: Any) -> str:
     return text
 
 
-def load_access_requests() -> list[dict[str, Any]]:
-    if not ACCESS_REQUESTS_FILE.exists():
-        return []
+def supabase_table_name() -> str:
+    return "".join(char for char in SUPABASE_STATE_TABLE if char.isalnum() or char == "_") or "site_state"
+
+
+def supabase_request(method: str, path: str, payload: Any | None = None, prefer: str = "") -> Any:
+    if not SUPABASE_ENABLED:
+        return None
+    body = json.dumps(payload).encode("utf-8") if payload is not None else None
+    headers = {
+        "apikey": SUPABASE_SERVICE_ROLE_KEY,
+        "Authorization": f"Bearer {SUPABASE_SERVICE_ROLE_KEY}",
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+    }
+    if prefer:
+        headers["Prefer"] = prefer
+    request = Request(
+        f"{SUPABASE_URL}/rest/v1/{path.lstrip('/')}",
+        data=body,
+        headers=headers,
+        method=method,
+    )
+    with urlopen(request, timeout=SUPABASE_TIMEOUT_SECONDS) as response:
+        raw = response.read().decode("utf-8")
+    return json.loads(raw) if raw else None
+
+
+def load_remote_state(key: str) -> Any | None:
+    if not SUPABASE_ENABLED:
+        return None
     try:
-        payload = json.loads(ACCESS_REQUESTS_FILE.read_text(encoding="utf-8"))
+        table = supabase_table_name()
+        query_key = quote(key, safe="")
+        rows = supabase_request("GET", f"{table}?key=eq.{query_key}&select=value&limit=1")
+    except Exception:
+        return None
+    if isinstance(rows, list) and rows and isinstance(rows[0], dict):
+        return rows[0].get("value")
+    return None
+
+
+def save_remote_state(key: str, value: Any) -> None:
+    if not SUPABASE_ENABLED:
+        return
+    try:
+        table = supabase_table_name()
+        body = {
+            "key": key,
+            "value": value,
+            "updated_at": now_paris().isoformat(),
+        }
+        supabase_request(
+            "POST",
+            f"{table}?on_conflict=key",
+            body,
+            prefer="resolution=merge-duplicates,return=minimal",
+        )
+    except Exception:
+        return
+
+
+def load_state(key: str, path: Path, default: Any, expected_type: type) -> Any:
+    remote = load_remote_state(key)
+    if isinstance(remote, expected_type):
+        return remote
+    if not path.exists():
+        return default
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
-        return []
-    return payload if isinstance(payload, list) else []
+        return default
+    return payload if isinstance(payload, expected_type) else default
+
+
+def save_state(key: str, path: Path, payload: Any) -> None:
+    try:
+        path.write_text(json.dumps(payload, ensure_ascii=True, indent=2), encoding="utf-8")
+    finally:
+        save_remote_state(key, payload)
+
+
+def load_access_requests() -> list[dict[str, Any]]:
+    return load_state("access_requests", ACCESS_REQUESTS_FILE, [], list)
 
 
 def save_access_requests(requests: list[dict[str, Any]]) -> None:
-    ACCESS_REQUESTS_FILE.write_text(json.dumps(requests, ensure_ascii=True, indent=2), encoding="utf-8")
+    save_state("access_requests", ACCESS_REQUESTS_FILE, requests)
 
 
 def load_paypal_events() -> list[dict[str, Any]]:
-    if not PAYPAL_EVENTS_FILE.exists():
-        return []
-    try:
-        payload = json.loads(PAYPAL_EVENTS_FILE.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return []
-    return payload if isinstance(payload, list) else []
+    return load_state("paypal_events", PAYPAL_EVENTS_FILE, [], list)
 
 
 def save_paypal_events(events: list[dict[str, Any]]) -> None:
-    PAYPAL_EVENTS_FILE.write_text(json.dumps(events[:250], ensure_ascii=True, indent=2), encoding="utf-8")
+    save_state("paypal_events", PAYPAL_EVENTS_FILE, events[:250])
 
 
 def load_donations() -> list[dict[str, Any]]:
-    if not DONATIONS_FILE.exists():
-        return []
-    try:
-        payload = json.loads(DONATIONS_FILE.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return []
-    return payload if isinstance(payload, list) else []
+    return load_state("donations", DONATIONS_FILE, [], list)
 
 
 def save_donations(donations: list[dict[str, Any]]) -> None:
-    DONATIONS_FILE.write_text(json.dumps(donations[:500], ensure_ascii=True, indent=2), encoding="utf-8")
+    save_state("donations", DONATIONS_FILE, donations[:500])
 
 
 def load_chat_messages() -> list[dict[str, Any]]:
-    if not CHAT_MESSAGES_FILE.exists():
-        return []
-    try:
-        payload = json.loads(CHAT_MESSAGES_FILE.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return []
-    return payload if isinstance(payload, list) else []
+    return load_state("chat_messages", CHAT_MESSAGES_FILE, [], list)
 
 
 def save_chat_messages(messages: list[dict[str, Any]]) -> None:
-    CHAT_MESSAGES_FILE.write_text(json.dumps(messages[:500], ensure_ascii=True, indent=2), encoding="utf-8")
+    save_state("chat_messages", CHAT_MESSAGES_FILE, messages[:500])
 
 
 def create_chat_message(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
@@ -522,12 +584,7 @@ def default_site_config() -> dict[str, Any]:
 
 
 def load_site_config() -> dict[str, Any]:
-    if not SITE_CONFIG_FILE.exists():
-        return default_site_config()
-    try:
-        payload = json.loads(SITE_CONFIG_FILE.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError):
-        return default_site_config()
+    payload = load_state("site_config", SITE_CONFIG_FILE, default_site_config(), dict)
     config = default_site_config()
     if isinstance(payload, dict):
         flash = payload.get("flash")
@@ -537,7 +594,7 @@ def load_site_config() -> dict[str, Any]:
 
 
 def save_site_config(config: dict[str, Any]) -> None:
-    SITE_CONFIG_FILE.write_text(json.dumps(config, ensure_ascii=True, indent=2), encoding="utf-8")
+    save_state("site_config", SITE_CONFIG_FILE, config)
 
 
 def parse_local_datetime(value: Any) -> datetime | None:
@@ -564,12 +621,7 @@ def public_flash_payload() -> dict[str, Any]:
 
 
 def load_analytics() -> dict[str, Any]:
-    if not ANALYTICS_FILE.exists():
-        return {"sessions": {}, "events": []}
-    try:
-        payload = json.loads(ANALYTICS_FILE.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError):
-        return {"sessions": {}, "events": []}
+    payload = load_state("analytics", ANALYTICS_FILE, {"sessions": {}, "events": []}, dict)
     if not isinstance(payload, dict):
         return {"sessions": {}, "events": []}
     sessions = payload.get("sessions") if isinstance(payload.get("sessions"), dict) else {}
@@ -580,7 +632,7 @@ def load_analytics() -> dict[str, Any]:
 def save_analytics(payload: dict[str, Any]) -> None:
     sessions = payload.get("sessions") if isinstance(payload.get("sessions"), dict) else {}
     events = payload.get("events") if isinstance(payload.get("events"), list) else []
-    ANALYTICS_FILE.write_text(json.dumps({"sessions": sessions, "events": events[:2500]}, ensure_ascii=True, indent=2), encoding="utf-8")
+    save_state("analytics", ANALYTICS_FILE, {"sessions": sessions, "events": events[:2500]})
 
 
 def hash_password(password: str) -> str:
