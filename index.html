@@ -1167,10 +1167,12 @@
       padding: 0;
       color: var(--paper);
       background:
-        radial-gradient(circle at 16% 40%, rgba(210,162,71,.12), transparent 32%),
-        radial-gradient(circle at 72% 38%, rgba(0,199,131,.12), transparent 30%),
-        linear-gradient(90deg, rgba(5,6,8,.96), rgba(5,6,8,.72) 54%, rgba(5,6,8,.34)),
-        url("assets/trading-command-center-bg-v2.png") center right / cover no-repeat;
+        linear-gradient(rgba(244,240,230,.024) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244,240,230,.018) 1px, transparent 1px),
+        radial-gradient(circle at 22% 46%, rgba(210,162,71,.10), transparent 27rem),
+        radial-gradient(circle at 74% 44%, rgba(0,199,131,.18), transparent 34rem),
+        linear-gradient(105deg, #030508 0%, #05080c 42%, #06120f 100%);
+      background-size: 56px 56px, 56px 56px, auto, auto, auto;
       overflow: visible;
       perspective: 1800px;
       isolation: isolate;
@@ -1184,8 +1186,9 @@
       align-items: center;
       overflow: hidden;
       background:
-        linear-gradient(180deg, rgba(5,6,8,.7), rgba(5,6,8,.08) 40%, rgba(5,6,8,.72)),
-        rgba(5,6,8,.22);
+        radial-gradient(circle at 70% 45%, rgba(0,199,131,.10), transparent 26rem),
+        linear-gradient(180deg, rgba(5,6,8,.92), rgba(5,6,8,.70) 44%, rgba(5,6,8,.94)),
+        rgba(5,6,8,.72);
       perspective: 1800px;
       transform-style: preserve-3d;
     }
@@ -1195,10 +1198,10 @@
       position: absolute;
       inset: -20%;
       background:
-        radial-gradient(ellipse 42% 34% at calc(38% + var(--deck-open, 0) * 32%) 50%, rgba(0,199,131,.24), transparent 68%),
-        radial-gradient(ellipse 32% 26% at calc(72% - var(--deck-fan, 0) * 18%) 36%, rgba(210,162,71,.18), transparent 70%),
-        linear-gradient(120deg, transparent 0 46%, rgba(255,255,255,.06) 46.4%, transparent 47.2% 100%);
-      opacity: calc(.5 + var(--deck-open, 0) * .38);
+        radial-gradient(ellipse 38% 32% at calc(48% + var(--deck-open, 0) * 20%) 52%, rgba(0,199,131,.18), transparent 70%),
+        radial-gradient(ellipse 26% 22% at calc(70% - var(--deck-fan, 0) * 10%) 40%, rgba(210,162,71,.11), transparent 72%),
+        linear-gradient(120deg, transparent 0 48%, rgba(255,255,255,.045) 48.4%, transparent 49.2% 100%);
+      opacity: calc(.34 + var(--deck-open, 0) * .28);
       transform: translate3d(calc(var(--deck-fan, 0) * -60px), calc(var(--deck-open, 0) * -30px), 0) scale(1.08);
       pointer-events: none;
     }
@@ -1207,10 +1210,10 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(90deg, transparent 0%, rgba(0,199,131,.18) 48%, rgba(210,162,71,.16) 52%, transparent 100%);
-      width: 34%;
-      opacity: calc(var(--deck-open, 0) * .42);
-      filter: blur(18px);
+      background: linear-gradient(90deg, transparent 0%, rgba(0,199,131,.11) 48%, rgba(210,162,71,.10) 52%, transparent 100%);
+      width: 24%;
+      opacity: calc(var(--deck-open, 0) * .30);
+      filter: blur(22px);
       transform: translateX(calc(-120% + var(--cinema-progress, 0) * 420%)) skewX(-16deg);
       pointer-events: none;
     }
@@ -1222,6 +1225,7 @@
       pointer-events: none;
       transform-style: preserve-3d;
       perspective: 1800px;
+      opacity: .82;
     }
 
     .deck-floor {
@@ -1380,8 +1384,9 @@
         rgba(6,8,11,.70);
       box-shadow: 0 28px 90px rgba(0,0,0,.42);
       backdrop-filter: blur(18px);
-      opacity: calc(.04 + var(--deck-fan, 0) * .96);
+      opacity: calc(.02 + var(--deck-fan, 0) * .42);
       transform-style: preserve-3d;
+      scale: .9;
     }
 
     .orbit-card::before {
@@ -1582,12 +1587,13 @@
       position: relative;
       z-index: 4;
       min-height: 580px;
-      border: 1px solid rgba(244,240,230,.14);
+      border: 1px solid rgba(0,199,131,.24);
       border-radius: 26px;
       background:
-        radial-gradient(circle at 80% 6%, rgba(0,199,131,.12), transparent 18rem),
+        radial-gradient(circle at 80% 6%, rgba(0,199,131,.16), transparent 18rem),
+        linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.015)),
         rgba(10,13,17,.86);
-      box-shadow: 0 52px 130px rgba(0,0,0,.45);
+      box-shadow: 0 52px 130px rgba(0,0,0,.45), 0 0 90px rgba(0,199,131,.10), inset 0 1px 0 rgba(255,255,255,.08);
       transform:
         translate3d(calc(var(--deck-open, 0) * -24px), calc(var(--deck-fan, 0) * 6px), calc(var(--deck-open, 0) * 80px))
         rotateX(calc(5deg - var(--cinema-progress, 0) * 8deg))
@@ -1878,33 +1884,35 @@
       min-height: 330vh;
       overflow: clip;
       background:
-        radial-gradient(circle at 72% 26%, rgba(0,199,131,.18), transparent 32%),
-        radial-gradient(circle at 34% 74%, rgba(210,162,71,.14), transparent 34%),
-        linear-gradient(135deg, rgba(4,6,8,.98), rgba(5,8,10,.92) 46%, rgba(7,9,12,.98)),
-        url("assets/trading-command-center-bg-v2.png") center / cover no-repeat;
+        linear-gradient(rgba(244,240,230,.024) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244,240,230,.018) 1px, transparent 1px),
+        radial-gradient(circle at 72% 28%, rgba(0,199,131,.16), transparent 28rem),
+        radial-gradient(circle at 34% 74%, rgba(210,162,71,.10), transparent 26rem),
+        linear-gradient(135deg, #030508, #04090b 46%, #06120f);
+      background-size: 56px 56px, 56px 56px, auto, auto, auto;
     }
 
     .process-sticky {
       background:
-        linear-gradient(90deg, rgba(3,5,7,.96), rgba(3,5,7,.7) 40%, rgba(3,5,7,.38)),
-        radial-gradient(ellipse at 72% 44%, rgba(0,199,131,.14), transparent 64%);
+        linear-gradient(90deg, rgba(3,5,7,.98), rgba(3,5,7,.82) 43%, rgba(3,5,7,.58)),
+        radial-gradient(ellipse at 72% 44%, rgba(0,199,131,.12), transparent 64%);
     }
 
     .process-sticky::before {
       inset: 0;
       background:
-        linear-gradient(90deg, rgba(3,5,7,.95) 0%, rgba(3,5,7,.78) 32%, transparent 62%),
-        radial-gradient(ellipse at calc(72% + var(--cinema-progress, 0) * 10%) 48%, rgba(0,199,131,.22), transparent 58%),
-        radial-gradient(ellipse at 84% 22%, rgba(210,162,71,.16), transparent 52%);
-      opacity: 1;
+        linear-gradient(90deg, rgba(3,5,7,.98) 0%, rgba(3,5,7,.82) 34%, transparent 66%),
+        radial-gradient(ellipse at calc(72% + var(--cinema-progress, 0) * 10%) 48%, rgba(0,199,131,.16), transparent 58%),
+        radial-gradient(ellipse at 84% 22%, rgba(210,162,71,.09), transparent 52%);
+      opacity: .92;
       transform: none;
     }
 
     .process-sticky::after {
-      width: 18%;
-      background: linear-gradient(90deg, transparent, rgba(244,240,230,.16), transparent);
-      opacity: calc(.1 + var(--cinema-progress, 0) * .32);
-      filter: blur(22px);
+      width: 12%;
+      background: linear-gradient(90deg, transparent, rgba(244,240,230,.10), transparent);
+      opacity: calc(.08 + var(--cinema-progress, 0) * .22);
+      filter: blur(26px);
       transform: translateX(calc(-120% + var(--cinema-progress, 0) * 680%)) skewX(-18deg);
     }
 
@@ -4322,16 +4330,7 @@
     }
 
     .broker-card::after {
-      content: attr(data-watermark);
-      position: absolute;
-      right: -18px;
-      bottom: -28px;
-      color: rgba(255,255,255,.06);
-      font-size: clamp(84px, 10vw, 176px);
-      line-height: .78;
-      font-weight: 950;
-      letter-spacing: -.08em;
-      pointer-events: none;
+      display: none;
     }
 
     .broker-card > * {
@@ -6624,7 +6623,7 @@
           <p class="lead" data-reveal>Vantage sert d'acces officiel au reseau avec bonus possibles et accompagnement. Le compte demo reste un plus pour tester sans risque. PU Prime permet d'acceder au Copy Trading Gold X.</p>
         </div>
         <div class="broker-grid">
-          <article class="broker-card vantage" data-watermark="VANTAGE" data-reveal>
+          <article class="broker-card vantage" data-reveal>
             <div class="broker-top">
               <div class="broker-logo">
                 <span class="eyebrow">Broker officiel reseau</span>
@@ -6658,7 +6657,7 @@
             </div>
           </article>
 
-          <article class="broker-card puprime" data-watermark="GOLD X" data-reveal>
+          <article class="broker-card puprime" data-reveal>
             <div class="broker-top">
               <div class="broker-logo">
                 <span class="eyebrow">Copy Trading Gold</span>
