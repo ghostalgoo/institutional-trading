@@ -889,6 +889,41 @@ def create_access_request(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
     return True, {"ok": True, "request": item}
 
 
+def create_admin_access_request(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
+    payload = dict(data)
+    payload["name"] = clean_text(payload.get("name"), 120) or "Client"
+    payload["email"] = clean_text(payload.get("email"), 180)
+    payload["tradingview"] = clean_text(payload.get("tradingview"), 120)
+    payload["paymentProof"] = clean_text(payload.get("paymentProof"), 400) or clean_text(payload.get("transactionId"), 180) or "Ajout manuel admin"
+    payload["clientPassword"] = clean_text(payload.get("clientPassword"), 200) or secrets.token_urlsafe(9)
+    ok, result = create_access_request(payload)
+    if not ok:
+        return ok, result
+
+    request_id = result.get("request", {}).get("id")
+    status = clean_text(data.get("status"), 40) or "pending"
+    if status not in {"pending", "approved", "rejected"}:
+        status = "pending"
+    admin_note = clean_text(data.get("adminNote"), 800)
+    months = clean_text(data.get("months"), 10)
+    days = 30
+    try:
+        days = max(1, min(365, int(float(months) * 30)))
+    except (TypeError, ValueError):
+        days = 30
+    subscription_end = (now_paris() + timedelta(days=days)).replace(microsecond=0).isoformat()
+    updated, payload_result = update_access_request_status({
+        "id": request_id,
+        "status": status,
+        "adminNote": admin_note or "Ajout manuel admin. Envoyer le mot de passe client separement.",
+        "subscriptionEnd": subscription_end,
+    })
+    if not updated:
+        return True, result
+    payload_result["clientPassword"] = payload["clientPassword"]
+    return True, payload_result
+
+
 def create_donation(data: dict[str, Any]) -> tuple[bool, dict[str, Any]]:
     return False, {"ok": False, "error": "payment_required", "donationUrl": DONATION_URL}
 
@@ -1317,6 +1352,10 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
     def do_GET(self) -> None:
         parsed_url = urlparse(self.path)
         path = parsed_url.path
+        if path in {"/ops", "/ops/"}:
+            self.path = "/admin.html"
+            super().do_GET()
+            return
         if path == "/admin.html":
             owner_key = parse_qs(parsed_url.query).get("owner", [""])[0]
             if not any(hmac.compare_digest(owner_key, allowed) for allowed in ADMIN_ACCESS_KEYS):
@@ -1420,6 +1459,13 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
                 return
             ok, payload = update_access_request_status(data)
             self.send_json(payload, 200 if ok else 400)
+            return
+        if path == "/api/admin/access-requests/create":
+            if not self.is_admin():
+                self.send_json({"ok": False, "error": "unauthorized"}, 401)
+                return
+            ok, payload = create_admin_access_request(data)
+            self.send_json(payload, 201 if ok else 400)
             return
         if path == "/api/admin/donations/status":
             if not self.is_admin():

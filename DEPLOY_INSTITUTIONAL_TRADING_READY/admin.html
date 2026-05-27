@@ -225,6 +225,232 @@
       line-height: 1.45;
     }
 
+    .ops-hero {
+      position: relative;
+      padding: 26px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(244,240,230,.14);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 12% 0, rgba(255,138,33,.22), transparent 24rem),
+        radial-gradient(circle at 72% 8%, rgba(38,183,255,.20), transparent 25rem),
+        linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.025)),
+        rgba(5,7,10,.88);
+      box-shadow: 0 38px 120px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.08);
+      overflow: hidden;
+    }
+
+    .ops-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(244,240,230,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(244,240,230,.045) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(90deg, #000, transparent 78%);
+      opacity: .6;
+    }
+
+    .ops-hero > * { position: relative; }
+
+    .ops-hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, .58fr);
+      gap: 18px;
+      align-items: end;
+    }
+
+    .ops-hero h2 {
+      margin: 8px 0 0;
+      font-size: clamp(38px, 5vw, 74px);
+      line-height: .88;
+      letter-spacing: -.03em;
+    }
+
+    .ops-signal-board {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid rgba(244,240,230,.12);
+      border-radius: 22px;
+      background: rgba(0,0,0,.22);
+    }
+
+    .ops-signal-line {
+      display: grid;
+      grid-template-columns: 120px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid rgba(244,240,230,.10);
+      border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      font-weight: 900;
+    }
+
+    .signal-track {
+      height: 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,.08);
+    }
+
+    .signal-track span {
+      display: block;
+      height: 100%;
+      width: var(--w, 40%);
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--btc), var(--gold), var(--cyan));
+      box-shadow: 0 0 24px rgba(38,183,255,.24);
+    }
+
+    .pipeline-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .pipeline-card {
+      min-height: 154px;
+      display: grid;
+      align-content: space-between;
+      gap: 16px;
+      padding: 18px;
+      border: 1px solid rgba(244,240,230,.13);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 80% 0, rgba(38,183,255,.12), transparent 16rem),
+        rgba(8,10,13,.82);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 24px 72px rgba(0,0,0,.22);
+    }
+
+    .pipeline-card strong {
+      font-size: clamp(32px, 3.4vw, 56px);
+      line-height: .86;
+    }
+
+    .pipeline-card.btc { border-color: rgba(255,138,33,.28); }
+    .pipeline-card.gold { border-color: rgba(210,162,71,.32); }
+    .pipeline-card.nasdaq { border-color: rgba(38,183,255,.32); }
+
+    .product-matrix {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .product-metric {
+      padding: 18px;
+      border: 1px solid rgba(244,240,230,.13);
+      border-radius: 24px;
+      background: rgba(8,10,13,.82);
+    }
+
+    .product-metric-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .product-metric strong { font-size: 32px; }
+
+    .metric-bar {
+      height: 11px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,.07);
+    }
+
+    .metric-bar span {
+      display: block;
+      width: var(--w, 0%);
+      height: 100%;
+      border-radius: inherit;
+    }
+
+    .product-metric.btc .metric-bar span { background: var(--btc); box-shadow: 0 0 24px rgba(255,138,33,.22); }
+    .product-metric.gold .metric-bar span { background: var(--gold); box-shadow: 0 0 24px rgba(210,162,71,.22); }
+    .product-metric.nasdaq .metric-bar span { background: var(--cyan); box-shadow: 0 0 24px rgba(38,183,255,.22); }
+
+    .control-deck {
+      display: grid;
+      grid-template-columns: minmax(220px, .8fr) repeat(2, minmax(150px, 190px));
+      gap: 10px;
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.035);
+    }
+
+    select {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 13px;
+      color: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(8,10,13,.94);
+      outline: 0;
+    }
+
+    .quick-add {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid rgba(244,240,230,.13);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 12% 0, rgba(210,162,71,.14), transparent 18rem),
+        rgba(8,10,13,.82);
+    }
+
+    .quick-add-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .check-row {
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(244,240,230,.045);
+      color: rgba(244,240,230,.78);
+      font-weight: 900;
+    }
+
+    .check-row input { width: auto; min-height: auto; }
+
+    .activity-tape {
+      display: grid;
+      gap: 8px;
+      max-height: 360px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .activity-line {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 12px;
+      border: 1px solid rgba(244,240,230,.10);
+      border-radius: 16px;
+      background: rgba(255,255,255,.035);
+      color: rgba(244,240,230,.78);
+      font-weight: 820;
+    }
+
     .section-title {
       display: flex;
       align-items: center;
@@ -634,6 +860,11 @@
       .finance-grid,
       .logs-grid,
       .ops-grid,
+      .ops-hero-grid,
+      .pipeline-grid,
+      .product-matrix,
+      .control-deck,
+      .quick-add-grid,
       .ops-row,
       .owner-flow,
       .request-card,
@@ -649,24 +880,24 @@
 <body>
   <header>
     <div class="wrap nav">
-      <a class="brand" href="vente.html">
+      <a class="brand" href="/ops">
         <span class="mark">TI</span>
-        <span><strong>Institutional Trading</strong><br><span class="micro">Administration</span></span>
+        <span><strong>Institutional Trading</strong><br><span class="micro">OPS Command</span></span>
       </a>
-      <a class="btn" href="vente.html#contact">Retour site</a>
+      <a class="btn" href="/">Retour site</a>
     </div>
   </header>
 
   <main class="wrap">
     <div class="top-grid">
       <div>
-        <span class="micro" style="color:var(--gold)">Administration privee</span>
-        <h1>Gestion des acces.</h1>
-        <p class="lead" style="margin-top:22px">Lien prive + mot de passe. Chaque validation alimente automatiquement le dashboard client.</p>
+        <span class="micro" style="color:var(--gold)">OPS / Achat declare</span>
+        <h1>Control room admin.</h1>
+        <p class="lead" style="margin-top:22px">Le paiement PayPal reste externe. Ici tu pilotes les achats declares, la validation, l'activation TradingView, les clients et les messages support.</p>
         <div class="owner-flow">
-          <div><span class="micro" style="color:var(--gold)">01</span><strong>Client paye PayPal</strong></div>
-          <div><span class="micro" style="color:var(--cyan)">02</span><strong>Tu valides ici</strong></div>
-          <div><span class="micro" style="color:var(--green)">03</span><strong>Espace client actif</strong></div>
+          <div><span class="micro" style="color:var(--gold)">01</span><strong>Achat declare</strong></div>
+          <div><span class="micro" style="color:var(--cyan)">02</span><strong>Verification manuelle</strong></div>
+          <div><span class="micro" style="color:var(--green)">03</span><strong>Acces client actif</strong></div>
         </div>
       </div>
       <form class="panel login" id="loginForm">
@@ -700,6 +931,27 @@
         <div class="stat"><span class="micro">Parrainages valides</span><strong id="referralCount">0</strong></div>
         <div class="stat"><span class="micro">Webhooks PayPal</span><strong id="webhookCount">0</strong></div>
       </div>
+      <div class="ops-hero">
+        <div class="ops-hero-grid">
+          <div>
+            <span class="micro" style="color:var(--btc)">Option 2 / PayPal externe</span>
+            <h2>War room achats.</h2>
+            <p class="lead">Le client declare son paiement PayPal. Tu verifies manuellement, tu valides l'acces, puis le client retrouve ses modules dans son espace.</p>
+          </div>
+          <div class="ops-signal-board">
+            <div class="ops-signal-line"><span>Declare</span><div class="signal-track"><span id="declareTrack" style="--w:0%"></span></div><strong id="declareRatio">0%</strong></div>
+            <div class="ops-signal-line"><span>Valide</span><div class="signal-track"><span id="approveTrack" style="--w:0%"></span></div><strong id="approveRatio">0%</strong></div>
+            <div class="ops-signal-line"><span>CA potentiel</span><div class="signal-track"><span id="potentialTrack" style="--w:0%"></span></div><strong id="potentialRevenue">0 EUR</strong></div>
+          </div>
+        </div>
+      </div>
+      <div class="pipeline-grid">
+        <div class="pipeline-card btc"><span class="micro">Achats declares</span><strong id="declaredCount">0</strong><span class="lead">Formulaires recus depuis le site.</span></div>
+        <div class="pipeline-card gold"><span class="micro">A verifier</span><strong id="toVerifyCount">0</strong><span class="lead">Paiements a controler sur PayPal.</span></div>
+        <div class="pipeline-card nasdaq"><span class="micro">Clients actifs</span><strong id="activeClientCount">0</strong><span class="lead">Acces TradingView ouverts.</span></div>
+        <div class="pipeline-card"><span class="micro">Mois vendus</span><strong id="soldMonths">0</strong><span class="lead">Base estimee sur 49,99 EUR / setup.</span></div>
+      </div>
+      <div class="product-matrix" id="productMatrix"></div>
       <div class="ops-grid">
         <div class="panel ops-panel">
           <div class="section-title micro"><span>Audience site</span><span id="analyticsUpdated">Actif</span></div>
@@ -749,6 +1001,44 @@
           </div>
         </form>
       </div>
+      <div class="ops-grid">
+        <form class="quick-add" id="manualPurchaseForm">
+          <div class="section-title micro" style="padding:0 0 14px;border-bottom:1px solid var(--line)"><span>Ajouter un achat manuel</span><span>Option 2</span></div>
+          <div class="quick-add-grid">
+            <input name="name" placeholder="Nom client" required>
+            <input name="email" type="email" placeholder="E-mail PayPal" required>
+            <input name="tradingview" placeholder="Username TradingView" required>
+            <input name="clientPassword" placeholder="Mot de passe client provisoire" required>
+            <input name="paymentProof" placeholder="ID transaction / note PayPal" required>
+            <select name="status">
+              <option value="pending">En attente</option>
+              <option value="approved">Valide directement</option>
+              <option value="rejected">Refuse</option>
+            </select>
+          </div>
+          <div class="quick-add-grid">
+            <label class="check-row"><input type="checkbox" name="products" value="BTC Institutional Setup - 49,99 EUR / mois"> BTC</label>
+            <label class="check-row"><input type="checkbox" name="products" value="Gold Institutional Setup - 49,99 EUR / mois"> Gold</label>
+            <label class="check-row"><input type="checkbox" name="products" value="Nasdaq Institutional Setup - 49,99 EUR / mois"> Nasdaq</label>
+          </div>
+          <div class="quick-add-grid">
+            <select name="months">
+              <option value="1">1 mois</option>
+              <option value="2">2 mois</option>
+              <option value="3">3 mois</option>
+              <option value="6">6 mois</option>
+              <option value="12">12 mois</option>
+            </select>
+            <input name="adminNote" placeholder="Note admin">
+            <button class="btn gold" type="submit">Creer achat</button>
+          </div>
+          <p class="lead" id="manualPurchaseStatus"></p>
+        </form>
+        <div class="panel ops-panel">
+          <div class="section-title micro"><span>Activite recente</span><span id="activityCount">0</span></div>
+          <div class="activity-tape" id="activityTape"></div>
+        </div>
+      </div>
       <div class="logs-grid">
         <div class="panel donation-log hidden" id="donationLog"></div>
         <div class="panel webhook-log hidden" id="paypalLog"></div>
@@ -756,6 +1046,21 @@
       <div class="panel chat-log hidden" id="chatLog"></div>
       <div class="panel table-wrap">
         <div class="section-title micro"><span>Demandes d'acces</span><span id="requestMeta">0 ligne</span></div>
+        <div class="control-deck">
+          <input id="searchInput" placeholder="Rechercher nom, email, TradingView, transaction...">
+          <select id="statusFilter">
+            <option value="all">Tous statuts</option>
+            <option value="pending">En attente</option>
+            <option value="approved">Valides</option>
+            <option value="rejected">Refuses</option>
+          </select>
+          <select id="productFilter">
+            <option value="all">Tous produits</option>
+            <option value="btc">BTC</option>
+            <option value="gold">Gold</option>
+            <option value="nasdaq">Nasdaq</option>
+          </select>
+        </div>
         <div class="request-list" id="requestRows"></div>
         <div class="empty hidden" id="emptyState">Aucune demande pour le moment.</div>
       </div>
@@ -773,6 +1078,11 @@
     let siteConfig = { flash: {} };
     const demoMode = new URLSearchParams(location.search).get("demo") === "1";
     let offerPreviewInterval = null;
+    const productDefs = [
+      { key: "btc", label: "BTC", full: "BTC Institutional Setup - 49,99 EUR / mois" },
+      { key: "gold", label: "Gold", full: "Gold Institutional Setup - 49,99 EUR / mois" },
+      { key: "nasdaq", label: "Nasdaq", full: "Nasdaq Institutional Setup - 49,99 EUR / mois" }
+    ];
 
     function escapeHTML(value) {
       return String(value ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -900,6 +1210,76 @@
         .join("");
     }
 
+    function productKeys(item) {
+      const source = Array.isArray(item.products) && item.products.length ? item.products.join(" ") : item.product || "";
+      const text = source.toLowerCase();
+      const keys = productDefs.filter(product => text.includes(product.key)).map(product => product.key);
+      return keys.length ? keys : ["gold"];
+    }
+
+    function filteredRequests() {
+      const search = (document.getElementById("searchInput")?.value || "").toLowerCase().trim();
+      const status = document.getElementById("statusFilter")?.value || "all";
+      const product = document.getElementById("productFilter")?.value || "all";
+      return requests.filter(item => {
+        const haystack = [
+          item.name,
+          item.email,
+          item.tradingview,
+          item.product,
+          item.paymentProof,
+          item.message,
+          item.adminNote
+        ].join(" ").toLowerCase();
+        const statusOk = status === "all" || item.status === status;
+        const productOk = product === "all" || productKeys(item).includes(product);
+        const searchOk = !search || haystack.includes(search);
+        return statusOk && productOk && searchOk;
+      });
+    }
+
+    function productStats() {
+      const stats = Object.fromEntries(productDefs.map(product => [product.key, { ...product, declared: 0, approved: 0, pending: 0, revenue: 0 }]));
+      requests.forEach(item => {
+        productKeys(item).forEach(key => {
+          const bucket = stats[key];
+          if (!bucket) return;
+          bucket.declared += 1;
+          if (item.status === "approved") {
+            bucket.approved += 1;
+            if (new Date(item.subscriptionEnd).getTime() > Date.now()) bucket.revenue += 49.99;
+          }
+          if (item.status === "pending") bucket.pending += 1;
+        });
+      });
+      return productDefs.map(product => stats[product.key]);
+    }
+
+    function recentActivity() {
+      const requestEvents = requests.slice(0, 12).map(item => ({
+        at: item.updated_at || item.created_at,
+        type: item.status === "approved" ? "Acces valide" : item.status === "rejected" ? "Acces refuse" : "Achat declare",
+        text: `${item.name || "Client"} - ${item.product || "Setup"}`,
+        status: item.status || "pending"
+      }));
+      const chatEvents = chatMessages.filter(item => item.sender !== "admin").slice(0, 6).map(item => ({
+        at: item.created_at,
+        type: "Support",
+        text: `${item.name || "Client"} - ${item.message || ""}`,
+        status: "pending"
+      }));
+      const paypalLog = paypalEvents.slice(0, 6).map(item => ({
+        at: item.received_at,
+        type: "PayPal log",
+        text: `${item.payer_email || "email inconnu"} - ${actionLabel(item.action)}`,
+        status: ["subscription_extended", "donation_recorded"].includes(item.action) ? "approved" : "pending"
+      }));
+      return [...requestEvents, ...chatEvents, ...paypalLog]
+        .filter(item => item.at)
+        .sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime())
+        .slice(0, 14);
+    }
+
     async function api(path, options = {}) {
       const response = await fetch(path, {
         ...options,
@@ -927,13 +1307,23 @@
       const confirmedDonations = donations.filter(item => item.status === "confirmed");
       const confirmedDonationTotal = confirmedDonations.reduce((sum, item) => sum + Number(item.amount || 0), 0);
       const totalCash = subscriptionRevenue + confirmedDonationTotal;
+      const potentialRevenue = requests
+        .filter(item => item.status === "pending")
+        .reduce((sum, item) => sum + productCount(item) * 49.99, 0);
+      const soldMonths = requests
+        .filter(item => item.status === "approved")
+        .reduce((sum, item) => sum + productCount(item), 0);
+      const visibleRequests = filteredRequests();
+      const declarePercent = Math.min(100, total ? Math.round((pending / total) * 100) : 0);
+      const approvePercent = Math.min(100, total ? Math.round((approved / total) * 100) : 0);
+      const potentialPercent = Math.min(100, Math.max(8, potentialRevenue ? Math.round((potentialRevenue / Math.max(potentialRevenue + subscriptionRevenue, 1)) * 100) : 0));
       document.getElementById("cashTotal").textContent = money(totalCash);
       document.getElementById("subscriptionTotal").textContent = money(subscriptionRevenue);
       document.getElementById("subscriptionMeta").textContent = `${activeClients} client${activeClients > 1 ? "s" : ""} actif${activeClients > 1 ? "s" : ""}`;
       document.getElementById("pendingMoneyCount").textContent = pending;
       document.getElementById("webhookCount").textContent = paypalEvents.length;
       document.getElementById("lastUpdate").textContent = `Maj ${new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}`;
-      document.getElementById("requestMeta").textContent = `${total} ligne${total > 1 ? "s" : ""}`;
+      document.getElementById("requestMeta").textContent = `${visibleRequests.length} affichee${visibleRequests.length > 1 ? "s" : ""} / ${total}`;
       document.getElementById("onlineCount").textContent = analytics.online || 0;
       document.getElementById("visitorsToday").textContent = analytics.visitorsToday || 0;
       document.getElementById("pageViewsToday").textContent = analytics.pageViewsToday || 0;
@@ -948,7 +1338,35 @@
       document.getElementById("rejectedCount").textContent = rejected;
       document.getElementById("referralCount").textContent = referralTotal;
       document.getElementById("donationTotal").textContent = money(donationTotal || confirmedDonationTotal);
-      document.getElementById("emptyState").classList.toggle("hidden", total !== 0);
+      document.getElementById("declaredCount").textContent = total;
+      document.getElementById("toVerifyCount").textContent = pending;
+      document.getElementById("activeClientCount").textContent = activeClients;
+      document.getElementById("soldMonths").textContent = soldMonths;
+      document.getElementById("declareTrack").style.setProperty("--w", `${declarePercent}%`);
+      document.getElementById("approveTrack").style.setProperty("--w", `${approvePercent}%`);
+      document.getElementById("potentialTrack").style.setProperty("--w", `${potentialPercent}%`);
+      document.getElementById("declareRatio").textContent = `${declarePercent}%`;
+      document.getElementById("approveRatio").textContent = `${approvePercent}%`;
+      document.getElementById("potentialRevenue").textContent = money(potentialRevenue);
+      document.getElementById("productMatrix").innerHTML = productStats().map(product => {
+        const max = Math.max(1, total);
+        const width = Math.min(100, Math.round((product.declared / max) * 100));
+        return `<article class="product-metric ${product.key}">
+          <div class="product-metric-head"><span class="product-pill ${product.key}">${product.label}</span><strong>${product.declared}</strong></div>
+          <div class="metric-bar"><span style="--w:${width}%"></span></div>
+          <p class="lead">${product.approved} valide${product.approved > 1 ? "s" : ""}, ${product.pending} en attente, ${money(product.revenue)} actif.</p>
+        </article>`;
+      }).join("");
+      const activity = recentActivity();
+      document.getElementById("activityCount").textContent = activity.length;
+      document.getElementById("activityTape").innerHTML = activity.length ? activity.map(item => `
+        <div class="activity-line">
+          <span class="micro">${escapeHTML(formatDate(item.at))}</span>
+          <span>${escapeHTML(item.type)}<br><span class="micro">${escapeHTML(item.text)}</span></span>
+          <span class="status ${escapeHTML(item.status)}">${escapeHTML(item.status)}</span>
+        </div>
+      `).join("") : `<div class="activity-line"><span class="micro">Live</span><span>Aucune activite pour le moment.</span><span class="status pending">standby</span></div>`;
+      document.getElementById("emptyState").classList.toggle("hidden", visibleRequests.length !== 0);
       const donationLog = document.getElementById("donationLog");
       donationLog.classList.toggle("hidden", donations.length === 0);
       donationLog.innerHTML = donations.length ? `<div class="section-title micro"><span>Dons confirmes PayPal</span><span>${money(confirmedDonationTotal)}</span></div>${donations.slice(0, 8).map(donation => `
@@ -982,7 +1400,7 @@
           </div>
         </div>
       `).join("")}` : "";
-      document.getElementById("requestRows").innerHTML = requests.map(item => {
+      document.getElementById("requestRows").innerHTML = visibleRequests.map(item => {
         const referral = referralFor(item);
         return `
         <article class="request-card">
@@ -1077,6 +1495,36 @@
         await loadRequests();
       } catch (error) {
         document.getElementById("loginStatus").textContent = "Mot de passe incorrect ou serveur admin indisponible.";
+      }
+    });
+
+    ["searchInput", "statusFilter", "productFilter"].forEach(id => {
+      document.getElementById(id).addEventListener("input", render);
+      document.getElementById(id).addEventListener("change", render);
+    });
+
+    document.getElementById("manualPurchaseForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.target;
+      const status = document.getElementById("manualPurchaseStatus");
+      const products = Array.from(form.querySelectorAll('input[name="products"]:checked')).map(input => input.value);
+      if (!products.length) {
+        status.textContent = "Choisis au moins BTC, Gold ou Nasdaq.";
+        return;
+      }
+      const data = Object.fromEntries(new FormData(form).entries());
+      data.products = products;
+      status.textContent = "Creation de l'achat...";
+      try {
+        const payload = await api("/api/admin/access-requests/create", {
+          method: "POST",
+          body: JSON.stringify(data)
+        });
+        status.textContent = `Achat cree. Mot de passe client : ${payload.clientPassword || data.clientPassword}`;
+        form.reset();
+        await loadRequests();
+      } catch (error) {
+        status.textContent = "Impossible de creer l'achat. Verifie les champs.";
       }
     });
 
