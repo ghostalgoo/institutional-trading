@@ -79,6 +79,8 @@ SUPABASE_SERVICE_ROLE_KEY = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
 SUPABASE_STATE_TABLE = os.environ.get("SUPABASE_STATE_TABLE", "site_state")
 SUPABASE_ENABLED = bool(SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY)
 SUPABASE_TIMEOUT_SECONDS = 8
+MAINTENANCE_MODE = os.environ.get("TRADING_MAINTENANCE_MODE", "").lower() in {"1", "true", "yes", "on"}
+MAINTENANCE_BYPASS_KEY = os.environ.get("TRADING_MAINTENANCE_BYPASS_KEY", ADMIN_ACCESS_KEY)
 
 
 def now_paris() -> datetime:
@@ -1722,6 +1724,37 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
         password = self.headers.get("X-Admin-Password", "")
         return any(hmac.compare_digest(password, allowed) for allowed in ADMIN_PASSWORDS)
 
+    def maintenance_bypass(self, parsed_url: Any) -> bool:
+        preview_key = clean_text(parse_qs(parsed_url.query).get("preview", [""])[0], 120)
+        if preview_key and MAINTENANCE_BYPASS_KEY and hmac.compare_digest(preview_key, MAINTENANCE_BYPASS_KEY):
+            return True
+        owner_key = clean_text(parse_qs(parsed_url.query).get("owner", [""])[0], 120)
+        return bool(owner_key and any(hmac.compare_digest(owner_key, allowed) for allowed in ADMIN_ACCESS_KEYS))
+
+    def should_show_maintenance(self, parsed_url: Any) -> bool:
+        if not MAINTENANCE_MODE or self.maintenance_bypass(parsed_url):
+            return False
+        path = parsed_url.path
+        if path in {"/ops", "/ops/", "/admin.html", "/maintenance.html"}:
+            return False
+        if path.startswith("/api/") or path.startswith("/assets/"):
+            return False
+        return True
+
+    def send_maintenance(self) -> None:
+        file_path = ROOT / "maintenance.html"
+        if file_path.exists():
+            body = file_path.read_bytes()
+        else:
+            body = b"<!doctype html><meta charset=\"utf-8\"><title>Site en construction</title><h1>Site en construction</h1>"
+        self.send_response(503)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Retry-After", "3600")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
     def read_json_body(self) -> dict[str, Any]:
         raw = self.read_body_text()
         if not raw:
@@ -1741,6 +1774,9 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
     def do_GET(self) -> None:
         parsed_url = urlparse(self.path)
         path = parsed_url.path
+        if self.should_show_maintenance(parsed_url):
+            self.send_maintenance()
+            return
         if path in {"/ops", "/ops/"}:
             self.path = "/admin.html"
             super().do_GET()
