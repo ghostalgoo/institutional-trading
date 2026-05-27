@@ -4531,51 +4531,98 @@
     }
 
     .broker-bonus {
+      position: relative;
       display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 16px;
+      grid-template-columns: 1fr;
+      gap: 12px;
       align-items: center;
-      padding: 18px;
+      min-height: 148px;
+      padding: 26px 28px;
       border: 1px solid rgba(255,138,33,.32);
-      border-radius: 24px;
+      border-radius: 28px;
       background:
         radial-gradient(circle at 6% 0, rgba(255,138,33,.28), transparent 18rem),
         rgba(255,138,33,.08);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .broker-bonus::before {
+      content: attr(data-stamp);
+      position: absolute;
+      right: 18px;
+      bottom: -18px;
+      z-index: -1;
+      color: rgba(244,240,230,.075);
+      font-size: clamp(70px, 8vw, 138px);
+      line-height: .78;
+      font-weight: 950;
+      letter-spacing: -.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .broker-bonus::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background:
+        linear-gradient(115deg, transparent 0 45%, rgba(255,255,255,.10) 48%, transparent 52%),
+        radial-gradient(circle at 82% 70%, var(--bonus-glow), transparent 18rem);
+      pointer-events: none;
     }
 
     .broker-card.vantage .broker-bonus {
+      --bonus-glow: rgba(0,219,189,.20);
       border-color: rgba(255,138,33,.38);
       background:
-        radial-gradient(circle at 6% 0, rgba(255,138,33,.30), transparent 18rem),
-        linear-gradient(135deg, rgba(255,138,33,.14), rgba(0,219,189,.06)),
+        linear-gradient(135deg, rgba(255,138,33,.18), rgba(0,219,189,.08) 62%, rgba(5,7,12,.88)),
         rgba(5,7,12,.82);
+    }
+
+    .broker-card.vantage .broker-bonus::before {
+      color: rgba(255,138,33,.095);
+      text-shadow: 0 0 58px rgba(0,219,189,.16);
     }
 
     .broker-card.puprime .broker-bonus {
+      --bonus-glow: rgba(210,162,71,.20);
       border-color: rgba(210,162,71,.40);
       background:
-        radial-gradient(circle at 6% 0, rgba(210,162,71,.28), transparent 18rem),
-        linear-gradient(135deg, rgba(38,107,255,.10), rgba(210,162,71,.12)),
+        linear-gradient(135deg, rgba(38,107,255,.16), rgba(210,162,71,.12) 62%, rgba(5,7,12,.88)),
         rgba(5,7,12,.82);
     }
 
+    .broker-card.puprime .broker-bonus::before {
+      color: rgba(210,162,71,.105);
+      text-shadow: 0 0 58px rgba(38,107,255,.18);
+    }
+
     .bonus-value {
-      min-width: 116px;
-      min-height: 90px;
-      display: grid;
-      place-items: center;
-      border-radius: 20px;
+      width: fit-content;
+      min-width: 0;
+      min-height: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border: 1px solid rgba(244,240,230,.18);
+      border-radius: 999px;
       color: #090805;
       background: linear-gradient(135deg, #fff4b8, var(--gold), var(--btc));
-      font-size: 33px;
+      font-size: 11px;
       line-height: 1;
       font-weight: 950;
-      box-shadow: 0 22px 64px rgba(255,138,33,.22);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      box-shadow: 0 16px 42px rgba(255,138,33,.18);
     }
 
     .broker-bonus strong {
       color: var(--paper);
-      font-size: 20px;
+      font-size: 23px;
       line-height: 1.1;
     }
 
@@ -6576,7 +6623,7 @@
                   <path d="M0 245 C68 224 104 180 152 190 C232 208 248 96 330 108 C416 120 426 210 514 162 C612 108 665 132 724 86 C784 40 836 64 900 28"></path>
                 </svg>
               </div>
-              <div class="broker-bonus">
+              <div class="broker-bonus" data-stamp="VANTAGE">
                 <span class="bonus-value">500 EUR</span>
                 <div>
                   <strong>Depot reel : bonus + bot offert.</strong>
@@ -6619,7 +6666,7 @@
                   <path d="M0 252 C80 224 126 232 186 184 C248 136 310 152 376 116 C454 72 512 104 574 78 C682 32 730 104 900 34"></path>
                 </svg>
               </div>
-              <div class="broker-bonus">
+              <div class="broker-bonus" data-stamp="GOLD X">
                 <span class="bonus-value">100%</span>
                 <div>
                   <strong>Depot double possible selon promotion.</strong>
