@@ -386,10 +386,415 @@
       text-align: center;
     }
 
+    .vip-shell {
+      min-height: calc(100vh - 134px);
+      display: grid;
+      grid-template-columns: 310px minmax(0, 1fr) 390px;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .vip-sidebar,
+    .vip-chat-panel,
+    .vip-intel-panel {
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.018)),
+        rgba(6,9,14,.82);
+      box-shadow: 0 34px 120px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter: blur(20px);
+      overflow: hidden;
+    }
+
+    .vip-sidebar,
+    .vip-intel-panel {
+      position: sticky;
+      top: 108px;
+      height: calc(100vh - 126px);
+      min-height: 650px;
+    }
+
+    .vip-sidebar {
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr) auto;
+      padding: 18px;
+      gap: 14px;
+    }
+
+    .vip-brand-card {
+      position: relative;
+      min-height: 150px;
+      display: grid;
+      align-content: space-between;
+      padding: 18px;
+      border: 1px solid rgba(217,168,68,.25);
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at 0 0, rgba(217,168,68,.20), transparent 12rem),
+        radial-gradient(circle at 100% 0, rgba(32,199,255,.14), transparent 12rem),
+        rgba(255,255,255,.045);
+      overflow: hidden;
+    }
+
+    .vip-brand-card::after {
+      content: "VIP";
+      position: absolute;
+      right: -8px;
+      bottom: -14px;
+      color: rgba(247,242,232,.055);
+      font-size: 94px;
+      line-height: .75;
+      font-weight: 1000;
+      letter-spacing: -.08em;
+      pointer-events: none;
+    }
+
+    .vip-brand-card h2 {
+      position: relative;
+      z-index: 1;
+      max-width: 220px;
+      font-size: 33px;
+    }
+
+    .member-card {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid rgba(247,242,232,.12);
+      border-radius: 22px;
+      background: rgba(0,0,0,.20);
+    }
+
+    .member-row {
+      display: grid;
+      grid-template-columns: 38px minmax(0,1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .member-avatar,
+    .bubble-avatar {
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      color: #07100c;
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+      font-weight: 1000;
+    }
+
+    .member-avatar { width: 38px; height: 38px; }
+    .member-row strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .vip-room-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      color: rgba(247,242,232,.62);
+    }
+
+    .room-tabs {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      overflow: auto;
+      padding-right: 3px;
+    }
+
+    .room-tabs button {
+      min-height: 58px;
+      justify-content: start;
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 0 12px;
+      border-radius: 18px;
+      text-align: left;
+      letter-spacing: 0;
+      text-transform: none;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .room-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      color: #06100c;
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+      font-size: 14px;
+      font-weight: 1000;
+    }
+
+    .room-name {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .room-name span:first-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .room-name span:last-child {
+      color: rgba(247,242,232,.44);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .room-count {
+      min-width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: rgba(247,242,232,.72);
+      background: rgba(255,255,255,.08);
+      font-size: 11px;
+      font-weight: 950;
+    }
+
+    .room-tabs button.active {
+      color: var(--paper);
+      border-color: rgba(32,199,255,.36);
+      background:
+        radial-gradient(circle at 0 0, rgba(32,199,255,.18), transparent 12rem),
+        rgba(255,255,255,.075);
+      box-shadow: inset 3px 0 0 var(--cyan), 0 18px 70px rgba(32,199,255,.08);
+    }
+
+    .vip-side-actions {
+      display: grid;
+      gap: 8px;
+    }
+
+    .vip-chat-panel {
+      min-height: calc(100vh - 126px);
+      display: grid;
+      grid-template-rows: auto auto minmax(0,1fr) auto;
+    }
+
+    .chat-head {
+      min-height: 86px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 0 0, rgba(32,199,255,.12), transparent 18rem),
+        rgba(255,255,255,.025);
+    }
+
+    .chat-head h1 {
+      margin: 0;
+      font-size: clamp(30px, 3.6vw, 58px);
+      letter-spacing: -.04em;
+    }
+
+    .chat-state {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--green);
+      white-space: nowrap;
+    }
+
+    .chat-state::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 20px rgba(0,208,138,.70);
+    }
+
+    .message.admin.priority.hidden,
+    #vipAnnouncement.hidden { display: none !important; }
+
+    #vipAnnouncement {
+      margin: 14px 18px 0 !important;
+      border-color: rgba(217,168,68,.34);
+      background:
+        radial-gradient(circle at 0 0, rgba(217,168,68,.16), transparent 18rem),
+        rgba(217,168,68,.08);
+    }
+
+    .messages {
+      max-height: none;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow: auto;
+      padding: 18px;
+    }
+
+    .message {
+      width: min(760px, 88%);
+      display: grid;
+      grid-template-columns: 38px minmax(0,1fr);
+      gap: 10px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .message.mine {
+      align-self: end;
+      grid-template-columns: minmax(0,1fr) 38px;
+    }
+
+    .message.mine .bubble-avatar { grid-column: 2; grid-row: 1; }
+    .message.mine .bubble { grid-column: 1; grid-row: 1; border-radius: 24px 8px 24px 24px; }
+
+    .bubble-avatar {
+      width: 38px;
+      height: 38px;
+      font-size: 13px;
+    }
+
+    .message.admin .bubble-avatar {
+      color: #090806;
+      background: linear-gradient(135deg, #fff0a5, var(--gold), var(--orange));
+    }
+
+    .bubble {
+      padding: 14px;
+      border: 1px solid rgba(247,242,232,.12);
+      border-radius: 8px 24px 24px 24px;
+      background: rgba(255,255,255,.055);
+      box-shadow: 0 18px 60px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .message.admin .bubble {
+      border-color: rgba(217,168,68,.30);
+      background:
+        radial-gradient(circle at 0 0, rgba(217,168,68,.14), transparent 14rem),
+        rgba(217,168,68,.075);
+    }
+
+    .message.priority .bubble {
+      border-color: rgba(255,77,104,.42);
+      background:
+        radial-gradient(circle at 0 0, rgba(255,77,104,.16), transparent 14rem),
+        rgba(255,77,104,.06);
+    }
+
+    .message.setup .bubble {
+      border-color: rgba(0,208,138,.42);
+      background:
+        radial-gradient(circle at 0 0, rgba(0,208,138,.18), transparent 16rem),
+        rgba(0,208,138,.06);
+    }
+
+    .message-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 10px;
+      color: rgba(247,242,232,.64);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .message p {
+      color: rgba(247,242,232,.90);
+      line-height: 1.55;
+      font-weight: 740;
+    }
+
+    .community-form {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      gap: 10px;
+      margin: 0;
+      padding: 14px;
+      border-top: 1px solid var(--line);
+      background: rgba(0,0,0,.18);
+    }
+
+    .community-form textarea {
+      min-height: 54px;
+      max-height: 150px;
+      border-radius: 20px;
+      resize: vertical;
+    }
+
+    .community-form .lead {
+      grid-column: 1 / -1;
+      margin: 0;
+    }
+
+    .vip-intel-panel {
+      display: grid;
+      grid-template-rows: auto minmax(0,1fr);
+    }
+
+    .intel-scroll {
+      display: grid;
+      gap: 14px;
+      overflow: auto;
+      padding: 14px;
+    }
+
+    .intel-card {
+      padding: 16px;
+      border: 1px solid rgba(247,242,232,.12);
+      border-radius: 24px;
+      background: rgba(255,255,255,.045);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .intel-card h2 {
+      font-size: clamp(26px, 3vw, 42px);
+      margin-top: 8px;
+    }
+
+    .calendar-list,
+    .resources-grid,
+    .setup-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .event-card,
+    .resource-card,
+    .setup-card {
+      min-height: auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      padding: 14px;
+      border-radius: 20px;
+    }
+
+    .event-date {
+      min-width: 0;
+      width: fit-content;
+      padding: 10px 12px;
+      font-size: 12px;
+    }
+
     footer { padding: 30px 0 60px; color: var(--muted); font-size: 11px; font-weight: 820; text-transform: uppercase; letter-spacing: .08em; }
 
     @media (max-width: 1120px) {
-      .nav-inner, .login-hero, .floor-hero, .trading-grid { grid-template-columns: 1fr; }
+      .nav-inner, .login-hero, .floor-hero, .trading-grid, .vip-shell { grid-template-columns: 1fr; }
+      .vip-sidebar,
+      .vip-intel-panel { position: relative; top: auto; height: auto; min-height: auto; }
+      .vip-chat-panel { min-height: 760px; }
       .nav-links { justify-content: start; }
       .metrics-row, .resources-grid, .setup-grid { grid-template-columns: 1fr 1fr; }
     }
@@ -404,6 +809,10 @@
       h2 { font-size: clamp(34px, 11vw, 52px); }
       .hero-copy, .command-card { min-height: auto; border-radius: 28px; padding: 24px; }
       .login-panel, .panel, .next-live { border-radius: 24px; }
+      .vip-sidebar, .vip-chat-panel, .vip-intel-panel { border-radius: 24px; }
+      .chat-head { align-items: start; flex-direction: column; }
+      .message { width: 100%; }
+      .community-form { grid-template-columns: 1fr; }
       .status-grid, .metrics-row, .resources-grid, .setup-grid, .countdown { grid-template-columns: 1fr; }
       .event-card { grid-template-columns: 1fr; }
     }
@@ -462,83 +871,104 @@
     </section>
 
     <section class="floor hidden" id="floorView">
-      <div class="floor-hero">
-        <article class="panel command-card">
-          <span class="eyebrow">VIP Trading Floor</span>
-          <h1 id="welcomeTitle">Bienvenue.</h1>
-          <p class="lead" id="welcomeCopy" style="margin-top:22px"></p>
-          <div class="message admin priority hidden" id="vipAnnouncement" style="margin-top:22px"></div>
-          <div class="floor-actions">
-            <a class="btn gold" href="#vip-calendar">Voir les lives</a>
-            <a class="btn dark" href="#community">Entrer dans le chat</a>
-            <button class="btn dark" id="logoutBtn" type="button">Deconnexion</button>
+      <div class="vip-shell">
+        <aside class="vip-sidebar">
+          <div class="vip-brand-card">
+            <span class="eyebrow">Private community</span>
+            <h2>VIP Trading Floor.</h2>
+            <span class="tag green">Acces valide</span>
           </div>
-          <div class="status-grid">
-            <div><span class="micro">Temps restant</span><strong id="daysLeft">--</strong></div>
-            <div><span class="micro">TradingView</span><strong id="tvUser">--</strong></div>
-            <div><span class="micro">Plan</span><strong id="clientPlan">--</strong></div>
-            <div><span class="micro">Statut</span><strong id="clientStatus">--</strong></div>
-          </div>
-        </article>
-        <aside class="panel next-live" id="nextLive">
-          <div>
-            <span class="eyebrow">Prochain live</span>
-            <h2 id="nextLiveTitle" style="margin-top:12px">Aucun live planifie.</h2>
-            <p class="lead" id="nextLiveCopy" style="margin-top:14px">Les lives formation seront publies ici depuis le panel admin.</p>
-          </div>
-          <div class="countdown" id="countdown">
-            <div><strong>--</strong><span class="micro">Jours</span></div>
-            <div><strong>--</strong><span class="micro">Heures</span></div>
-            <div><strong>--</strong><span class="micro">Min</span></div>
-            <div><strong>--</strong><span class="micro">Sec</span></div>
-          </div>
-          <a class="btn gold hidden" id="nextLiveLink" target="_blank" rel="noopener">Ouvrir le live</a>
-        </aside>
-      </div>
 
-      <section class="metrics-row" id="metrics">
-        <article class="metric gold"><span class="micro">Gold</span><strong>83.0% WR</strong><p class="lead">Session London / New York / Asia.</p></article>
-        <article class="metric cyan"><span class="micro">BTC</span><strong>85.3% WR</strong><p class="lead">Marche 24/7, zones et alertes.</p></article>
-        <article class="metric green"><span class="micro">Nasdaq</span><strong>3.40 PF</strong><p class="lead">Momentum US100 et session US.</p></article>
-        <article class="metric"><span class="micro">Risque</span><strong>Manuel</strong><p class="lead">Le trader valide toujours l'execution.</p></article>
-      </section>
+          <div class="member-card">
+            <div class="member-row">
+              <div class="member-avatar" id="memberAvatar">VIP</div>
+              <div>
+                <strong id="welcomeTitle">Bienvenue.</strong>
+                <span class="micro" id="clientStatus">Actif</span>
+              </div>
+            </div>
+            <div class="status-grid">
+              <div><span class="micro">Temps</span><strong id="daysLeft">--</strong></div>
+              <div><span class="micro">Plan</span><strong id="clientPlan">--</strong></div>
+              <div><span class="micro">TradingView</span><strong id="tvUser">--</strong></div>
+              <div><span class="micro">Mode</span><strong>Manuel</strong></div>
+            </div>
+          </div>
 
-      <section class="panel calendar" id="vip-calendar">
-        <div class="section-head">
-          <div><span class="eyebrow">Calendrier VIP</span><h2>Lives formation & sessions privees.</h2></div>
-          <span class="tag gold">Admin controlled</span>
-        </div>
-        <div class="calendar-list" id="calendarList"></div>
-      </section>
-
-      <section class="trading-grid">
-        <article class="panel community" id="community">
-          <div class="section-head">
-            <div><span class="eyebrow">Communaute VIP</span><h2>Chat prive membres.</h2></div>
+          <div class="vip-room-title">
+            <span class="micro">Salons prives</span>
             <span class="tag green">Live</span>
           </div>
           <div class="room-tabs" id="roomTabs"></div>
+
+          <div class="vip-side-actions">
+            <a class="btn gold" href="#vip-calendar">Lives formation</a>
+            <button class="btn dark" id="logoutBtn" type="button">Deconnexion</button>
+          </div>
+        </aside>
+
+        <section class="vip-chat-panel" id="community">
+          <header class="chat-head">
+            <div>
+              <span class="eyebrow">Canal VIP</span>
+              <h1 id="activeRoomTitle">General desk</h1>
+              <p class="lead" id="welcomeCopy" style="margin-top:10px"></p>
+            </div>
+            <span class="chat-state micro">Membres valides uniquement</span>
+          </header>
+          <div class="message admin priority hidden" id="vipAnnouncement"></div>
           <div class="messages" id="messages"></div>
           <form class="community-form" id="communityForm">
-            <textarea name="message" placeholder="Message a la communaute VIP..." required></textarea>
-            <button class="btn gold" type="submit">Envoyer au salon</button>
+            <textarea name="message" placeholder="Ecrire dans le salon VIP..." required></textarea>
+            <button class="btn gold" type="submit">Envoyer</button>
             <p class="lead" id="communityStatus"></p>
           </form>
-        </article>
-        <aside class="panel resources" id="training">
-          <div class="section-head">
-            <div><span class="eyebrow">Formation privee</span><h2>Ressources.</h2></div>
-          </div>
-          <div class="resources-grid" id="resourceList"></div>
-        </aside>
-      </section>
+        </section>
 
-      <section class="panel setups">
-        <div class="section-head">
-          <div><span class="eyebrow">Vos algorithmes</span><h2>Setups disponibles.</h2></div>
-        </div>
-        <div class="setup-grid" id="setupGrid"></div>
-      </section>
+        <aside class="vip-intel-panel">
+          <div class="chat-head">
+            <div>
+              <span class="eyebrow">Intel board</span>
+              <h2>Desk prive.</h2>
+            </div>
+          </div>
+          <div class="intel-scroll">
+            <section class="intel-card next-live" id="nextLive">
+              <span class="eyebrow">Prochain live</span>
+              <h2 id="nextLiveTitle">Aucun live planifie.</h2>
+              <p class="lead" id="nextLiveCopy" style="margin-top:12px">Les lives formation seront publies ici depuis le panel admin.</p>
+              <div class="countdown" id="countdown" style="margin-top:16px">
+                <div><strong>--</strong><span class="micro">J</span></div>
+                <div><strong>--</strong><span class="micro">H</span></div>
+                <div><strong>--</strong><span class="micro">M</span></div>
+                <div><strong>--</strong><span class="micro">S</span></div>
+              </div>
+              <a class="btn gold hidden" id="nextLiveLink" target="_blank" rel="noopener" style="margin-top:14px">Ouvrir le live</a>
+            </section>
+
+            <section class="intel-card calendar" id="vip-calendar">
+              <div class="section-head">
+                <div><span class="eyebrow">Calendrier VIP</span><h3>Sessions privees</h3></div>
+              </div>
+              <div class="calendar-list" id="calendarList"></div>
+            </section>
+
+            <section class="intel-card setups">
+              <div class="section-head">
+                <div><span class="eyebrow">Vos algorithmes</span><h3>Setups actifs</h3></div>
+              </div>
+              <div class="setup-grid" id="setupGrid"></div>
+            </section>
+
+            <section class="intel-card resources" id="training">
+              <div class="section-head">
+                <div><span class="eyebrow">Formation privee</span><h3>Ressources</h3></div>
+              </div>
+              <div class="resources-grid" id="resourceList"></div>
+            </section>
+          </div>
+        </aside>
+      </div>
     </section>
   </main>
 
@@ -578,6 +1008,21 @@
       if (/nasdaq/i.test(list)) names.push("Nasdaq");
       return names.length ? names.join(" + ") : "VIP";
     };
+    const roomLabels = {
+      general: ["General desk", "Annonces, questions, communaute"],
+      gold: ["Gold desk", "XAUUSD, sessions, setup Gold"],
+      btc: ["BTC desk", "Crypto 24/7, zones BTC"],
+      nasdaq: ["Nasdaq desk", "US100, momentum, session US"],
+      macro: ["Macro room", "News, DXY, taux, calendrier"],
+      formation: ["Formation live", "Cours, replay, accompagnement"]
+    };
+    const initials = value => String(value || "VIP")
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map(part => part[0] || "")
+      .join("")
+      .toUpperCase() || "VIP";
 
     addEventListener("pointermove", event => {
       document.documentElement.style.setProperty("--mx", `${event.clientX}px`);
@@ -651,6 +1096,7 @@
       $("#tvUser").textContent = client.tradingview || "--";
       $("#clientPlan").textContent = productShort(client.products);
       $("#clientStatus").textContent = "Actif";
+      $("#memberAvatar").textContent = initials(client.name || client.tradingview || "VIP");
       renderNextLive();
       renderCalendar();
       renderRooms();
@@ -719,7 +1165,20 @@
     function renderRooms() {
       const rooms = Array.isArray(vip?.rooms) && vip.rooms.length ? vip.rooms : ["general", "gold", "btc", "nasdaq", "macro", "formation"];
       if (!rooms.includes(activeRoom)) activeRoom = rooms[0];
-      $("#roomTabs").innerHTML = rooms.map(room => `<button type="button" class="${room === activeRoom ? "active" : ""}" data-room="${escapeHTML(room)}">${escapeHTML(room)}</button>`).join("");
+      const messages = Array.isArray(vip?.messages) ? vip.messages : [];
+      const [activeTitle] = roomLabels[activeRoom] || [activeRoom, "Salon VIP"];
+      $("#activeRoomTitle").textContent = activeTitle;
+      $("#roomTabs").innerHTML = rooms.map(room => {
+        const [label, desc] = roomLabels[room] || [room, "Salon VIP"];
+        const count = messages.filter(message => (message.room || "general") === room && message.status !== "deleted").length;
+        return `
+          <button type="button" class="${room === activeRoom ? "active" : ""}" data-room="${escapeHTML(room)}">
+            <span class="room-icon">${escapeHTML(label.slice(0, 2).toUpperCase())}</span>
+            <span class="room-name"><span>${escapeHTML(label)}</span><span>${escapeHTML(desc)}</span></span>
+            <span class="room-count">${count}</span>
+          </button>
+        `;
+      }).join("");
     }
 
     function renderMessages() {
@@ -738,6 +1197,40 @@
           <p>${escapeHTML(message.message)}</p>
         </article>
       `).join("") : `<p class="lead">Aucun message dans ce salon. Lance la discussion.</p>`;
+    }
+
+    function renderMessages() {
+      const messages = (Array.isArray(vip?.messages) ? vip.messages : [])
+        .filter(message => (message.room || "general") === activeRoom && message.status !== "deleted");
+      $("#messages").innerHTML = messages.length ? messages.map(message => `
+        <article class="message ${message.sender === "admin" ? "admin" : ""} ${message.email && client?.email && message.email === client.email ? "mine" : ""} ${message.priority ? "priority" : ""} ${message.kind === "setup" ? "setup" : ""}">
+          <div class="bubble-avatar">${escapeHTML(message.sender === "admin" ? "IT" : initials(message.name || "VIP"))}</div>
+          <div class="bubble">
+            <div class="message-head">
+              <span>${escapeHTML(message.sender === "admin" ? "Admin" : message.name || "VIP")} - ${escapeHTML(productShort(message.products))}</span>
+              <span>${escapeHTML(fmtDate(message.created_at))}</span>
+            </div>
+            <div class="message-tags">
+              ${message.status === "pinned" ? `<span class="tag gold">Epingle</span>` : ""}
+              ${message.priority ? `<span class="tag">Important</span>` : ""}
+              ${message.kind ? `<span class="tag ${message.kind === "setup" ? "green" : "cyan"}">${escapeHTML(message.kind === "setup" ? "Setup S+" : message.kind)}</span>` : ""}
+              ${message.market ? `<span class="tag">${escapeHTML(message.market)}</span>` : ""}
+              ${message.grade ? `<span class="tag gold">${escapeHTML(message.grade)}</span>` : ""}
+            </div>
+            ${message.title ? `<strong class="message-title">${escapeHTML(message.title)}</strong>` : ""}
+            <p>${escapeHTML(message.message || "")}</p>
+          </div>
+        </article>
+      `).join("") : `
+        <article class="message admin">
+          <div class="bubble-avatar">IT</div>
+          <div class="bubble">
+            <div class="message-head"><span>Admin - ${escapeHTML(activeRoom)}</span><span>pret</span></div>
+            <strong class="message-title">Salon VIP pret.</strong>
+            <p>Aucun message ici pour le moment. Les annonces, setups S+ et notes importantes arriveront dans ce salon.</p>
+          </div>
+        </article>
+      `;
     }
 
     function renderResources() {
