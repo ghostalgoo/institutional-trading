@@ -1857,8 +1857,8 @@
             <input name="clientPassword" placeholder="Mot de passe client provisoire" required>
             <input name="paymentProof" placeholder="ID transaction / note PayPal" required>
             <select name="status">
+              <option value="approved" selected>Valide directement</option>
               <option value="pending">En attente</option>
-              <option value="approved">Valide directement</option>
               <option value="rejected">Refuse</option>
             </select>
           </div>
@@ -2784,11 +2784,23 @@
           method: "POST",
           body: JSON.stringify(data)
         });
-        status.textContent = `Achat cree. Mot de passe client : ${payload.clientPassword || data.clientPassword}`;
+        const createdClient = payload.request || {};
+        const shownPassword = payload.clientPassword || data.clientPassword;
+        status.innerHTML = `
+          Achat cree et ${createdClient.status === "approved" ? "VIP actif" : "en attente"}.<br>
+          Email client : <strong>${escapeHTML(createdClient.email || data.email)}</strong><br>
+          Mot de passe client : <strong>${escapeHTML(shownPassword)}</strong><br>
+          Lien client : <a href="client.html" target="_blank" rel="noopener">ouvrir le panel client</a>
+        `;
         form.reset();
-        await loadRequests();
+        form.elements.status.value = "approved";
+        try {
+          await loadRequests();
+        } catch (refreshError) {
+          document.getElementById("loginStatus").textContent = "Achat cree. Recharge l'admin si la liste ne se met pas a jour.";
+        }
       } catch (error) {
-        status.textContent = "Impossible de creer l'achat. Verifie les champs.";
+        status.textContent = "Impossible de creer l'achat. Verifie : mot de passe client 6 caracteres minimum, email, TradingView, produit coche.";
       }
     });
 

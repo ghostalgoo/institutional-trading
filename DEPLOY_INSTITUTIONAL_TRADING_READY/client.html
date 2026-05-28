@@ -862,8 +862,8 @@
 
     <section class="locked panel hidden" id="lockedView">
       <span class="eyebrow">Acces non actif</span>
-      <h2 style="margin-top:12px">Votre espace attend validation.</h2>
-      <p class="lead" style="margin:16px auto 0;max-width:660px">Le panel VIP complet est reserve aux achats valides. Si vous venez de payer, envoyez votre transaction PayPal et votre username TradingView via le support.</p>
+      <h2 style="margin-top:12px" id="lockedTitle">Votre espace attend validation.</h2>
+      <p class="lead" id="lockedCopy" style="margin:16px auto 0;max-width:660px">Le panel VIP complet est reserve aux achats valides. Si vous venez de payer, envoyez votre transaction PayPal et votre username TradingView via le support.</p>
       <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:22px">
         <a class="btn gold" href="vente.html#contact">Finaliser l'activation</a>
         <button class="btn dark" id="backLogin" type="button">Retour connexion</button>
@@ -1077,6 +1077,12 @@
       if (!hasActiveAccess()) {
         $("#lockedView").classList.remove("hidden");
         $("#floorView").classList.add("hidden");
+        const end = new Date(client?.subscriptionEnd || "");
+        const expired = client?.status === "approved" && !Number.isNaN(end.getTime()) && end.getTime() <= Date.now();
+        $("#lockedTitle").textContent = expired ? "Votre acces VIP est expire." : "Votre espace attend validation.";
+        $("#lockedCopy").textContent = expired
+          ? "Votre compte existe, mais le temps d'acces est termine. Contactez l'admin pour recharger votre abonnement apres paiement."
+          : "Votre compte existe, mais il n'est pas encore valide ou aucune date d'abonnement active n'est ouverte. L'admin doit valider l'achat ou ajouter du temps VIP.";
         return;
       }
       $("#lockedView").classList.add("hidden");
@@ -1271,7 +1277,7 @@
         await login(data);
         status.textContent = "";
       } catch (error) {
-        status.textContent = "Connexion impossible. Verifiez l'e-mail et le mot de passe.";
+        status.textContent = "Connexion impossible. Verifiez exactement l'e-mail et le mot de passe fournis par l'admin.";
       }
     });
 
