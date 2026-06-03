@@ -81,6 +81,8 @@ SUPABASE_ENABLED = bool(SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY)
 SUPABASE_TIMEOUT_SECONDS = 8
 MAINTENANCE_MODE = os.environ.get("TRADING_MAINTENANCE_MODE", "").lower() in {"1", "true", "yes", "on"}
 MAINTENANCE_BYPASS_KEY = os.environ.get("TRADING_MAINTENANCE_BYPASS_KEY", ADMIN_ACCESS_KEY)
+KAIROS_MACRO_API_KEY = os.environ.get("KAIROS_MACRO_API_KEY", "").strip()
+KAIROS_INCLUDE_FALLBACK_NEWS = os.environ.get("KAIROS_INCLUDE_FALLBACK_NEWS", "").lower() in {"1", "true", "yes", "on"}
 
 
 def now_paris() -> datetime:
@@ -397,6 +399,60 @@ def calendar_payload() -> dict[str, Any]:
     CALENDAR_CACHE["payload"] = payload
     CALENDAR_CACHE["expires_at"] = now_paris() + timedelta(seconds=CALENDAR_CACHE_SECONDS)
     return payload
+
+
+def kairos_currency_for_event(event: dict[str, Any]) -> str:
+    raw_value = str(event.get("currency") or event.get("country") or "").strip().upper()
+    if raw_value and raw_value.isalpha() and 2 <= len(raw_value) <= 4:
+        return raw_value
+    event_id = str(event.get("id") or "").upper()
+    if event_id.startswith("FF-USD-") or "USD" in event_id:
+        return "USD"
+    return "USD"
+
+
+def kairos_impact_for_event(event: dict[str, Any]) -> str:
+    haystack = " ".join(str(event.get(key) or "") for key in ("impact", "tag", "title", "expectedTitle")).lower()
+    if any(word in haystack for word in ("high", "fort", "fomc", "cpi", "payroll", "nfp", "pce", "rate decision")):
+        return "HIGH"
+    if any(word in haystack for word in ("medium", "macro", "pmi", "retail", "sentiment", "confidence", "claims")):
+        return "MEDIUM"
+    return "LOW"
+
+
+def kairos_clean_title(value: Any) -> str:
+    title = " ".join(str(value or "").replace("|", " ").split())
+    return title[:120] or "Macro Event"
+
+
+def kairos_macro_news_text() -> str:
+    payload = calendar_payload()
+    if payload.get("provider") == "fallback" and not KAIROS_INCLUDE_FALLBACK_NEWS:
+        return "OK"
+
+    now = now_paris()
+    rows: list[tuple[int, datetime, str]] = []
+    events = payload.get("events") if isinstance(payload.get("events"), list) else []
+    impact_rank = {"HIGH": 0, "MEDIUM": 1, "LOW": 2}
+
+    for event in events:
+        if not isinstance(event, dict):
+            continue
+        event_date = parse_provider_date(event.get("date"))
+        if not event_date or event_date <= now:
+            continue
+        currency = kairos_currency_for_event(event)
+        impact = kairos_impact_for_event(event)
+        title = kairos_clean_title(event.get("title"))
+        utc_date = event_date.astimezone(timezone.utc)
+        line = f"{utc_date:%Y.%m.%d %H:%M}|{currency}|{impact}|{title}"
+        priority = 0 if currency == "USD" and impact == "HIGH" else 10 + impact_rank.get(impact, 9)
+        rows.append((priority, utc_date, line))
+
+    if not rows:
+        return "OK"
+    rows.sort(key=lambda item: (item[0], item[1]))
+    return "\n".join(["OK", *[line for _, _, line in rows[:80]]])
 
 
 def clean_text(value: Any, limit: int = 500) -> str:
@@ -1713,6 +1769,16 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def send_text(self, payload: str, status: int = 200) -> None:
+        body = payload.encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "text/plain; charset=utf-8")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
     def do_OPTIONS(self) -> None:
         self.send_response(204)
         self.send_header("Access-Control-Allow-Origin", "*")
@@ -1788,6 +1854,14 @@ class InstitutionalTradingHandler(SimpleHTTPRequestHandler):
                 return
         if path == "/api/health":
             self.send_json({"ok": True, "updated_at": now_paris().isoformat()})
+            return
+        if path == "/api/kairos/macro-news":
+            query = parse_qs(parsed_url.query)
+            key = str(query.get("key", [""])[0]).strip()
+            if KAIROS_MACRO_API_KEY and not hmac.compare_digest(key, KAIROS_MACRO_API_KEY):
+                self.send_text("ERROR\nINVALID_KEY", 401)
+                return
+            self.send_text(kairos_macro_news_text())
             return
         if path == "/api/calendar":
             self.send_json(calendar_payload())
